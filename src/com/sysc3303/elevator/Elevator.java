@@ -9,8 +9,7 @@ import java.util.Properties;
 import com.sysc3303.commons.Message;
 import com.sysc3303.commons.SerializationUtil;
 import com.sysc3303.commons.SocketHandler;
-
-import constants.Constants;
+import com.sysc3303.constants.Constants;
 
 /**
  * @author 

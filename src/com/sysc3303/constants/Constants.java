@@ -1,4 +1,4 @@
-package constants;
+package com.sysc3303.constants;
 
 public class Constants {
 	private Constants() {}
