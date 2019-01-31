@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 
 /**
- * @author
+ * @author Yu Yamanaka
  *
  */
 public class SocketHandler {
