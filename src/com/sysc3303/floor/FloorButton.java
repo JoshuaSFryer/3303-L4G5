@@ -27,4 +27,28 @@ public class FloorButton {
 	public boolean isDownButtonEnabled() {
 		return down;
 	}
+	
+	/*
+	 * isTopFloor returns true if the Elevator is in the Top Floor
+	 * 
+	 * may be we can take floor number as a parameter here and compare it
+	 */
+	
+	public boolean isTopFloor() {
+		
+		up = false;
+		return up;
+	}
+	
+	/*
+	 * isGroundFloor returns true if the Elevator is at the ground level and cannot go further down
+	 * 
+	 * may be we can take floor number as a parameter here and compare it
+	 */
+	
+	public boolean isGroundFloor() {
+		
+		down = false;
+		return up;
+	}
 }
