@@ -7,6 +7,7 @@ import java.net.InetAddress;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 
+import com.sysc3303.commons.Command;
 import com.sysc3303.commons.Message;
 import com.sysc3303.commons.SerializationUtil;
 import com.sysc3303.commons.SocketHandler;
@@ -43,7 +44,7 @@ public class Scheduler {
 		return floorSocketHandler.getRecievePacketLength();
 	}
 	
-	public void sendMessageToElevator(byte[] data, int length, InetAddress address, int port) {
+	public void sendCommandToElevator(byte[] data, int length, InetAddress address, int port) {
 		elevatorSocketHandler.sendSocket(data, address, port, length);
 	}
 	
@@ -51,12 +52,18 @@ public class Scheduler {
 		floorSocketHandler.sendSocketToRecievedHost(data, length);
 	}
 	
+	public Command createCommandForElevator(Message message) {
+		Object[] params = {message.destinationFloor};
+		return new Command("goToFloor", params);
+	}
+	
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
-		Properties                 properties        = new Properties();
-		InputStream                inputStream       = new FileInputStream(Constants.CONFIG_PATH);
-		boolean                    running           = true;
-		InetAddress                elevatorIp        = InetAddress.getLocalHost();
-		SerializationUtil<Message> serializationUtil = new SerializationUtil<Message>();
+		Properties                 properties           = new Properties();
+		InputStream                inputStream          = new FileInputStream(Constants.CONFIG_PATH);
+		boolean                    running              = true;
+		InetAddress                elevatorIp           = InetAddress.getLocalHost();
+		SerializationUtil<Message> msgSerializationUtil = new SerializationUtil<Message>();
+		SerializationUtil<Command> cmdSerializationUtil = new SerializationUtil<Command>();
 		
 		properties.loadFromXML(inputStream);
 		
@@ -65,36 +72,36 @@ public class Scheduler {
 		Scheduler scheduler    = new Scheduler(port);
 		
 		while(running) {
-			byte[]  recieveData = new byte[300];
-			int     recieveLength;
-			Message message;
-			
 			System.out.println("----------");
 			System.out.println("Waiting for message from floor");
 			
-			recieveData   = scheduler.recieveMessageFromFloor(recieveData);
-			recieveLength = scheduler.getFloorRecievePacketLength();	
-			message       = serializationUtil.deserialize(recieveData, recieveLength);
+			byte[]  recieveData   = scheduler.recieveMessageFromFloor(new byte[300]);
+			int     recieveLength = scheduler.getFloorRecievePacketLength();	
+			Message message       = msgSerializationUtil.deserialize(recieveData, recieveLength);
 			
 			System.out.println("Recieved following message from floor: ");
 			System.out.println(message.toString());
- 			System.out.println("Forwarding message to elevator");
+ 			System.out.println("Sending command to elevator");
  			
- 			scheduler.sendMessageToElevator(recieveData, recieveLength, elevatorIp, elevatorPort);
  			
- 			System.out.println("Wating for message from elevator");
+ 			// let scheduler create command
+ 			Command command     = scheduler.createCommandForElevator(message);
+ 			byte[]  commandData = cmdSerializationUtil.serialize(command);
+ 		
+ 			// send created command to elevator
+ 			scheduler.sendCommandToElevator(commandData, commandData.length, elevatorIp, elevatorPort);
+ 			
+ 			// wait for message from elevators arrival sensor
+ 			// !!!need some kind of class that tells elevators state!!!
+ 			System.out.println("Waiting for elevator to arrive at destination");
  			
  			recieveData   = scheduler.recieveMessageFromElevator(new byte[300]);
- 			recieveLength = scheduler.getElevatorRecievePacketLength();
- 			message       = serializationUtil.deserialize(recieveData, recieveLength);
+ 			recieveLength = scheduler.getFloorRecievePacketLength();
  			
- 			System.out.println("Recieved following message from elevator: ");
- 			System.out.println(message.toString());
- 			System.out.println("Forwarding message to floor");
+ 			System.out.println("Elevator arrived to destination, sending information to floor");
  			
+ 			// send elevator state back to floor
  			scheduler.sendMessageToFloor(recieveData, recieveLength);
- 			
- 			System.out.println("Message sent");
  			System.out.println("----------");
 		}
 	}
