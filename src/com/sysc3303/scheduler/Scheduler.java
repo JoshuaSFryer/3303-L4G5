@@ -35,12 +35,12 @@ public class Scheduler {
 		return data;
 	}
 	
-	public int getElevatorRecievePacketLength() {
-		return elevatorSocketHandler.getRecievePacketLength();
+	public int getElevatorReceivePacketLength() {
+		return elevatorSocketHandler.getReceivePacketLength();
 	}
 
-	public int getFloorRecievePacketLength() {
-		return floorSocketHandler.getRecievePacketLength();
+	public int getFloorReceivePacketLength() {
+		return floorSocketHandler.getReceivePacketLength();
 	}
 	
 	public void sendMessageToElevator(byte[] data, int length, InetAddress address, int port) {
@@ -48,7 +48,7 @@ public class Scheduler {
 	}
 	
 	public void sendMessageToFloor(byte[] data, int length) {
-		floorSocketHandler.sendSocketToRecievedHost(data, length);
+		floorSocketHandler.sendSocketToReceivedHost(data, length);
 	}
 	
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
@@ -73,10 +73,10 @@ public class Scheduler {
 			System.out.println("Waiting for message from floor");
 			
 			receiveData   = scheduler.receiveMessageFromFloor(receiveData);
-			receiveLength = scheduler.getFloorRecievePacketLength();
+			receiveLength = scheduler.getFloorReceivePacketLength();
 			message       = serializationUtil.deserialize(receiveData, receiveLength);
 			
-			System.out.println("Recieved following message from floor: ");
+			System.out.println("Received following message from floor: ");
 			System.out.println(message.toString());
  			System.out.println("Forwarding message to elevator");
  			
@@ -85,10 +85,10 @@ public class Scheduler {
  			System.out.println("Wating for message from elevator");
  			
  			receiveData   = scheduler.receiveMessageFromElevator(new byte[300]);
- 			receiveLength = scheduler.getElevatorRecievePacketLength();
+ 			receiveLength = scheduler.getElevatorReceivePacketLength();
  			message       = serializationUtil.deserialize(receiveData, receiveLength);
  			
- 			System.out.println("Recieved following message from elevator: ");
+ 			System.out.println("Received following message from elevator: ");
  			System.out.println(message.toString());
  			System.out.println("Forwarding message to floor");
  			

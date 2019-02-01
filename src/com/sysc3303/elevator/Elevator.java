@@ -37,11 +37,11 @@ public class Elevator {
 	}
 
 	public int getSchedulerMessageLength() {
-		return socketHandler.getRecievePacketLength();
+		return socketHandler.getReceivePacketLength();
 	}
 	
 	public void sendMessageToScheduler(byte[] data, int length) {
-		socketHandler.sendSocketToRecievedHost(data, length);
+		socketHandler.sendSocketToReceivedHost(data, length);
 	}
 	
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {

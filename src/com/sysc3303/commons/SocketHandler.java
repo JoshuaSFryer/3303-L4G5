@@ -66,7 +66,7 @@ public class SocketHandler {
 	/**
 	 * @return received packet byte length
 	 */
-	public int getRecievePacketLength() {
+	public int getReceivePacketLength() {
 		return receivePacket.getLength();
 	}
 	
@@ -74,7 +74,7 @@ public class SocketHandler {
 	 * Sends socket to previously received host
 	 * @param data
 	 */
-	public void sendSocketToRecievedHost(byte[] data) {
+	public void sendSocketToReceivedHost(byte[] data) {
 		sendPacket = new DatagramPacket(data, data.length,
                 receivePacket.getAddress(), receivePacket.getPort());
 		send();
@@ -85,7 +85,7 @@ public class SocketHandler {
 	 * @param data
 	 * @param length
 	 */
-	public void sendSocketToRecievedHost(byte[] data, int length) {
+	public void sendSocketToReceivedHost(byte[] data, int length) {
 		sendPacket = new DatagramPacket(data, length,
                 receivePacket.getAddress(), receivePacket.getPort());
 		send();

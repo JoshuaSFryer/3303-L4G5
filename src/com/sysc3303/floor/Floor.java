@@ -42,7 +42,7 @@ public class Floor {
 	}
 	
 	public int getSchedulerMessageLength() {
-		return socketHandler.getRecievePacketLength();
+		return socketHandler.getReceivePacketLength();
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
@@ -74,7 +74,7 @@ public class Floor {
 			
 			receivedData = floor.waitMessageFromScheduler(receivedData);
 			
-			System.out.println("Recieved message from scheduler");
+			System.out.println("Received message from scheduler");
 			
 			message = serializationUtil.deserialize(receivedData, floor.getSchedulerMessageLength());
 			
