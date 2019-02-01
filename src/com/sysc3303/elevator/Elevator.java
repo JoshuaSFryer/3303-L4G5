@@ -139,8 +139,8 @@ public class Elevator {
 	
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
 		Properties                 properties        = new Properties();
-		//InputStream                inputStream       = new FileInputStream(Constants.CONFIG_PATH);
-		InputStream                inputStream       = new FileInputStream("config/config.xml");
+		InputStream                inputStream       = new FileInputStream(Constants.CONFIG_PATH);
+		//InputStream                inputStream       = new FileInputStream("config/config.xml");
 		boolean                    running           = true;
 		SerializationUtil<Message> serializationUtil = new SerializationUtil<Message>();
 		
@@ -149,11 +149,11 @@ public class Elevator {
 		// Create a new Elevator instance.
 		int      port     = Integer.parseInt(properties.getProperty("elevatorPort"));
 		Elevator elevator = new Elevator(port, 
-							Integer.parseInt(properties.getProperty("Number of Elevators")),
+							Integer.parseInt(properties.getProperty("numberOfElevators")),
 							0); //TODO: De-magicify this number.
 		
 		while(running) {
-			/*
+			
 			byte[]  recieveData = new byte[300];
 			Message message;
 			int     recieveLength;
@@ -171,11 +171,11 @@ public class Elevator {
 			
 			System.out.println("Forwarding message to scheduler");
 			
-			elevator.sendMessageToScheduler(recieveData, recieveLength);
+			elevator.sendStateToScheduler(recieveData, recieveLength);
 	
 			System.out.println("Message sent");
 			System.out.println("----------");
-			*/
+			
 			
 			
 			
