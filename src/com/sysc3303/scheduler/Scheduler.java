@@ -38,7 +38,7 @@ public class Scheduler {
 		floorSocketHandler    = new SocketHandler(port);
 		elevatorSocketHandler = new SocketHandler();
 		//can we declare something like the struct in c here ?????????????????
-		//or what is the object name in other class 
+		//or what is the object name in other class
 		floorRequestList[] = new ArrayList();
 		elevatorRequestList[] = new ArrayList();
 		elevatorPosition = -1;
@@ -67,7 +67,7 @@ public class Scheduler {
 
 	public void sendMessageToElevator(byte[] data, int length, InetAddress address, int port) {
 =======
-	
+
 	public void sendCommandToElevator(byte[] data, int length, InetAddress address, int port) {
 >>>>>>> iteration1/scheduler
 		elevatorSocketHandler.sendSocket(data, address, port, length);
@@ -77,6 +77,21 @@ public class Scheduler {
 		floorSocketHandler.sendSocketToRecievedHost(data, length);
 	}
 <<<<<<< HEAD
+//This function update the target floor based on the floorRequestList, elevatorRequestList
+//and elevator's position and status
+	private void decide_target_floor(){
+		switch (status){
+			case stationary:
+
+				
+				break;
+			case goingUp:
+				break;
+			case goingDown:
+				break;
+		}
+
+	}
 
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
 		Properties                 properties        = new Properties();
@@ -86,12 +101,12 @@ public class Scheduler {
 		SerializationUtil<Message> serializationUtil = new SerializationUtil<Message>();
 
 =======
-	
+
 	public Command createCommandForElevator(Message message) {
 		Object[] params = {message.destinationFloor};
 		return new Command("goToFloor", params);
 	}
-	
+
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
 		Properties                 properties           = new Properties();
 		InputStream                inputStream          = new FileInputStream(Constants.CONFIG_PATH);
@@ -99,7 +114,7 @@ public class Scheduler {
 		InetAddress                elevatorIp           = InetAddress.getLocalHost();
 		SerializationUtil<Message> msgSerializationUtil = new SerializationUtil<Message>();
 		SerializationUtil<Command> cmdSerializationUtil = new SerializationUtil<Command>();
-		
+
 >>>>>>> iteration1/scheduler
 		properties.loadFromXML(inputStream);
 
@@ -142,32 +157,32 @@ public class Scheduler {
 =======
 			System.out.println("----------");
 			System.out.println("Waiting for message from floor");
-			
+
 			byte[]  recieveData   = scheduler.recieveMessageFromFloor(new byte[300]);
-			int     recieveLength = scheduler.getFloorRecievePacketLength();	
+			int     recieveLength = scheduler.getFloorRecievePacketLength();
 			Message message       = msgSerializationUtil.deserialize(recieveData, recieveLength);
-			
+
 			System.out.println("Recieved following message from floor: ");
 			System.out.println(message.toString());
  			System.out.println("Sending command to elevator");
- 			
- 			
+
+
  			// let scheduler create command
  			Command command     = scheduler.createCommandForElevator(message);
  			byte[]  commandData = cmdSerializationUtil.serialize(command);
- 		
+
  			// send created command to elevator
  			scheduler.sendCommandToElevator(commandData, commandData.length, elevatorIp, elevatorPort);
- 			
+
  			// wait for message from elevators arrival sensor
  			// !!!need some kind of class that tells elevators state!!!
  			System.out.println("Waiting for elevator to arrive at destination");
- 			
+
  			recieveData   = scheduler.recieveMessageFromElevator(new byte[300]);
  			recieveLength = scheduler.getFloorRecievePacketLength();
- 			
+
  			System.out.println("Elevator arrived to destination, sending information to floor");
- 			
+
  			// send elevator state back to floor
  			scheduler.sendMessageToFloor(recieveData, recieveLength);
 >>>>>>> iteration1/scheduler
