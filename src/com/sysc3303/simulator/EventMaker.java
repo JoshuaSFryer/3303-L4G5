@@ -1,3 +1,4 @@
+package com.sysc3303.simulator;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
