@@ -13,19 +13,39 @@ import com.sysc3303.commons.SerializationUtil;
 import com.sysc3303.commons.SocketHandler;
 import com.sysc3303.constants.Constants;
 
+
 /**
- * @author 
+ * @author
  *
  */
 public class Scheduler {
 	private SocketHandler floorSocketHandler;
 	private SocketHandler elevatorSocketHandler;
-	
+	//This list stores the raw data from floor
+	private ArrayList floorRequestList[];
+	//This list stores the raw data from elevator
+	private ArrayList elevatorRequestList[];
+	//The elevator's position, which floor the elevator is currently at.
+	private int elevatorPosition;
+	//The elevator status:going up, going down or stationary
+	private int elevatorStatus;
+	//constants to descripe the elevator's status
+	private static final int goingUp = 1;
+	private static final int goingDown = 2;
+	private static final int stationary = 0;
+
 	public Scheduler(int port) {
 		floorSocketHandler    = new SocketHandler(port);
 		elevatorSocketHandler = new SocketHandler();
+		//can we declare something like the struct in c here ?????????????????
+		//or what is the object name in other class 
+		floorRequestList[] = new ArrayList();
+		elevatorRequestList[] = new ArrayList();
+		elevatorPosition = -1;
+		elevatorStatus = stationary;
+
 	}
-	
+
 	public byte[] recieveMessageFromFloor(byte[] data) {
 		data = floorSocketHandler.waitForPacket(data, false);
 		return data;
@@ -35,7 +55,7 @@ public class Scheduler {
 		data = elevatorSocketHandler.waitForPacket(data, true);
 		return data;
 	}
-	
+
 	public int getElevatorRecievePacketLength() {
 		return elevatorSocketHandler.getRecievePacketLength();
 	}
@@ -47,7 +67,7 @@ public class Scheduler {
 	public void sendCommandToElevator(byte[] data, int length, InetAddress address, int port) {
 		elevatorSocketHandler.sendSocket(data, address, port, length);
 	}
-	
+
 	public void sendMessageToFloor(byte[] data, int length) {
 		floorSocketHandler.sendSocketToRecievedHost(data, length);
 	}
@@ -66,11 +86,11 @@ public class Scheduler {
 		SerializationUtil<Command> cmdSerializationUtil = new SerializationUtil<Command>();
 		
 		properties.loadFromXML(inputStream);
-		
+
 		int       port         = Integer.parseInt(properties.getProperty("schedulerPort"));
 		int       elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
 		Scheduler scheduler    = new Scheduler(port);
-		
+
 		while(running) {
 			System.out.println("----------");
 			System.out.println("Waiting for message from floor");
