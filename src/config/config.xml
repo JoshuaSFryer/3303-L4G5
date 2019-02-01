@@ -5,6 +5,6 @@
   <entry key="numberOfElevators">1</entry>
   <entry key="timeOpeningDoor">1</entry>
   <entry key="timeClosingDoor">1</entry>
-  <entry key="schedulerPort">23</entry>
-  <entry key="elevatorPort">69</entry>
+  <entry key="schedulerPort">6000</entry>
+  <entry key="elevatorPort">5000</entry>
 </properties>
