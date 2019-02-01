@@ -74,7 +74,7 @@ class Idle implements ElevatorState {
 
 class MovingUp implements ElevatorState {
 	public void entryAction(Elevator context) {
-		context.moveUp();
+		//context.moveUp();
 	}
 	
 	public void doAction(Elevator context) {
@@ -82,13 +82,13 @@ class MovingUp implements ElevatorState {
 	}
 	
 	public void exitAction(Elevator context) {
-		context.stop();
+		//context.stop();
 	}
 }
 
 class MovingDown implements ElevatorState {
 	public void entryAction(Elevator context) {
-		context.moveDown();
+		//context.moveDown();
 	}
 	
 	public void doAction(Elevator context) {
@@ -96,7 +96,7 @@ class MovingDown implements ElevatorState {
 	}
 	
 	public void exitAction(Elevator context) {
-		context.stop();
+		//context.stop();
 	}
 }
 
