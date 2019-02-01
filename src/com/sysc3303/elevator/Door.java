@@ -3,6 +3,7 @@ package com.sysc3303.elevator;
 public class Door {
 	
 	// Open = true, closed = false.
+	@SuppressWarnings("unused")
 	private boolean doorState;
 	
 	public Door() {

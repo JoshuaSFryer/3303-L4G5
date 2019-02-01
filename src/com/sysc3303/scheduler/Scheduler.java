@@ -65,7 +65,7 @@ public class Scheduler {
 		Scheduler scheduler    = new Scheduler(port);
 		
 		while(running) {
-			byte[]  recieveData = new byte[300];
+			byte[]  recieveData = new byte[400];
 			int     recieveLength;
 			Message message;
 			
@@ -73,7 +73,7 @@ public class Scheduler {
 			System.out.println("Waiting for message from floor");
 			
 			recieveData   = scheduler.recieveMessageFromFloor(recieveData);
-			recieveLength = scheduler.getFloorRecievePacketLength();	
+			recieveLength = scheduler.getFloorRecievePacketLength();
 			message       = serializationUtil.deserialize(recieveData, recieveLength);
 			
 			System.out.println("Recieved following message from floor: ");
