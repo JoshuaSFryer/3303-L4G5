@@ -31,7 +31,7 @@ public class Elevator {
 		door          = new Door();
 	}
 	
-	public byte[] recieveMessageFromScheduler(byte data[]) {
+	public byte[] receiveMessageFromScheduler(byte data[]) {
 		data = socketHandler.waitForPacket(data, false);
 		return data;		
 	}
@@ -56,24 +56,24 @@ public class Elevator {
 		Elevator elevator = new Elevator(port);
 		
 		while(running) {
-			byte[]  recieveData = new byte[300];
+			byte[]  receiveData = new byte[300];
 			Message message;
-			int     recieveLength;
+			int     receiveLength;
 			
 			System.out.println("----------");
 			System.out.println("Waiting for message from scheduler");
 			
-			recieveData   = elevator.recieveMessageFromScheduler(recieveData);
-			recieveLength = elevator.getSchedulerMessageLength();
-			message       = serializationUtil.deserialize(recieveData, recieveLength);
+			receiveData   = elevator.receiveMessageFromScheduler(receiveData);
+			receiveLength = elevator.getSchedulerMessageLength();
+			message       = serializationUtil.deserialize(receiveData, receiveLength);
 			
-			System.out.println("Elevator recieved following message: ");
+			System.out.println("Elevator received following message: ");
 			System.out.println(message.toString());
 	
 			
 			System.out.println("Forwarding message to scheduler");
 			
-			elevator.sendMessageToScheduler(recieveData, recieveLength);
+			elevator.sendMessageToScheduler(receiveData, receiveLength);
 	
 			System.out.println("Message sent");
 			System.out.println("----------");
