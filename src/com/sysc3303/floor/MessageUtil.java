@@ -54,10 +54,10 @@ public class MessageUtil {
 	/**
 	 * Given a string, determine whether it maps to UP or DOWN values of the
 	 * Direction enum, and return a Direction of that value.
-	 * @param s		The string to test
-	 * @return 		A Direction containing Up or Down
+	 * @param s		The string to test.
+	 * @return 		A Direction containing Up or Down.
 	 * @throws		IllegalArgumentException if the string does not map to
-	 * 				either "up" or "down"
+	 * 				either "up" or "down".
 	 * @see Direction
 	 */
 	private Direction getDirection(String s) {
