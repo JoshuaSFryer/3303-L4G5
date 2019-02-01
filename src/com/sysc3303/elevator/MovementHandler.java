@@ -17,8 +17,8 @@ public class MovementHandler implements Runnable {
 	}
 	
 	/**
-	 * Move towards the target floor until either the next floor is reached,
-	 * or the elevator is interrupted by a new request.
+	 * Move towards the target floor, not stopping until either the next floor 
+	 * is reached, or the elevator is interrupted by a new request.
 	 */
 	public void run() {
 		while(true) {
@@ -39,7 +39,7 @@ public class MovementHandler implements Runnable {
 				// If not at a floor yet, move towards the target.
 				if(targetFloor > floor) {
 					moveUp();
-				} else if(targetFloor > floor) {
+				} else if(targetFloor < floor) {
 					moveDown();
 				} else { // already at the target floor
 					// Don't need to move any more, so kill this thread.
