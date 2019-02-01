@@ -1,3 +1,4 @@
+package com.sysc3303.simulator;
 public class ElevatorSender {
     private static ElevatorSender instance;
 

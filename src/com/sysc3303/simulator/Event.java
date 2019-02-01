@@ -1,3 +1,4 @@
+package com.sysc3303.simulator;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

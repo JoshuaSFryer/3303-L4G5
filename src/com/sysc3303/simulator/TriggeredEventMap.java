@@ -1,3 +1,4 @@
+package com.sysc3303.simulator;
 import java.util.HashMap;
 
 public class TriggeredEventMap {

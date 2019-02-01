@@ -1,3 +1,4 @@
+package com.sysc3303.simulator;
 import java.util.*;
 
 public class EventTimer extends Timer{

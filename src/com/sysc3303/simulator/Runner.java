@@ -1,3 +1,4 @@
+package com.sysc3303.simulator;
 import java.net.URL;
 
 import static java.lang.Thread.sleep;

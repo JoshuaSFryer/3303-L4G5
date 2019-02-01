@@ -1,3 +1,4 @@
+package com.sysc3303.simulator;
 public class FloorReceiver {
     private static FloorReceiver instance;
 

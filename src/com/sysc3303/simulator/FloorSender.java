@@ -1,3 +1,4 @@
+package com.sysc3303.simulator;
 import com.sun.media.sound.WaveFloatFileReader;
 
 public class FloorSender {
