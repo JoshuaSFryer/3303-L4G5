@@ -20,15 +20,20 @@ import com.sysc3303.constants.Constants;
 
 public class Elevator {
 	private static final int GROUND_FLOOR = 1;
+	
+	public final int elevatorID;
 
 	private SocketHandler  		socketHandler;
 	private ElevatorLamp   		lamp;
 	private Motor          		motor;
 	private Door           		door;
 	private ArrayList<ElevatorButton> 	buttons;
+	private FloorSensor 		sensor;
 	
 	private int				targetFloor;
 	private int 			currentFloor;
+	
+	private double			currentHeight;
 	private ElevatorState 	currentState;
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
@@ -36,20 +41,24 @@ public class Elevator {
 			new ClosingDoors()};
 			*/
 	
-	public Elevator(int port, int numFloors) {
+	public Elevator(int port, int numFloors, int ID) {
+		elevatorID 		= ID;
 		socketHandler 	= new SocketHandler(port);
 		lamp          	= new ElevatorLamp();
 		buttons       	= generateButtons(numFloors);
-		motor         	= new Motor();
+		sensor 			= new FloorSensor(this);
+		motor         	= new Motor(this);
 		door          	= new Door();
-		targetFloor   	= Elevator.GROUND_FLOOR;
+		currentFloor   	= Elevator.GROUND_FLOOR;
+		targetFloor 	= Elevator.GROUND_FLOOR;
 		currentState	= new Idle();
+		currentHeight 	= 0; //TODO: de-magicify this number
 	}
 	
 	private ArrayList<ElevatorButton> generateButtons(int numButtons) {
 		ArrayList<ElevatorButton> buttonList = new ArrayList<ElevatorButton>();
 		for(int i=0; i<numButtons; i++) {
-			buttonList.add(new ElevatorButton());
+			buttonList.add(new ElevatorButton(this, i));
 		}
 		return buttonList;
 	}
@@ -96,45 +105,36 @@ public class Elevator {
 		door.closeDoors();
 	}
 	
-	synchronized public void moveUp() {
-		while(this.currentFloor != this.targetFloor) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				
-			}
-			motor.stop();
-		}
+	public int getCurrentFloor() {
+		return this.currentFloor;
 	}
 	
-	synchronized public void moveDown() {
-		while(this.currentFloor != this.targetFloor) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				
-			}
-			motor.stop();
-		}
+	public void setCurrentFloor(int floor) {
+		this.currentFloor = floor;
 	}
 	
-	public void stop() {
-		this.motor.stop();
+	public double getCurrentHeight() {
+		return this.currentHeight;
 	}
+	
+	public void setCurrentHeight(double height) {
+		this.currentHeight = height;
+	}
+	
+	
 	/**
-	 * Travel to the target floor.
+	 * Travel to the target floor. If interrupted by a message from the
+	 * scheduler, stop moving and execute the new command.
 	 * @param floor
 	 */
-	public void goToFloor(int floor) {
-		this.targetFloor = floor;
+	public void goToFloor(int targetFloor) {
 		
-		if(this.currentFloor == this.targetFloor) {
-			// Do nothing
-		} else if (this.currentFloor < this.targetFloor) {
-			moveUp();
-		} else if (this.currentFloor > this.targetFloor) {
-			moveDown();
-		}
+		//this.targetFloor = floor;
+		Thread mover = new Thread(
+						new MovementHandler(targetFloor, this, this.sensor, 
+											this.motor));
+		//sensor.attachThread(mover);
+		mover.start();
 	}
 	
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
@@ -148,7 +148,8 @@ public class Elevator {
 		// Create a new Elevator instance.
 		int      port     = Integer.parseInt(properties.getProperty("elevatorPort"));
 		Elevator elevator = new Elevator(port, 
-							Integer.parseInt(properties.getProperty("Number of Elevators")));
+							Integer.parseInt(properties.getProperty("Number of Elevators")),
+							0); //TODO: De-magicify this number.
 		
 		while(running) {
 			/*
