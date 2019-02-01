@@ -139,7 +139,8 @@ public class Elevator {
 	
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
 		Properties                 properties        = new Properties();
-		InputStream                inputStream       = new FileInputStream(Constants.CONFIG_PATH);
+		//InputStream                inputStream       = new FileInputStream(Constants.CONFIG_PATH);
+		InputStream                inputStream       = new FileInputStream("config/config.xml");
 		boolean                    running           = true;
 		SerializationUtil<Message> serializationUtil = new SerializationUtil<Message>();
 		
