@@ -4,8 +4,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.util.InvalidPropertiesFormatException;
-import java.util.Properties;
+import java.util.*;
+// import java.util.InvalidPropertiesFormatException;
+// import java.util.Properties;
+// import java.util.ArrayList;
 
 import com.sysc3303.commons.Command;
 import com.sysc3303.commons.Message;
@@ -21,9 +23,9 @@ import com.sysc3303.constants.Constants;
 public class Scheduler {
 	private SocketHandler floorSocketHandler;
 	private SocketHandler elevatorSocketHandler;
-	//This list stores the raw data from floor
+	//This list stores the raw data from floor, need to add <type>!!!!!!!!!!!!!!!!!!!!
 	private ArrayList floorRequestList[];
-	//This list stores the raw data from elevator
+	//This list stores the raw data from elevator,need to add <type>!!!!!!!!!!!!!!!!!!!!
 	private ArrayList elevatorRequestList[];
 	//The elevator's position, which floor the elevator is currently at.
 	private int elevatorPosition;
@@ -33,14 +35,15 @@ public class Scheduler {
 	private static final int goingUp = 1;
 	private static final int goingDown = 2;
 	private static final int stationary = 0;
+	private int target = -1;
 
 	public Scheduler(int port) {
 		floorSocketHandler    = new SocketHandler(port);
 		elevatorSocketHandler = new SocketHandler();
 		//can we declare something like the struct in c here ?????????????????
 		//or what is the object name in other class
-		floorRequestList[] = new ArrayList();
-		elevatorRequestList[] = new ArrayList();
+		floorRequestList[] = new ArrayList(); //need to add <type>!!!!!!!!!!!!!!!!!!!!
+		elevatorRequestList[] = new ArrayList(); //need to add <type>!!!!!!!!!!!!!!!!!!!!
 		elevatorPosition = -1;
 		elevatorStatus = stationary;
 
@@ -63,44 +66,123 @@ public class Scheduler {
 	public int getFloorRecievePacketLength() {
 		return floorSocketHandler.getRecievePacketLength();
 	}
-<<<<<<< HEAD
-
-	public void sendMessageToElevator(byte[] data, int length, InetAddress address, int port) {
-=======
 
 	public void sendCommandToElevator(byte[] data, int length, InetAddress address, int port) {
->>>>>>> iteration1/scheduler
 		elevatorSocketHandler.sendSocket(data, address, port, length);
 	}
 
 	public void sendMessageToFloor(byte[] data, int length) {
 		floorSocketHandler.sendSocketToRecievedHost(data, length);
 	}
-<<<<<<< HEAD
+
 //This function update the target floor based on the floorRequestList, elevatorRequestList
 //and elevator's position and status
 	private void decide_target_floor(){
-		switch (status){
+		switch (elevatorStatus){
 			case stationary:
+				// want to set to null, this may need to be changed
+				Date firstRequest = null;
+				OBject rightRequest = null;
 
-				
+
+				//go through the floorRequestList to find the earliest request
+				for(int i = 0 ;i < floorRequestList.size();i++){
+					//not sure what time is being named in floor????????????????????????
+					if(i == 0 || firstRequest.compareTo(floorRequestList.get(i).time) > 0){
+						firstRequest = floorRequestList.get(i).time;
+						rightRequest = floorRequestList.get(i);
+					}
+				}
+
+				//go through the elevatorRequestList to find the earliest request
+				//not sure what time is being named in elevator????????????????????????
+				for(int j = 0 ;j < elevatorRequestList.size();j++){
+					if((firstRequest = null && j = 0)||
+								firstRequest.compareTo(elevatorRequestList.get(j).time) > 0){
+						firstRequest = elevatorRequestList.get(j).time;
+						rightRequest = elevatorRequestList.get(j);
+					}
+				}
+				//NOT SURE what the objects are called!!!!!!!!!!!!!!!!!!!!
+				if(rightRequest == floorRequestListObject)
+					target =  rightRequest.numberFromFloor;//???
+				target = rightRequest.numberFromElevator;//???
 				break;
+
 			case goingUp:
+
+				ArrayList selectFloorListup = new ArrayList();
+				ArrayList selectElevatorListup = new ArrayList();
+
+				for(int i = 0 ;i < floorRequestList.size();i++){
+					//not sure what time is being named in floor????????????????????????
+					if(floorRequestList.get(i).direction == requestUp
+						&& floorRequestList.get(i).requestFloor > floorThatElevatorIsAt){//???
+						selectFloorListup.add(floorRequestList.get(i));
+					}
+				}
+
+				for(int j = 0 ;j < elevatorRequestList.size();j++){
+					if(elevatorRequestList.get(j).requestFloor > floorThatElevatorIsAt){//???
+							selectElevatorListup.add(elevatorRequestList.get(j));
+					}
+				}
+
+				//inefficient sorting algothrim
+				//go through the selectFloorList to find the nearest request
+				for(int i = 0 ;i < selectFloorListup.size();i++){
+					//not sure what time is being named in floor????????????????????????
+					if(i == 0 || target > selectFloorListup.get(i)){
+						target = selectFloorListup.get(i).requestFloor;//???
+					}
+				}
+
+				for(int j = 0 ;j < selectElevatorListup.size();j++){
+					if((target == -1 && j = 0)||
+								target > selectElevatorListup.get(j)){
+						target = selectElevatorListup.get(j).requestFloor;//???
+					}
+				}
+
 				break;
 			case goingDown:
+
+				ArrayList selectFloorListDown = new ArrayList();
+				ArrayList selectElevatorListDown = new ArrayList();
+
+				for(int i = 0 ;i < floorRequestList.size();i++){
+					//not sure what time is being named in floor????????????????????????
+					if(floorRequestList.get(i).direction == requestDown
+						&& floorRequestList.get(i).requestFloor < floorThatElevatorIsAt){//???
+						selectFloorListDown.add(floorRequestList.get(i));
+					}
+				}
+
+				for(int j = 0 ;j < elevatorRequestList.size();j++){
+					if(elevatorRequestList.get(j).requestFloor < floorThatElevatorIsAt){//???
+							selectElevatorListDown.add(elevatorRequestList.get(j));
+					}
+				}
+
+				//inefficient sorting algothrim
+				//go through the selectFloorList to find the nearest request
+				for(int i = 0 ;i < selectFloorListDown.size();i++){
+					//not sure what time is being named in floor????????????????????????
+					if(i == 0 || target < selectFloorListDown.get(i)){
+						target = selectFloorListDown.get(i).requestFloor;//???
+					}
+				}
+
+				for(int j = 0 ;j < selectElevatorListDown.size();j++){
+					if((target == -1 && j = 0)||
+								target < selectElevatorListDown.get(j)){
+						target = selectElevatorListDown.get(j).requestFloor;//???
+					}
+				}
 				break;
 		}
 
 	}
-
-	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
-		Properties                 properties        = new Properties();
-		InputStream                inputStream       = new FileInputStream(Constants.CONFIG_PATH);
-		boolean                    running           = true;
-		InetAddress                elevatorIp        = InetAddress.getLocalHost();
-		SerializationUtil<Message> serializationUtil = new SerializationUtil<Message>();
-
-=======
 
 	public Command createCommandForElevator(Message message) {
 		Object[] params = {message.destinationFloor};
@@ -115,7 +197,6 @@ public class Scheduler {
 		SerializationUtil<Message> msgSerializationUtil = new SerializationUtil<Message>();
 		SerializationUtil<Command> cmdSerializationUtil = new SerializationUtil<Command>();
 
->>>>>>> iteration1/scheduler
 		properties.loadFromXML(inputStream);
 
 		int       port         = Integer.parseInt(properties.getProperty("schedulerPort"));
@@ -123,40 +204,8 @@ public class Scheduler {
 		Scheduler scheduler    = new Scheduler(port);
 
 		while(running) {
-<<<<<<< HEAD
-			byte[]  recieveData = new byte[300];
-			int     recieveLength;
-			Message message;
-
 			System.out.println("----------");
-			System.out.println("Waiting for message from floor");
-
-			recieveData   = scheduler.recieveMessageFromFloor(recieveData);
-			recieveLength = scheduler.getFloorRecievePacketLength();
-			message       = serializationUtil.deserialize(recieveData, recieveLength);
-
-			System.out.println("Recieved following message from floor: ");
-			System.out.println(message.toString());
- 			System.out.println("Forwarding message to elevator");
-
- 			scheduler.sendMessageToElevator(recieveData, recieveLength, elevatorIp, elevatorPort);
-
- 			System.out.println("Wating for message from elevator");
-
- 			recieveData   = scheduler.recieveMessageFromElevator(new byte[300]);
- 			recieveLength = scheduler.getElevatorRecievePacketLength();
- 			message       = serializationUtil.deserialize(recieveData, recieveLength);
-
- 			System.out.println("Recieved following message from elevator: ");
- 			System.out.println(message.toString());
- 			System.out.println("Forwarding message to floor");
-
- 			scheduler.sendMessageToFloor(recieveData, recieveLength);
-
- 			System.out.println("Message sent");
-=======
-			System.out.println("----------");
-			System.out.println("Waiting for message from floor");
+			System.out.print ln("Waiting for message from floor");
 
 			byte[]  recieveData   = scheduler.recieveMessageFromFloor(new byte[300]);
 			int     recieveLength = scheduler.getFloorRecievePacketLength();
@@ -185,7 +234,6 @@ public class Scheduler {
 
  			// send elevator state back to floor
  			scheduler.sendMessageToFloor(recieveData, recieveLength);
->>>>>>> iteration1/scheduler
  			System.out.println("----------");
 		}
 	}
