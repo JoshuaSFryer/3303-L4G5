@@ -65,7 +65,7 @@ public class Scheduler {
 		Scheduler scheduler    = new Scheduler(port);
 		
 		while(running) {
-			byte[]  recieveData = new byte[300];
+			byte[]  recieveData = new byte[400];
 			int     recieveLength;
 			Message message;
 			
