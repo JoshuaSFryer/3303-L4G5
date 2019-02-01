@@ -37,7 +37,7 @@ public class MessageUtil {
 		try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
-		       String[] splittedStr      = line.split("\\s+");
+		       String[]     splittedStr      = line.split("\\s+");
 		       Date     	time             = new Date(formatter.parse(
 		    		   							splittedStr[0]).getTime());
 		       int      	floor            = Integer.parseInt(splittedStr[1]);
