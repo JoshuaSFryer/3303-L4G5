@@ -4,55 +4,35 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
-public class Message implements Serializable{
-	private static final long serialVersionUID = 1097867564019283746L;
-	private Date   requestTime;
-	private int    floorNumber;
-	private int    destinationFloor;
-	private String direction;
+/**
+ * Message represents data pulled from a single line of the input file.
+ * 
+ * @see		MessageUtil
+ * @author	Yu Yamanaka
+ *
+ */
+
+public class Message implements Serializable {
+	public static final long serialVersionUID = 1097867564019283746L;
+	public final Date   	requestTime;
+	public final int    	floorNumber;
+	public final int    	destinationFloor;
+	public final Direction 	direction;
 	
-	public Message(Date requestTime, int floorNumber, String direction, int destinationFloor) {
+	public Message(Date requestTime, int floorNumber, Direction direction, int destinationFloor) {
 		this.requestTime      = requestTime;
 		this.floorNumber      = floorNumber;
 		this.direction        = direction;
 		this.destinationFloor = destinationFloor;
 	}
 	
-	public Date getRequestTime() {
-		return requestTime;
-	}
-	
+	/**
+	 * Get a formatted string containing the time contained in requestTime, without the date components.
+	 * @return the time elements of requestTime
+	 */
 	public String toStringRequestTime() {
 		SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss.S");
 		return formatter.format(requestTime);
-	}
-	
-	public void setRequestTime(Date requestTime) {
-		this.requestTime = requestTime;
-	}
-	
-	public int getFloorNumber() {
-		return floorNumber;
-	}
-	
-	public void setFloorNumber(int floorNumber) {
-		this.floorNumber = floorNumber;
-	}
-	
-	public int getDestinationFloor() {
-		return destinationFloor;
-	}
-	
-	public void setDestinationFloor(int destinationFloor) {
-		this.destinationFloor = destinationFloor;
-	}
-	
-	public String getDirection() {
-		return direction;
-	}
-	
-	public void setDirection(String direction) {
-		this.direction = direction;
 	}
 	
 	public String toString() {
