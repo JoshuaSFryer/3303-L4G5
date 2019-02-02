@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import com.sysc3303.commons.Message;
-//import com.sysc3303.commons.GoToFloorMessage;
 import com.sysc3303.commons.SerializationUtil;
 import com.sysc3303.commons.SocketHandler;
 import com.sysc3303.constants.Constants;
@@ -39,6 +38,8 @@ public class Elevator {
 	private ElevatorState 	currentState;
 	
 	private Thread 			mover;
+	
+	private ElevatorMessageHandler messageHandler;
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -57,6 +58,8 @@ public class Elevator {
 		targetFloor 	= Elevator.GROUND_FLOOR;
 		currentState	= new Idle();
 		currentHeight 	= 0; //TODO: de-magicify this number
+		
+		messageHandler = new ElevatorMessageHandler(port, this);
 	}
 	
 	/**
@@ -135,6 +138,7 @@ public class Elevator {
 	
 	public void setCurrentFloor(int floor) {
 		this.currentFloor = floor;
+		this.lamp.setCurrentFloor(floor);
 	}
 	
 	public int getCurrentHeight() {
@@ -143,6 +147,16 @@ public class Elevator {
 	
 	public void setCurrentHeight(int height) {
 		this.currentHeight = height;
+	}
+	
+	public void pressButton(int num) {
+		if(num > this.buttons.size() || num < 1) {
+			//TODO: Throw an exception here?
+			System.out.println("Invalid button press, out of bounds!");
+			return;
+		}
+		this.buttons.get(num+1).press();
+		messageHandler.sendElevatorButton(num, this.elevatorID);
 	}
 	
 	

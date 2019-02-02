@@ -10,10 +10,12 @@ public class ElevatorMessageHandler extends MessageHandler{
     //TODO you need to add the port numbers that will be associated with scheduler
     final int schedulerPort = 7002;
     private InetAddress schedulerAddress;
+    private Elevator context;
 
 
-    public ElevatorMessageHandler(int receivePort){
+    public ElevatorMessageHandler(int receivePort, Elevator context){
         super(receivePort);
+        this.context = context;
         //TODO currently for localhost this is how it looks
         try{
             schedulerAddress = InetAddress.getLocalHost();
@@ -35,6 +37,8 @@ public class ElevatorMessageHandler extends MessageHandler{
                 break;
             case 2:
                 // TODO what happens when you receive GoToFloor
+            	GoToFloorMessage castMessage = (GoToFloorMessage) message;
+            	context.goToFloor(castMessage.getDestinationFloor());
                 break;
             case 3:
                 // Shouldn't have this on the elevator
@@ -58,4 +62,11 @@ public class ElevatorMessageHandler extends MessageHandler{
         ElevatorButtonMessage elevatorButtonMessage = new ElevatorButtonMessage(destinationFloor, elevatorId, new Date());
         send(elevatorButtonMessage, schedulerAddress, schedulerPort);
     }
+}
+
+class BadMessageTypeException extends Exception {
+	
+	public BadMessageTypeException(String msg) {
+		super(msg);
+	}
 }
