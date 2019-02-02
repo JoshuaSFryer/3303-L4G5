@@ -2,10 +2,9 @@ package com.sysc3303.commons;
 
 import java.net.InetAddress;
 
-public class CommunicationHandler{
+class CommunicationHandler{
 
     public CommunicationHandler(int receivePort, MessageHandler messageHandler){
-        messageHandler.setCommunicationHandler(this);
         ReceiveHandler receiveHandler = new ReceiveHandler(receivePort, messageHandler);
         receiveHandler.start();
     };

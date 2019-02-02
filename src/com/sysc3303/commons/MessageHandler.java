@@ -3,13 +3,14 @@ package com.sysc3303.commons;
 import java.net.InetAddress;
 
 public abstract class MessageHandler{
-    private CommunicationHandler communicationHandler;
+    protected CommunicationHandler communicationHandler;
+
+    public MessageHandler(int receivePort){
+        this.communicationHandler = new CommunicationHandler(receivePort, this);
+    }
 
     public void received(Message message){
         return;
-    }
-    public void setCommunicationHandler(CommunicationHandler communicationHandler){
-        this.communicationHandler = communicationHandler;
     }
 
     public void send(Message message, InetAddress address, int port){
