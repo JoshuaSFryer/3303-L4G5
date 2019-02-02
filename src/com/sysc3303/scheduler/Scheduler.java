@@ -21,8 +21,8 @@ import com.sysc3303.constants.Constants;
  *
  */
 public class Scheduler {
-	private SocketHandler    floorSocketHandler;
-	private SocketHandler    elevatorSocketHandler;
+	private CommunicationHandler    communicationHandler;
+	private SchedulerMessageHandler messageHandler;
 	//This list stores the raw data from floor, need to add <type>!!!!!!!!!!!!!!!!!!!!
 	private ArrayList        floorRequestList[];
 	//This list stores the raw data from elevator,need to add <type>!!!!!!!!!!!!!!!!!!!!
@@ -36,18 +36,57 @@ public class Scheduler {
 	private static final int goingDown  = 2;
 	private static final int stationary = 0;
 	private int              target     = -1;
+	private FloorMessageHandler    floorMessageHandler;
+	private ElevatorMessageHandler elevatorMessageHandler;
+	private Request                request;
+	
 
 	public Scheduler(int port) {
-		floorSocketHandler    = new SocketHandler(port);
-		elevatorSocketHandler = new SocketHandler();
+		messageHandler         = new SchedulerMessageHandler();
+		communicationHandler   = new CommunicationHandler(port, messageHandler);
 		//can we declare something like the struct in c here ?????????????????
 		//or what is the object name in other class
-		floorRequestList[]    = new ArrayList(); //need to add <type>!!!!!!!!!!!!!!!!!!!!
-		elevatorRequestList[] = new ArrayList(); //need to add <type>!!!!!!!!!!!!!!!!!!!!
-		elevatorPosition      = -1;
-		elevatorStatus        = stationary;
+		floorRequestList       = new ArrayList(); //need to add <type>!!!!!!!!!!!!!!!!!!!!
+		elevatorRequestList    = new ArrayList(); //need to add <type>!!!!!!!!!!!!!!!!!!!!
+		elevatorPosition       = -1;
+		elevatorStatus         = stationary;
+		request                = new Request();
+		elevatorMessageHandler = new ElevatorMessageHandler(messageHandler, request);
+		floorMessageHandler    = new FloorMessageHandler(messageHandler, request);
+		
+		elevatorMessageHandler.start();
+		floorMessageHandler.start();
+
+			/**Handle this in multi thread...**/
+			// if recieve message from floor
+			  // add into floorRequestList   (synchronized)  
+			  // decideTargetFloor           (synchronized) 
+			  // create GoToFloorMessage    
+			  // wait for message from elevator
+			/****/
+			// if recieve message from elevator
+			  // if elevatorStateMessage
+			    // if elevator in target floor
+					// create FloorArrivalMessage and send it to floor
+			        // update target floor que (synchronized) 
+			  // if elevatorRequest message
+			    // queue it!                   (synchronized) 
+			
+		
 	}
 
+	public boolean recievedFloorButtonMessage() {
+		return messageHandler.hasFloorButtonMessage();
+	}
+	
+	public FloorButtonMessage getFloorButtonMessage() {
+		return messageHandler.getFloorButtonMessage();
+	}
+	
+	public 
+	
+	public boolean 
+	
 	public byte[] recieveMessageFromFloor(byte[] data) {
 		data = floorSocketHandler.waitForPacket(data, false);
 		return data;
@@ -73,214 +112,8 @@ public class Scheduler {
 	public void sendMessageToFloor(byte[] data, int length) {
 		floorSocketHandler.sendSocketToRecievedHost(data, length);
 	}
-	
-	private FloorRequest getEariestFloorRequest() {
-		FloorRequest floorRequest;
-		
-		for(int i = 0; i < floorRequestList.size(); i++) {
-			//not sure what time is being named in floor????????????????????????
-			FloorRequest curFloorRequest = floorRequestList.get(i);
-			Date         curRequestTime  = curFloorRequest.time;
-			
-			if(floorRequest == null || floorRequest.time.compareTo(curRequestTime) > 0){
-				floorRequest = curFloorRequest;
-			}
-		}
-		
-		return floorRequest;
-	}
-	
-	private ElevatorRequest getEariestElevatorRequest() {
-		ElevatorRequest elevatorRequest;
-		//go through the elevatorRequestList to find the earliest request
-		//not sure what time is being named in elevator????????????????????????
-		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			ElevatorRequest curElevatorRequest = elevatorRequestList.get(i);
-			Date            curRequestTime     = curElevatorRequest.time;
-			
-			if(elevatorRequest == null || elevatorRequest.time.compareTo(curRequestTime) > 0) {
-				elevatorRequest = curElevatorRequest;
-			}
-		}
-		return elevatorRequest;
-	}
-	
-	private ArrayList<FloorRequest> getFloorUpRequestArray() {
-		ArrayList<FloorRequest> selectFloorListup = new ArrayList<FloorRequest>();
-		
-		for(int i = 0; i < floorRequestList.size(); i++) {
-			//not sure what time is being named in floor????????????????????????
-			FloorRequest curFloorRequest = floorRequestList.get(i);
-			
-			if(curFloorRequest.direction == requestUp && 
-			   curFloorRequest.requestFloor > elevatorPosition) {//???
-				selectFloorListup.add(curFloorRequest);
-			}
-		}
-		
-		return selectFloorListup;
-	}
-	
-	private ArrayList<ElevatorRequest> getElevatorUpRequestArray() {
-		ArrayList<ElevatorRequest> selectElevatorListup = new ArrayList<ElevatorRequest>();
-		
-		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			//not sure what time is being named in floor????????????????????????
-			ElevatorRequest curElevatorRequest = elevatorRequestList.get(i);
-			
-			if(curElevatorRequest.requestFloor > elevatorPosition) {//???
-				selectElevatorListup.add(curFloorRequest);
-			}
-		}
-		
-		return selectElevatorListup;
-	}
-	
-	private ArrayList<ElevatorRequest> getEariestElevatorRequest() {
-		ArrayList<ElevatorRequest> selectElevatorListup = new ArrayList<ElevatorRequest>();
-		
-		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			ElevatorRequest curElevatorRequest = elevatorRequestList.get(i);
-			
-			if(curElevatorRequest.requestFloor > elevatorPosition){//???
-					selectElevatorListup.add(curElevatorRequest);
-			}
-		}
-		
-		return selectElevatorListup;
-	}
-	
-	private int getNearestUpRequest(ArrayList<FloorRequest> seletFloorListup, ArrayList<ElevatorRequest> selectElevatorListup) {
-		int targetFloor = 0;
-		
-		for(int i = 0 ; i < selectFloorListup.size();i++) {
-			//not sure what time is being named in floor????????????????????????
-			int curRequestFloor = selectFloorListup.get(i).requestFloor;
-			
-			if(targetFloor == 0 || targetFloor > curRequestFloor){
-				targetFloor = curRequestFloor;//???
-			}
-		}
 
-		for(int i = 0; i < selectElevatorListup.size(); i++) {
-			int curRequestFloor = selectElevatorListup.get(i).requestFloor;
-			if(targetFloor == 0 || targetFloor > curRequestFloor) {
-				targetFloor = curRequestFloor;//???
-			}
-		}
-		return targetFloor;
-	}
-	
-	private int getNearestDownRequest(ArrayList<FloorRequest> seletFloorListDown, ArrayList<ElevatorRequest> selectElevatorListDown) {
-		int targetFloor = 0;
-		for(int i = 0 ;i < selectFloorListDown.size();i++) {
-			//not sure what time is being named in floor????????????????????????
-			int requestFloor = selectFloorListDown.get(i).requestFloor;
-			
-			if(targetFloor == 0 || targetFloor < requestFloor){
-				target = requestFloor;//???
-			}
-		}
 
-		for(int i = 0 ; i < selectElevatorListDown.size(); i++) {
-			int requestFloor = selectElevatorListDown.get(i).requestFloor;
-			
-			if(targetFloor == 0 || target < requestFloor){
-				target = requestFloor;//???
-			}
-		}
-		
-		return targetFloor;
-	}
-	
-	private ArrayList<FloorRequest> getFloorDownRequestArray() {
-		ArrayList<FloorRequest> selectFloorListDown = new ArrayList<FloorRequest>();
-		
-		for(int i = 0; i < floorRequestList.size(); i++) {
-			//not sure what time is being named in floor????????????????????????
-			FloorRequest curFloorRequest = floorRequestList.get(i);
-			if(curFloorRequest.direction == requestDown && 
-			   curFloorRequest.requestFloor < elevatorPosition){//???
-				selectFloorListDown.add(curFloorRequest);
-			}
-		}
-		
-		return selectFloorListDown;
-	}
-	
-	private ArrayList<ElevatorRequest> getElevatorDownRequestArray() {
-		ArrayList<ElevatorRequest> selectElevatorListDown = new ArrayList<ElevatorRequest>();
-		
-		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			ElevatorRequest curElevatorRequest = elevatorRequestList.get(i);
-			
-			if(curElevatorRequest.requestFloor < elevatorPosition){//???
-				selectElevatorListDown.add(curElevatorRequest);
-			}
-		}
-		
-		return selectElevatorListDown;
-	}
-	
-    //This function update the target floor based on the floorRequestList, elevatorRequestList
-    //and elevator's position and status
-	private void decideTargetFloor() {
-		if(elevatorStatus == stationary) {
-			// want to set to null, this may need to be changed
-			FloorRequest    floorRequest    = getEariestFloorRequest();
-			ElevatorRequest elevatorRequest = getEariestElevatorRequest();
-			
-			//NOT SURE what the objects are called!!!!!!!!!!!!!!!!!!!!
-			if(floorRequest.time.compareTo(elevatorRequest.time) > 0) {
-				target = elevatorRequest.numberFromElevator;
-			}
-			else {
-				target = floorRequest.numberFromFloor;
-			}
-		}
-		else if(elevatorStatus == goingUp) {
-			ArrayList selectFloorListup    = getFloorUpRequestArray();
-			ArrayList selectElevatorListup = getElevatorUpRequestArray();
-
-			//inefficient sorting algothrim
-			//go through the selectFloorList to find the nearest request
-			target = getNearestUpRequest(selectFloorListup, selectElevatorListup);
-		}
-		else {
-			ArrayList selectFloorListDown    = getFloorDownRequestArray();
-			ArrayList selectElevatorListDown = getElevatorDownRequestArray();
-
-			//inefficient sorting algothrim
-			//go through the selectFloorList to find the nearest request
-			target = getNearestDownRequest(selectFloorListDown, selectElevatorListDown);
-		}
-	}
-
-	/**
-    * need another function which is to update the floorRequestList and elevatorRequestList
-	* once the elevator arrived a target floor, the target floor needs to be removed potentially
-	* both from floorRequestList and elevatorRequestList.
-	* for elevatorRequestList: just scan and removed
-	* for floorRequestList: need to scan the target floor with the direction
-	*/
-	private void removeTargetFloor(int targetFloor, Direction targetDirection) {
-		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			if(elevatorRequestList.get(i).requestFloor == targetFloor) {
-				elevatorRequestList.remove(i);
-				break;
-			}
-		}
-		
-		for(int i = 0; i < floorRequestList.size(); i++) {
-			FloorRequest curFloorRequest = floorRequestList.get(i);
-			
-			if(curFloorRequest.requestFloor == targetFloor && 
-			   curFloorRequest.direction    == targetDirection) {
-				floorRequestList.remove(i);
-				break;
-			}
-		}
-	}
 
 	public Command createCommandForElevator(Message message) {
 		Object[] params = {message.destinationFloor};
