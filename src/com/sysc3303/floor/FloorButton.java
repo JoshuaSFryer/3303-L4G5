@@ -2,43 +2,31 @@ package com.sysc3303.floor;
 
 public class FloorButton {
 	
-	String upButton;
-	String downButton;
-	
-	private String up = "up";
-	private String down = "down";
-	private String elevatorArrived = "elevatorArrived";
-	
+	private boolean upButtonLight;
+	private boolean downButtonLight;
 	
 	FloorButton(){
-		upButton = " Not Pressed";
-		downButton = " Not Pressed";
+		this.upButtonLight = false;
+		this.downButtonLight = false;
 	}
-	
-	
 
-	public String getButtonStatus() {
-		return "Up-Button = " + upButton + "  Down-Button = " + downButton;
+	public String getButtonStatusString() {
+		return "Up-Button = " + upButtonLight + "  Down-Button = " + downButtonLight;
 	}
 	
-	public void setButton(String button) {
-		if (button.equals(up)) {
-			upButton = "Pressed";
-			downButton = "Not Pressed";
-		}
-		
-		else if (button.equals(down)) {
-			downButton = "Pressed";
-			upButton = "Not Pressed";
-		}
-		
-		else if (button.equals(elevatorArrived)){
-			upButton = "Not Pressed";
-			downButton = "Not Pressed";
-			
-		}
+	public boolean isUpButtonLight() {
+		return upButtonLight;
 	}
-	
-	
 
+	public void setUpButtonLight(boolean upButtonLight) {
+		this.upButtonLight = upButtonLight;
+	}
+
+	public boolean isDownButtonLight() {
+		return downButtonLight;
+	}
+
+	public void setDownButtonLight(boolean downButtonLight) {
+		this.downButtonLight = downButtonLight;
+	}
 }

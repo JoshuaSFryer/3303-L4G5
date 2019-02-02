@@ -1,18 +1,15 @@
 package com.sysc3303.floor;
 
+import com.sun.javafx.scene.traversal.Direction;
+
 public class FloorLamp {
 	
-	private String up = "up";
-	private String down = "down";
-	private String elevatorArrived = "elevatorArrived";
-		
-	
-	private String upLamp;
-	private String downLamp;
+	private boolean upLamp;
+	private boolean downLamp;
 	
 	FloorLamp() {
-		upLamp = "OFF";
-		downLamp = "OFF";
+		this.upLamp = false;
+		this.downLamp = false;
 	}
 	
 
@@ -20,44 +17,41 @@ public class FloorLamp {
 		return "UP-Lamp = " + upLamp + "  DOWN-Lamp = " + downLamp + "\n";
 	}
 	
-
-	
 	public void turnUpLampON() {
-		upLamp = "ON";
-		downLamp = "OFF";
+		upLamp = true;
+	}
+	
+	public void turnUpLampOFF() {
+		upLamp = false;
 	}
 	
 	public void turnDownLampON() {
-		upLamp = "OFF";
-		downLamp = "ON";
+		downLamp = true;
+	}
+	
+	public void turnDownLampOFF() {
+		downLamp = false;
 	}
 	
 	public void turnBothLampON() {
-		upLamp = "ON";
-		downLamp = "ON";
+		upLamp = true;
+		downLamp = true;
 	}
 	
 	public void turnBothLampOFF() {
-		upLamp = "OFF";
-		downLamp = "OFF";
+		upLamp = false;
+		downLamp = false;
 	}
 	
 	
 	
-	public void flashLamp(String dir) {
-		if (dir.equals(up)){
+	public void flashLamp(Direction direction) {
+		if (Direction.UP == direction){
 			turnUpLampON();
 		}
 		
-		else if (dir.equals(down)) {
+		else if (Direction.DOWN == direction) {
 			turnDownLampON();
 		}
-		
-		else if (dir.equals(elevatorArrived)) {
-			turnBothLampOFF();
-		}
 	}
-	
-	
-
 }

@@ -4,36 +4,25 @@ package com.sysc3303.floor;
 
 public class FloorGeneral {
 	
-	FloorButton buttons = new FloorButton();
-	FloorLamp lamps = new FloorLamp();
+	private int floorNum;
+	private FloorButton buttons;
+	private FloorLamp lamps;
+	int passengerIsOnFloor = 1;
 	
-	String direction;
-	String lamp;
-	
-	FloorGeneral (){
-		direction = "NONE";
-		lamp = "OFF";
+	/*
+	 * methodFloorArrival deals with information coming from Scheduler Sub-System
+	 */
+	public FloorGeneral(int floorNum) {
+		this.floorNum = floorNum;
+		this.buttons = new FloorButton();
+		this.lamps = new FloorLamp();
 	}
 	
-	
-	public void setDirectionForLamp(String dir) {
-		
-		lamps.flashLamp(dir);
-		System.out.println(lamps.getLampStatus());
+	public FloorButton getButtons() {
+		return this.buttons;
 	}
 	
-	public void setButton(String dir) {
-		buttons.setButton(dir);
-		System.out.println(buttons.getButtonStatus());
+	public FloorLamp getLamps() {
+		return this.lamps;
 	}
-	
-	public String getStatusofLampandButton() {
-		
-		return lamps.getLampStatus() + buttons.getButtonStatus();
-	}
-	
-//	public void pressedButton(String dir) {
-//		buttons.pressedButton();
-//	}
-
 }
