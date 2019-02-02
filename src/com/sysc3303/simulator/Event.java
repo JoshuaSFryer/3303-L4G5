@@ -1,4 +1,6 @@
 package com.sysc3303.simulator;
+import com.sysc3303.commons.Direction;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,9 +13,9 @@ public class Event {
 
     private Date timestamp;
     private int floor, elevatorButton;
-    private DirectionEnum direction;
+    private Direction direction;
 
-    public Event(Date timestamp, int floor, int elevatorButton, DirectionEnum direction) {
+    public Event(Date timestamp, int floor, int elevatorButton, Direction direction) {
         this.timestamp = timestamp;
         this.floor = floor;
         this.direction = direction;
@@ -23,7 +25,7 @@ public class Event {
     public Event(String[] stringArray) throws ParseException{
         this.timestamp = parseDate(stringArray[0]);
         this.floor = Integer.parseInt(stringArray[1]);
-        this.direction = DirectionEnum.valueOf(stringArray[2].toUpperCase());
+        this.direction = Direction.valueOf(stringArray[2].toUpperCase());
         this.elevatorButton = Integer.parseInt(stringArray[3]);
     }
 
@@ -64,11 +66,11 @@ public class Event {
         this.elevatorButton = elevatorButton;
     }
 
-    public DirectionEnum getDirection() {
+    public Direction getDirection() {
         return direction;
     }
 
-    public void setDirection(DirectionEnum direction) {
+    public void setDirection(Direction direction) {
         this.direction = direction;
     }
 }

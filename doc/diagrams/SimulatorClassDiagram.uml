@@ -1,6 +1,6 @@
 @startuml
 
-class DirectionEnum{
+class Direction{
 }
 together {
   class Timer
@@ -13,14 +13,14 @@ EventTimer ..> TimedEvent: "schedules" >
 
 together {
   class FloorReceiver<<(S, blue)>>{
-    + receiveElevatorArrived(int floor, DirectionEnum direction)
+    + receiveElevatorArrived(int floor, Direction direction)
   }
 
   class ElevatorSender<<(S, blue)>>{
     + sendElevatorClick(int elevatorNum, int floor)
   }
   class FloorSender <<(S, blue)>>{
-    + sendFloorClick(int floor, DirectionEnum direction)
+    + sendFloorClick(int floor, Direction direction)
   }
 }
 
@@ -32,7 +32,7 @@ together {
   class TriggeredEventMap<<(S, blue)>>{
     HashMap<floor: HashMap<direction: Event>>
     + add(Event event)
-    + send(int floor, DirectionEnum direction, int elevatorNum)
+    + send(int floor, Direction direction, int elevatorNum)
   }
 
   class TimedEvent{
@@ -46,7 +46,7 @@ together {
   class Event{
     - time: dateTime
     - floor: int
-    - direction: DirectionEnum
+    - direction: Direction
     - elevatorButton: int
   }
 }
@@ -71,7 +71,7 @@ EventMaker .> EventTimer: "adds events"
 TriggeredEventMap "[floor, direction]" o-- Event
 TimedEvent o-- Event
 
-Event o-- DirectionEnum
+Event o-- Direction
 
 TimedEvent ..> FloorSender: sends event using
 TriggeredEventMap ..> ElevatorSender: sends events using

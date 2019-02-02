@@ -1,9 +1,11 @@
 package com.sysc3303.simulator;
+import com.sysc3303.commons.Direction;
+
 import java.util.HashMap;
 
 public class TriggeredEventMap {
     public static TriggeredEventMap instance;
-    private HashMap<Integer, HashMap<DirectionEnum, Event>> map;
+    private HashMap<Integer, HashMap<Direction, Event>> map;
 
     private TriggeredEventMap(){}
 
@@ -18,9 +20,9 @@ public class TriggeredEventMap {
     public static synchronized void setNull(){}
 
     public boolean add(Event event){
-        DirectionEnum direction = event.getDirection();
+        Direction direction = event.getDirection();
         Integer floor = new Integer(event.getFloor());
-        HashMap<DirectionEnum, Event> subMap;
+        HashMap<Direction, Event> subMap;
         if (!map.containsKey(floor)){
             subMap = new HashMap<>();
             map.put(floor, subMap);
@@ -34,7 +36,7 @@ public class TriggeredEventMap {
         return true;
     }
 
-    public boolean send(int floor, DirectionEnum direction, int elevatorNum){
+    public boolean send(int floor, Direction direction, int elevatorNum){
         Event event = map.get(floor).remove(direction);
         return ElevatorSender.getInstance().sendElevatorClick(elevatorNum, event.getElevatorButton());
     }
