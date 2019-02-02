@@ -37,12 +37,12 @@ public class Floor {
 	}
 	
 	public byte[] waitMessageFromScheduler(byte[] data) {
-		byte[] recievedData = socketHandler.waitForPacket(data, true);
-		return recievedData;
+		byte[] receivedData = socketHandler.waitForPacket(data, true);
+		return receivedData;
 	}
 	
 	public int getSchedulerMessageLength() {
-		return socketHandler.getRecievePacketLength();
+		return socketHandler.getReceivePacketLength();
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException, IOException, ParseException {
@@ -61,7 +61,7 @@ public class Floor {
 		
 		for(int i = 0; i < messages.size(); i++) {
 			Message message      = messages.get(i);
-			byte[]  recievedData = new byte[300];
+			byte[]  receivedData = new byte[300];
 			byte[]  data         = serializationUtil.serialize(message);
 			
 			System.out.println("-------------");
@@ -72,11 +72,11 @@ public class Floor {
 			
 			System.out.println("Waiting message from scheduler");
 			
-			recievedData = floor.waitMessageFromScheduler(recievedData);
+			receivedData = floor.waitMessageFromScheduler(receivedData);
 			
-			System.out.println("Recieved message from scheduler");
+			System.out.println("Received message from scheduler");
 			
-			message = serializationUtil.deserialize(recievedData, floor.getSchedulerMessageLength());
+			message = serializationUtil.deserialize(receivedData, floor.getSchedulerMessageLength());
 			
 			System.out.println(message.toString());
 			System.out.println("-------------");
