@@ -10,8 +10,9 @@ public class ElevatorButton {
 		this.id = id;
 	}
 	
-	public void ClickButton() {
+	public void press() {
 		// Have the elevator call method to send to scheduler, and turn on light.
+		
 		setLight(true);
 	}
 	

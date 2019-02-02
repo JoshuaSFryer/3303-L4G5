@@ -1,14 +1,18 @@
 package com.sysc3303.elevator;
 
 public class ElevatorLamp {
-	private boolean on;
+	private int currentFloor;
 	
 	public ElevatorLamp() {
-		this.on = false;
+		this.setCurrentFloor(0); //TODO: Demagicify
 	}
-	
-	public void setState(boolean newState) {
-		this.on = newState;
+
+	public int getCurrentFloor() {
+		return currentFloor;
 	}
-	
+
+	public void setCurrentFloor(int currentFloor) {
+		this.currentFloor = currentFloor;
+	}
+
 }
