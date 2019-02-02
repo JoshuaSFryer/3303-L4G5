@@ -14,7 +14,7 @@ public class ElevatorStateMessage extends Message{
 
     public ElevatorStateMessage(ElevatorVector elevatorVector, int elevatorId) {
         // Opcode for this message is 4
-        super((byte)4);
+        super((byte)3);
         this.elevatorVector = elevatorVector;
         this.elevatorId = elevatorId;
     }
