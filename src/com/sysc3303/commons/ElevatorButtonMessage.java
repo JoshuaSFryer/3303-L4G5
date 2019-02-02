@@ -14,7 +14,7 @@ public class ElevatorButtonMessage extends Message{
 
     public ElevatorButtonMessage(int destinationFloor, int elevatorId, Date time) {
         // the opcode for this message type is 5
-        super((byte) 5);
+        super((byte) 4);
         this.destinationFloor = destinationFloor;
         this.elevatorId = elevatorId;
         this.time = time;
