@@ -48,7 +48,7 @@ public class Elevator {
 	
 	public Elevator(int port, int numFloors, int ID) {
 		elevatorID 		= ID;
-		socketHandler 	= new SocketHandler(port);
+		//socketHandler 	= new SocketHandler(port);
 		lamp          	= new ElevatorLamp();
 		buttons       	= generateButtons(numFloors);
 		sensor 			= new FloorSensor(this);
