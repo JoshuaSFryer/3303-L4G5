@@ -201,6 +201,18 @@ public class Scheduler {
 		}
 	}
 
+	/**
+  * need another function which is to update the floorRequestList and elevatorRequestList
+	* once the elevator arrived a target floor, the target floor needs to be removed potentially
+	* both from floorRequestList and elevatorRequestList.
+	* for elevatorRequestList: just scan and removed
+	* for floorRequestList: need to scan the target floor with the direction
+	*/
+
+	private update_requestList(){
+
+	}
+
 	public Command createCommandForElevator(Message message) {
 		Object[] params = {message.destinationFloor};
 		return new Command("goToFloor", params);
