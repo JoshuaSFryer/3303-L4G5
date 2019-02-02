@@ -29,7 +29,7 @@ public class FloorMessageHandler extends MessageHandler{
     public synchronized void received(Message message){
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
-            case OpCodes.FLOOR_BUTTON.getOpcode():
+            case 0:
                 // Shouldn't have this on the Floor
                 // TODO what happens when you receive FloorButton
                 break;

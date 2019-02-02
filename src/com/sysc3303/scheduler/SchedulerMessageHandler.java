@@ -25,7 +25,7 @@ public class SchedulerMessageHandler extends MessageHandler{
     public void received(Message message){
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
-            case OpCodes.FLOOR_BUTTON.getOpcode():
+            case 0:
                 // TODO what happens when you receive FloorButton
                 break;
             case 1:
