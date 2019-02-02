@@ -22,9 +22,7 @@ public class FileParserTest {
     @Test
     public void testEventsFileProducesArray() throws Exception {
         FileParser fp = FileParser.getInstance();
-
-        URL url = Thread.currentThread().getContextClassLoader().getResource("../resources/simpleTestEvents.txt");
-        fp.parse(url.getPath());
+        fp.parse("simpleTestEvents.txt");
 
         System.out.println(fp.getParsed());
         Event event = new Event(fp.getParsed().get(0));
