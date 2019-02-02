@@ -15,7 +15,9 @@ public class ElevatorButtonMessage extends Message{
     }
 
     public String toString(){
-        return "Elevator Button Request";
+        return "Elevator Button Request\n\tDesination Floor: " +
+                destinationFloor +"\n\tElevator Id: " + elevatorId +
+                "\n\tTime: " + time;
     }
 
     public int getDestinationFloor() {

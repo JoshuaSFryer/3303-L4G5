@@ -11,7 +11,8 @@ public class FloorArrivalMessage extends Message{
     }
 
     public String toString(){
-        return "Floor Button Request";
+        return "Floor Arrival Message\n\tfloor: " +
+                floor +"\n\tcurrent direction: " + currentDirection;
     }
 
     public int getFloor() {

@@ -15,7 +15,9 @@ public class FloorButtonMessage extends Message{
     }
 
     public String toString(){
-        return "Floor Button Request";
+        return "Floor Button Message\n\tfloor: " +
+                floor +"\n\tdirection: " + direction +
+                "\n\ttime: " + time;
     }
 
     public int getFloor() {

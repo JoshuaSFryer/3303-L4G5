@@ -4,7 +4,8 @@ import java.net.InetAddress;
 
 public class CommunicationHandler{
 
-    public CommunicationHandler(int receivePort, IMessageHandler messageHandler){
+    public CommunicationHandler(int receivePort, MessageHandler messageHandler){
+        messageHandler.setCommunicationHandler(this);
         ReceiveHandler receiveHandler = new ReceiveHandler(receivePort, messageHandler);
         receiveHandler.start();
     };

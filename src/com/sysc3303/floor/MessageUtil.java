@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import com.sysc3303.commons.Direction;
+import com.sysc3303.commons.FloorArrivalMessage;
 import com.sysc3303.commons.Message;
 
 /**
@@ -42,8 +43,7 @@ public class MessageUtil {
 		       int      	floor            = Integer.parseInt(splittedStr[1]);
 		       Direction	direction        = getDirection(splittedStr[2]);
 		       int      	destinationFloor = Integer.parseInt(splittedStr[3]);
-		       Message  	message          = new Message(time, floor, 
-		    		   							direction, destinationFloor);
+		       Message  	message          = new FloorArrivalMessage(floor, direction);
 		       messageArr.add(message);
 		    }
 		}

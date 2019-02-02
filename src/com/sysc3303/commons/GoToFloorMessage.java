@@ -9,7 +9,8 @@ public class GoToFloorMessage extends Message{
     }
 
     public String toString(){
-        return "Go To Floor Request";
+        return "Go To Floor Message\n\tDestination Floor: " +
+        destinationFloor;
     }
 
     public int getDestinationFloor() {

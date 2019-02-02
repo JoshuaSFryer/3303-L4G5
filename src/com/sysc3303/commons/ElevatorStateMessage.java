@@ -4,17 +4,21 @@ import com.sysc3303.elevator.ElevatorVector;
 
 public class ElevatorStateMessage extends Message{
     private final ElevatorVector elevatorVector;
+    private final int elevatorId;
 
-    public ElevatorStateMessage(ElevatorVector elevatorVector) {
+    public ElevatorStateMessage(ElevatorVector elevatorVector, int elevatorId) {
         super((byte)4);
         this.elevatorVector = elevatorVector;
+        this.elevatorId = elevatorId;
     }
 
     public String toString(){
-        return "Go To Floor Request";
+        return "Elevator State Message\n\tElevator Vector: " +
+                elevatorVector +"\n\tElevator Id: " + elevatorId;
+
     }
 
-    public ElevatorVector elevatorVector() {
-        return elevatorVector();
+    public ElevatorVector getElevatorVector() {
+        return elevatorVector;
     }
 }

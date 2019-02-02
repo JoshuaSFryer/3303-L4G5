@@ -11,7 +11,7 @@ public class SendHandler extends Thread{
     private final InetAddress address;
 
     public SendHandler(Message message, InetAddress address, int port){
-        serializationUtil = new SerializationUtil<>();
+        serializationUtil = new SerializationUtil<Message>();
         socketHandler = new SocketHandler();
         this.message = message;
         this.address = address;
@@ -21,6 +21,7 @@ public class SendHandler extends Thread{
     public void run(){
         byte[] data = serializationUtil.serialize(message);
         socketHandler.sendSocket(data, address, port);
+        socketHandler.closeSocket();
     }
 
 }
