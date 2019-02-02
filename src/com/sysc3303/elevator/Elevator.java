@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.Message;
 import com.sysc3303.commons.SerializationUtil;
 import com.sysc3303.commons.SocketHandler;
@@ -36,6 +37,7 @@ public class Elevator {
 	
 	private int			currentHeight; // Current height in CM
 	private ElevatorState 	currentState;
+	private Direction		currentDirection;
 	
 	private Thread 			mover;
 	
@@ -58,6 +60,7 @@ public class Elevator {
 		targetFloor 	= Elevator.GROUND_FLOOR;
 		currentState	= new Idle();
 		currentHeight 	= 0; //TODO: de-magicify this number
+		currentDirection = Direction.IDLE;
 		
 		messageHandler = new ElevatorMessageHandler(port, this);
 	}
@@ -70,7 +73,7 @@ public class Elevator {
 	private ArrayList<ElevatorButton> generateButtons(int numButtons) {
 		ArrayList<ElevatorButton> buttonList = new ArrayList<ElevatorButton>();
 		for(int i=0; i<numButtons; i++) {
-			buttonList.add(new ElevatorButton(this, i));
+			buttonList.add(new ElevatorButton(this, i+1));
 		}
 		return buttonList;
 	}
@@ -96,7 +99,20 @@ public class Elevator {
 		this.currentState.doAction(this);
 	}
 
-	public void receiveMessageFromScheduler() {
+	public void receiveMessageFromScheduler(int targetFloor) {
+		// Wait for message
+		// Interrupt the movement handler
+		try {
+			this.mover.interrupt();
+		} catch (NullPointerException e) {
+			//e.printStackTrace();
+			System.out.println("No movement thread to interrupt!");
+		}
+		// Assign the new target floor
+		goToFloor(targetFloor);
+	}
+	
+	public void generateRandomRequest() {
 		// Wait for message
 		// Interrupt the movement handler
 		try {
@@ -116,12 +132,9 @@ public class Elevator {
 		
 	}
 
-	public int getSchedulerMessageLength() {
-		return socketHandler.getReceivePacketLength();
-	}
-	
-	public void sendMessageToScheduler(byte[] data, int length) {
-		socketHandler.sendSocketToReceivedHost(data, length);
+	public void notifyArrival() {
+		ElevatorVector v = new ElevatorVector(this.currentFloor, this.currentDirection);
+		this.messageHandler.sendElevatorState(v, this.elevatorID);
 	}
 	
 	public void openDoors() {
@@ -147,6 +160,10 @@ public class Elevator {
 	
 	public void setCurrentHeight(int height) {
 		this.currentHeight = height;
+	}
+	
+	public ElevatorMessageHandler getMessageHandler() {
+		return this.messageHandler;
 	}
 	
 	public void pressButton(int num) {
@@ -195,7 +212,7 @@ public class Elevator {
 							0); //TODO: De-magicify this number.
 		
 		while(running) {
-			elevator.receiveMessageFromScheduler();
+			elevator.generateRandomRequest();
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {
