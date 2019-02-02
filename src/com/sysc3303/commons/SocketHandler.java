@@ -12,9 +12,9 @@ import java.net.SocketException;
  */
 public class SocketHandler {
 	private DatagramPacket sendPacket;
-	private DatagramPacket recievePacket;
+	private DatagramPacket receivePacket;
 	private DatagramSocket sendSocket;
-	private DatagramSocket recieveSocket;
+	private DatagramSocket receiveSocket;
 	
 	/**
 	 * @param port listens to this
@@ -22,7 +22,7 @@ public class SocketHandler {
 	public SocketHandler(int port) {
 		try {
 			sendSocket    = new DatagramSocket();
-			recieveSocket = new DatagramSocket(port);
+			receiveSocket = new DatagramSocket(port);
 		} catch(SocketException err) {
 			err.printStackTrace();
 			System.exit(-1);
@@ -48,13 +48,13 @@ public class SocketHandler {
 	 * @return
 	 */
 	public byte[] waitForPacket(byte[] data, boolean waitInSentSocket) {
-		recievePacket = new DatagramPacket(data, data.length);
+		receivePacket = new DatagramPacket(data, data.length);
 		try {
 			if(waitInSentSocket) {
-				sendSocket.receive(recievePacket);
+				sendSocket.receive(receivePacket);
 			}
 			else {
-				recieveSocket.receive(recievePacket);
+				receiveSocket.receive(receivePacket);
 			}
 		} catch(IOException error) {
 			error.printStackTrace();
@@ -66,17 +66,17 @@ public class SocketHandler {
 	/**
 	 * @return received packet byte length
 	 */
-	public int getRecievePacketLength() {
-		return recievePacket.getLength();
+	public int getReceivePacketLength() {
+		return receivePacket.getLength();
 	}
 	
 	/**
 	 * Sends socket to previously received host
 	 * @param data
 	 */
-	public void sendSocketToRecievedHost(byte[] data) {
+	public void sendSocketToReceivedHost(byte[] data) {
 		sendPacket = new DatagramPacket(data, data.length,
-                recievePacket.getAddress(), recievePacket.getPort());
+                receivePacket.getAddress(), receivePacket.getPort());
 		send();
 	}
 	
@@ -85,9 +85,9 @@ public class SocketHandler {
 	 * @param data
 	 * @param length
 	 */
-	public void sendSocketToRecievedHost(byte[] data, int length) {
+	public void sendSocketToReceivedHost(byte[] data, int length) {
 		sendPacket = new DatagramPacket(data, length,
-                recievePacket.getAddress(), recievePacket.getPort());
+                receivePacket.getAddress(), receivePacket.getPort());
 		send();
 	}
 	

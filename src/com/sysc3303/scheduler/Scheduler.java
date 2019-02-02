@@ -70,6 +70,10 @@ public class Scheduler {
 
 
 	}
+<<<<<<< HEAD
+	
+	public byte[] receiveMessageFromFloor(byte[] data) {
+=======
 
 	public boolean recievedFloorButtonMessage() {
 		return messageHandler.hasFloorButtonMessage();
@@ -81,21 +85,28 @@ public class Scheduler {
 
 
 	public byte[] recieveMessageFromFloor(byte[] data) {
+>>>>>>> iteration1/scheduler
 		data = floorSocketHandler.waitForPacket(data, false);
 		return data;
 	}
 
-	public byte[] recieveMessageFromElevator(byte[] data) {
+	public byte[] receiveMessageFromElevator(byte[] data) {
 		data = elevatorSocketHandler.waitForPacket(data, true);
 		return data;
 	}
+<<<<<<< HEAD
+	
+	public int getElevatorReceivePacketLength() {
+		return elevatorSocketHandler.getReceivePacketLength();
+=======
 
 	public int getElevatorRecievePacketLength() {
 		return elevatorSocketHandler.getRecievePacketLength();
+>>>>>>> iteration1/scheduler
 	}
 
-	public int getFloorRecievePacketLength() {
-		return floorSocketHandler.getRecievePacketLength();
+	public int getFloorReceivePacketLength() {
+		return floorSocketHandler.getReceivePacketLength();
 	}
 
 	public void sendCommandToElevator(byte[] data, int length, InetAddress address, int port) {
@@ -103,7 +114,7 @@ public class Scheduler {
 	}
 
 	public void sendMessageToFloor(byte[] data, int length) {
-		floorSocketHandler.sendSocketToRecievedHost(data, length);
+		floorSocketHandler.sendSocketToReceivedHost(data, length);
 	}
 	
 /**
@@ -154,6 +165,11 @@ public class Scheduler {
 		Scheduler scheduler    = new Scheduler(port);
 		
 		while(running) {
+<<<<<<< HEAD
+			byte[]  receiveData = new byte[400];
+			int     receiveLength;
+			Message message;
+=======
 			ElevatorVector elevatorVector  = scheduler.getElevatorVector();
 			int            currentPosition = elevatorVector.currentFloor;
 			ElevatorStatus currentStatus   = elevatorVector.status;
@@ -163,9 +179,37 @@ public class Scheduler {
 			if(scheduler.decide_target_floor()) {
 				
 			}
+>>>>>>> iteration1/scheduler
 			
 			
+<<<<<<< HEAD
+			receiveData   = scheduler.receiveMessageFromFloor(receiveData);
+			receiveLength = scheduler.getFloorReceivePacketLength();
+			message       = serializationUtil.deserialize(receiveData, receiveLength);
 			
+			System.out.println("Received following message from floor: ");
+			System.out.println(message.toString());
+ 			System.out.println("Forwarding message to elevator");
+ 			
+ 			scheduler.sendMessageToElevator(receiveData, receiveLength, elevatorIp, elevatorPort);
+ 			
+ 			System.out.println("Wating for message from elevator");
+ 			
+ 			receiveData   = scheduler.receiveMessageFromElevator(new byte[400]);
+ 			receiveLength = scheduler.getElevatorReceivePacketLength();
+ 			message       = serializationUtil.deserialize(receiveData, receiveLength);
+ 			
+ 			System.out.println("Received following message from elevator: ");
+ 			System.out.println(message.toString());
+ 			System.out.println("Forwarding message to floor");
+ 			
+ 			scheduler.sendMessageToFloor(receiveData, receiveLength);
+ 			
+ 			System.out.println("Message sent");
+ 			System.out.println("----------");
+=======
+			
+>>>>>>> iteration1/scheduler
 		}
 	}
 }
