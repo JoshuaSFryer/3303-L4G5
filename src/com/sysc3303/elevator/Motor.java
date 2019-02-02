@@ -2,7 +2,7 @@ package com.sysc3303.elevator;
 
 public class Motor {
 	
-	private final double INCREMENT = 0.1;
+	private final int INCREMENT = 1; // 1 cm
 	private Elevator parent;
 	
 	public Motor(Elevator parent) {

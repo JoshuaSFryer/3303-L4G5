@@ -1,7 +1,7 @@
 package com.sysc3303.elevator;
 
 public class MovementHandler implements Runnable {
-	public static final int MOVEMENTDELAY = 100;
+	public static final int MOVEMENTDELAY = 1000;
 	
 	int targetFloor;
 	Motor motor;
@@ -42,8 +42,17 @@ public class MovementHandler implements Runnable {
 				} else if(targetFloor < floor) {
 					moveDown();
 				} else { // already at the target floor
-					// Don't need to move any more, so kill this thread.
-					return;
+					
+					// If the elevator is partway to the next floor, move down
+					// to the base of the floor.
+					if(context.getCurrentHeight() > 
+						context.getCurrentFloor() * FloorSensor.FLOORHEIGHT) {
+						moveDown();
+					} else {
+						// Don't need to move any more, so kill this thread.
+						//context.openDoors();
+						return;
+					}
 				}
 			} catch (InterruptedException e) {
 				// Thread was interrupted, so return and kill it.
@@ -54,10 +63,12 @@ public class MovementHandler implements Runnable {
 	
 	public void moveUp() {
 		motor.moveUp();
+		System.out.println(context.getCurrentHeight());
 	}
 	
 	public void moveDown() {
 		motor.moveDown();
+		System.out.println(context.getCurrentHeight());
 	}
 
 }

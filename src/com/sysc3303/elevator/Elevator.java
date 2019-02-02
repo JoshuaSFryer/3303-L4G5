@@ -6,8 +6,10 @@ import java.io.InputStream;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.sysc3303.commons.Message;
+//import com.sysc3303.commons.GoToFloorMessage;
 import com.sysc3303.commons.SerializationUtil;
 import com.sysc3303.commons.SocketHandler;
 import com.sysc3303.constants.Constants;
@@ -33,8 +35,10 @@ public class Elevator {
 	private int				targetFloor;
 	private int 			currentFloor;
 	
-	private double			currentHeight;
+	private int			currentHeight; // Current height in CM
 	private ElevatorState 	currentState;
+	
+	private Thread 			mover;
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -55,6 +59,11 @@ public class Elevator {
 		currentHeight 	= 0; //TODO: de-magicify this number
 	}
 	
+	/**
+	 * Generate a given number of buttons.
+	 * @param numButtons	The number of buttons to create.
+	 * @return				An ArrayList containing all of the buttons.
+	 */
 	private ArrayList<ElevatorButton> generateButtons(int numButtons) {
 		ArrayList<ElevatorButton> buttonList = new ArrayList<ElevatorButton>();
 		for(int i=0; i<numButtons; i++) {
@@ -84,16 +93,40 @@ public class Elevator {
 		this.currentState.doAction(this);
 	}
 	
+	/*
 	public byte[] recieveMessageFromScheduler(byte data[]) {
+		
 		data = socketHandler.waitForPacket(data, false);
 		return data;
+		
+		
+	}
+	*/
+	public void receiveMessageFromScheduler() {
+		// Wait for message
+		// Interrupt the movement handler
+		try {
+			this.mover.interrupt();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
+		// Assign the new target floor
+		int nextFloor = generateRandomInt(1, 8);
+		System.out.println("Requested floor: " + nextFloor);
+		goToFloor(nextFloor);
+	}
+	
+	private int generateRandomInt(int min, int max) {
+		//Random r = new Random();
+		return (int)(Math.random() * ((max-min) + 1) + min);
+		
 	}
 
 	public int getSchedulerMessageLength() {
 		return socketHandler.getRecievePacketLength();
 	}
 	
-	public void sendStateToScheduler(byte[] data, int length) {
+	public void sendMessageToScheduler(byte[] data, int length) {
 		socketHandler.sendSocketToRecievedHost(data, length);
 	}
 	
@@ -113,11 +146,11 @@ public class Elevator {
 		this.currentFloor = floor;
 	}
 	
-	public double getCurrentHeight() {
+	public int getCurrentHeight() {
 		return this.currentHeight;
 	}
 	
-	public void setCurrentHeight(double height) {
+	public void setCurrentHeight(int height) {
 		this.currentHeight = height;
 	}
 	
@@ -125,15 +158,19 @@ public class Elevator {
 	/**
 	 * Travel to the target floor. If interrupted by a message from the
 	 * scheduler, stop moving and execute the new command.
-	 * @param floor
+	 * @param targetFloor	The floor to travel to.
 	 */
 	public void goToFloor(int targetFloor) {
 		
-		//this.targetFloor = floor;
-		Thread mover = new Thread(
+		this.mover = new Thread(
 						new MovementHandler(targetFloor, this, this.sensor, 
 											this.motor));
 		//sensor.attachThread(mover);
+		
+		// Launch the mover thread. It will continue until the target floor is
+		// reached, or this elevator receives a new goToFloor request. Upon
+		// receiving this request, the elevator will interrupt the thread
+		// and launch a new one by invoking goToFloor() again.
 		mover.start();
 	}
 	
@@ -154,7 +191,8 @@ public class Elevator {
 		
 		while(running) {
 			
-			byte[]  recieveData = new byte[300];
+			/*
+			byte[]  recieveData = new byte[Constants.MESSSAGE_BUFFER_LENGTH];
 			Message message;
 			int     recieveLength;
 			
@@ -171,13 +209,19 @@ public class Elevator {
 			
 			System.out.println("Forwarding message to scheduler");
 			
-			elevator.sendStateToScheduler(recieveData, recieveLength);
+			elevator.sendMessageToScheduler(recieveData, recieveLength);
 	
 			System.out.println("Message sent");
 			System.out.println("----------");
+			*/
 			
-			
-			
+			elevator.receiveMessageFromScheduler();
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		}
 	}
