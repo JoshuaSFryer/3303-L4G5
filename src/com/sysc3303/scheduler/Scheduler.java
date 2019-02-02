@@ -39,7 +39,7 @@ public class Scheduler {
 	private FloorMessageHandler    floorMessageHandler;
 	private ElevatorMessageHandler elevatorMessageHandler;
 	private Request                request;
-	
+
 
 	public Scheduler(int port) {
 		messageHandler         = new SchedulerMessageHandler();
@@ -53,40 +53,37 @@ public class Scheduler {
 		request                = new Request();
 		elevatorMessageHandler = new ElevatorMessageHandler(messageHandler, request);
 		floorMessageHandler    = new FloorMessageHandler(messageHandler, request);
-		
+
 		elevatorMessageHandler.start();
 		floorMessageHandler.start();
 
 			/**Handle this in multi thread...**/
 			// if recieve message from floor
-			  // add into floorRequestList   (synchronized)  
-			  // decideTargetFloor           (synchronized) 
-			  // create GoToFloorMessage    
+			  // add into floorRequestList   (synchronized)
+			  // decideTargetFloor           (synchronized)
+			  // create GoToFloorMessage
 			  // wait for message from elevator
 			/****/
 			// if recieve message from elevator
 			  // if elevatorStateMessage
 			    // if elevator in target floor
 					// create FloorArrivalMessage and send it to floor
-			        // update target floor que (synchronized) 
+			        // update target floor que (synchronized)
 			  // if elevatorRequest message
-			    // queue it!                   (synchronized) 
-			
-		
+			    // queue it!                   (synchronized)
+
+
 	}
 
 	public boolean recievedFloorButtonMessage() {
 		return messageHandler.hasFloorButtonMessage();
 	}
-	
+
 	public FloorButtonMessage getFloorButtonMessage() {
 		return messageHandler.getFloorButtonMessage();
 	}
-	
-	public 
-	
-	public boolean 
-	
+
+
 	public byte[] recieveMessageFromFloor(byte[] data) {
 		data = floorSocketHandler.waitForPacket(data, false);
 		return data;
@@ -113,6 +110,24 @@ public class Scheduler {
 		floorSocketHandler.sendSocketToRecievedHost(data, length);
 	}
 
+	/**
+	  * This function set the elevatorStatus which will be used internally
+		* based on the message sent from elevator.
+		* @para
+		*/
+		private void setElevatorStatus(the status part in message from elevator){
+			if (para == going up){
+				elevatorStatus = goingUp;
+			}
+
+			if (para == going down){
+				elevatorStatus = goingDown;
+			}
+
+			if(para == idle ||(elevatorRequestList.size() = 0 && floorRequestList.size() = 0)){
+				elevatorStatus = stationary;
+			}
+		}
 
 
 	public Command createCommandForElevator(Message message) {
