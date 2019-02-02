@@ -71,7 +71,7 @@ public class Elevator {
 		}
 		return buttonList;
 	}
-	
+
 	/**
 	 * Get the current state.
 	 * @return	The current ElevatorState
@@ -92,16 +92,7 @@ public class Elevator {
 		this.currentState.entryAction(this);
 		this.currentState.doAction(this);
 	}
-	
-	/*
-	public byte[] recieveMessageFromScheduler(byte data[]) {
-		
-		data = socketHandler.waitForPacket(data, false);
-		return data;
-		
-		
-	}
-	*/
+
 	public void receiveMessageFromScheduler() {
 		// Wait for message
 		// Interrupt the movement handler
@@ -123,11 +114,11 @@ public class Elevator {
 	}
 
 	public int getSchedulerMessageLength() {
-		return socketHandler.getRecievePacketLength();
+		return socketHandler.getReceivePacketLength();
 	}
 	
 	public void sendMessageToScheduler(byte[] data, int length) {
-		socketHandler.sendSocketToRecievedHost(data, length);
+		socketHandler.sendSocketToReceivedHost(data, length);
 	}
 	
 	public void openDoors() {
@@ -190,31 +181,6 @@ public class Elevator {
 							0); //TODO: De-magicify this number.
 		
 		while(running) {
-			
-			/*
-			byte[]  recieveData = new byte[Constants.MESSSAGE_BUFFER_LENGTH];
-			Message message;
-			int     recieveLength;
-			
-			System.out.println("----------");
-			System.out.println("Waiting for message from scheduler");
-			
-			recieveData   = elevator.recieveMessageFromScheduler(recieveData);
-			recieveLength = elevator.getSchedulerMessageLength();
-			message       = serializationUtil.deserialize(recieveData, recieveLength);
-			
-			System.out.println("Elevator recieved following message: ");
-			System.out.println(message.toString());
-	
-			
-			System.out.println("Forwarding message to scheduler");
-			
-			elevator.sendMessageToScheduler(recieveData, recieveLength);
-	
-			System.out.println("Message sent");
-			System.out.println("----------");
-			*/
-			
 			elevator.receiveMessageFromScheduler();
 			try {
 				Thread.sleep(5000);
