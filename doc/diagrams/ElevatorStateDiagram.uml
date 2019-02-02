@@ -1,0 +1,25 @@
+@startuml
+
+[*] --> Idle
+
+Idle -left-> MovingUp : moveUp()
+MovingUp: entry/motor.moveUp()
+MovingUp: exit/motor.stop()
+MovingUp --> Idle : arrived
+
+Idle --> MovingDown : moveDown()
+MovingDown: entry/motor.moveDown()
+MovingDown: exit/motor.stop()
+MovingDown --> Idle : arrived
+
+Idle --> OpeningDoors : openDoors()
+OpeningDoors: entry/door.open()
+
+OpeningDoors --> DoorsOpen : opening finishes
+DoorsOpen: entry/Hold open 10 seconds
+
+DoorsOpen -right-> ClosingDoors : time elapsed
+ClosingDoors: entry/door.close()
+ClosingDoors --> Idle : closing finishes
+
+@enduml
