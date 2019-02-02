@@ -12,7 +12,7 @@ public class ElevatorButton {
 	
 	public void press() {
 		// Have the elevator call method to send to scheduler, and turn on light.
-		
+		System.out.println("Button " + this.id + " pressed");
 		setLight(true);
 	}
 	

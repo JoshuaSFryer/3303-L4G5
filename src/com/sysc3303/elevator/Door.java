@@ -11,10 +11,12 @@ public class Door {
 	}
 	
 	public void openDoors() {
+		System.out.println("Opening doors");
 		this.doorState = true;
 	}
 	
 	public void closeDoors() {
+		System.out.println("Closing doors");
 		this.doorState = false;
 	}
 
