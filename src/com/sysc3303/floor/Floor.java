@@ -61,7 +61,7 @@ public class Floor {
 		
 		for(int i = 0; i < messages.size(); i++) {
 			Message message      = messages.get(i);
-			byte[]  receivedData = new byte[300];
+			byte[]  receivedData = new byte[400];
 			byte[]  data         = serializationUtil.serialize(message);
 			
 			System.out.println("-------------");

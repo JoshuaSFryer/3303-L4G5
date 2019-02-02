@@ -56,7 +56,7 @@ public class Elevator {
 		Elevator elevator = new Elevator(port);
 		
 		while(running) {
-			byte[]  receiveData = new byte[300];
+			byte[]  receiveData = new byte[400];
 			Message message;
 			int     receiveLength;
 			

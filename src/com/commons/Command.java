@@ -1,17 +1,19 @@
+package com.commons;
+
 public class Command{
   private String methodName;
   private Object[] params;
 
   public Command(String methodName, Object[] params){
-    self.params = params;
-    self.methodName = methodName;
+    this.params = params;
+    this.methodName = methodName;
   }
 
   public Object[] getParams(){
-    return self.params;
+    return this.params;
   }
 
   public String getMethodName(){
-    return self.methodName;
+    return this.methodName;
   }
 }

@@ -84,7 +84,7 @@ public class Scheduler {
  			
  			System.out.println("Wating for message from elevator");
  			
- 			receiveData   = scheduler.receiveMessageFromElevator(new byte[300]);
+ 			receiveData   = scheduler.receiveMessageFromElevator(new byte[400]);
  			receiveLength = scheduler.getElevatorReceivePacketLength();
  			message       = serializationUtil.deserialize(receiveData, receiveLength);
  			
