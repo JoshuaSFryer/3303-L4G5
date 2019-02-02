@@ -1,9 +1,18 @@
 package com.sysc3303.commons;
 
+/**
+ * Message from Scheduler to Elevator
+ * Tells the elevator to go to a specific floor now
+ *
+ * Contains the destination floor
+ *
+ * @author Mattias Lightstone
+ */
 public class GoToFloorMessage extends Message{
     private final int destinationFloor;
 
     public GoToFloorMessage(int destinationFloor) {
+        // Opcode for this message is 2
         super((byte) 2);
         this.destinationFloor = destinationFloor;
     }
