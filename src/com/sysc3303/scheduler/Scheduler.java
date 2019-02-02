@@ -24,21 +24,18 @@ public class Scheduler {
 	private CommunicationHandler    communicationHandler;
 	private SchedulerMessageHandler messageHandler;
 	//This list stores the raw data from floor, need to add <type>!!!!!!!!!!!!!!!!!!!!
-	private ArrayList        floorRequestList[];
+	private ArrayList<FloorButtonMessage>    floorRequestList;
 	//This list stores the raw data from elevator,need to add <type>!!!!!!!!!!!!!!!!!!!!
-	private ArrayList        elevatorRequestList[];
+	private ArrayList<ElevatorButtonMessage> elevatorRequestList;
 	//The elevator's position, which floor the elevator is currently at.
 	private int              elevatorPosition;
 	//The elevator status:going up, going down or stationary
-	private int              elevatorStatus;
 	//constants to descripe the elevator's status
-	private static final int goingUp    = 1;
-	private static final int goingDown  = 2;
-	private static final int stationary = 0;
 	private int              target     = -1;
 	private FloorMessageHandler    floorMessageHandler;
 	private ElevatorMessageHandler elevatorMessageHandler;
 	private Request                request;
+	private ScheudulerElevatorStatus elevatorStatus;  
 
 
 	public Scheduler(int port) {
@@ -46,17 +43,16 @@ public class Scheduler {
 		communicationHandler   = new CommunicationHandler(port, messageHandler);
 		//can we declare something like the struct in c here ?????????????????
 		//or what is the object name in other class
-		floorRequestList       = new ArrayList(); //need to add <type>!!!!!!!!!!!!!!!!!!!!
-		elevatorRequestList    = new ArrayList(); //need to add <type>!!!!!!!!!!!!!!!!!!!!
+		floorRequestList       = new ArrayList<FloorButtonMessage>(); //need to add <type>!!!!!!!!!!!!!!!!!!!!
+		elevatorRequestList    = new ArrayList<ElevatorButtonMessage>(); //need to add <type>!!!!!!!!!!!!!!!!!!!!
 		elevatorPosition       = -1;
-		elevatorStatus         = stationary;
+		elevatorStatus         = SchedulerElevatorStatus.Idle;
 		request                = new Request();
 		elevatorMessageHandler = new ElevatorMessageHandler(messageHandler, request);
 		floorMessageHandler    = new FloorMessageHandler(messageHandler, request);
 
 		elevatorMessageHandler.start();
 		floorMessageHandler.start();
-
 			/**Handle this in multi thread...**/
 			// if recieve message from floor
 			  // add into floorRequestList   (synchronized)
@@ -109,31 +105,39 @@ public class Scheduler {
 	public void sendMessageToFloor(byte[] data, int length) {
 		floorSocketHandler.sendSocketToRecievedHost(data, length);
 	}
-
-	/**
-	  * This function set the elevatorStatus which will be used internally
-		* based on the message sent from elevator.
-		* @para
-		*/
-		private void setElevatorStatus(the status part in message from elevator){
-			if (para == going up){
-				elevatorStatus = goingUp;
-			}
-
-			if (para == going down){
-				elevatorStatus = goingDown;
-			}
-
-			if(para == idle ||(elevatorRequestList.size() = 0 && floorRequestList.size() = 0)){
-				elevatorStatus = stationary;
-			}
+	
+/**
+  * This function set the elevatorStatus which will be used internally
+	* based on the message sent from elevator.
+	* @para
+	*/
+	public void setElevatorStatus(ElevatorStatus elevatorStatus) {
+		if (elevatorStatus == ElevatorStatus.GoingUp) {
+			elevatorStatus = ElevatorStatus.GoingUp;
 		}
+		if (elevatorStatus == ElevatorStatus.GoingDown){
+			elevatorStatus = ElevatorStatus.GoingDown;
+		}
+
+		if(elevatorRequestList.size() = 0 && floorRequestList.size() = 0){
+			elevatorStatus = ElevatorStatus.Idle;
+		}
+	}
 
 
 	public Command createCommandForElevator(Message message) {
 		Object[] params = {message.destinationFloor};
 		return new Command("goToFloor", params);
 	}
+	
+	public ElevatorMessageHander getElevatorVector() {
+		return elevatorMessageHandler.getElevatorVector();
+	}
+	
+	//This function update the target floor based on the floorRequestList, elevatorRequestList
+	//and elevator's position and status
+			
+	
 
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
 		Properties                 properties           = new Properties();
@@ -148,39 +152,20 @@ public class Scheduler {
 		int       port         = Integer.parseInt(properties.getProperty("schedulerPort"));
 		int       elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
 		Scheduler scheduler    = new Scheduler(port);
-
+		
 		while(running) {
-			System.out.println("----------");
-			System.out.println("Waiting for message from floor");
-
-			byte[]  recieveData   = scheduler.recieveMessageFromFloor(new byte[300]);
-			int     recieveLength = scheduler.getFloorRecievePacketLength();
-			Message message       = msgSerializationUtil.deserialize(recieveData, recieveLength);
-
-			System.out.println("Recieved following message from floor: ");
-			System.out.println(message.toString());
- 			System.out.println("Sending command to elevator");
-
-
- 			// let scheduler create command
- 			Command command     = scheduler.createCommandForElevator(message);
- 			byte[]  commandData = cmdSerializationUtil.serialize(command);
-
- 			// send created command to elevator
- 			scheduler.sendCommandToElevator(commandData, commandData.length, elevatorIp, elevatorPort);
-
- 			// wait for message from elevators arrival sensor
- 			// !!!need some kind of class that tells elevators state!!!
- 			System.out.println("Waiting for elevator to arrive at destination");
-
- 			recieveData   = scheduler.recieveMessageFromElevator(new byte[300]);
- 			recieveLength = scheduler.getFloorRecievePacketLength();
-
- 			System.out.println("Elevator arrived to destination, sending information to floor");
-
- 			// send elevator state back to floor
- 			scheduler.sendMessageToFloor(recieveData, recieveLength);
- 			System.out.println("----------");
+			ElevatorVector elevatorVector  = scheduler.getElevatorVector();
+			int            currentPosition = elevatorVector.currentFloor;
+			ElevatorStatus currentStatus   = elevatorVector.status;
+			
+			scheduler.setElevatorStatus(currentStatus);
+			
+			if(scheduler.decide_target_floor()) {
+				
+			}
+			
+			
+			
 		}
 	}
 }

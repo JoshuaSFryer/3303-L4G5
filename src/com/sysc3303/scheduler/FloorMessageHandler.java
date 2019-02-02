@@ -7,13 +7,13 @@ import java.util.Date;
 public class FloorMessageHandler extends Thread {
 	private Request              request;
 	private MessageHandler       messageHandler;
-	private ElevatorStatus       elevatorStatus;
+	private SchedulerElevatorStatus       elevatorStatus;
 	private InetAddress          elevatorAddress;
 	private int                  elevatorPort;
 	private CommunicationHandler communicationHandler;
 	private int                  targetFloor;
 	
-	public FloorMessageHandler(Request request, MessageHandler messageHandler, ElevatorStatus elevatorStatus, 
+	public FloorMessageHandler(Request request, MessageHandler messageHandler, SchedulerElevatorStatus elevatorStatus, 
 			                   int elevatorPort, InetAddress elevatorAddress, CommunicationHandler communicationHandler) {
 		this.request              = request;
 		this.messageHandler       = messageHandler;
@@ -40,11 +40,11 @@ public class FloorMessageHandler extends Thread {
 	}
 	
 	private int decideTargetFloor() {
-		int target = 0;
-		if(elevatorStatus == ElevatorStatus.Stationary) {
+		int target = -1;
+		if(elevatorStatus == SchedulerElevatorStatus.Stationary) {
 			// want to set to null, this may need to be changed
-			FloorRequest    floorRequest    = getEariestFloorRequest();
-			ElevatorRequest elevatorRequest = getEariestElevatorRequest();
+			FloorButtonMessage    floorRequest    = getEariestFloorRequest();
+			ElevatorButtonMessage elevatorRequest = getEariestElevatorRequest();
 			
 			//NOT SURE what the objects are called!!!!!!!!!!!!!!!!!!!!
 			if(floorRequest.time.compareTo(elevatorRequest.time) > 0) {
@@ -54,7 +54,7 @@ public class FloorMessageHandler extends Thread {
 				target = floorRequest.numberFromFloor;
 			}
 		}
-		else if(elevatorStatus == ElevatorStatus.GoingUp) {
+		else if(elevatorStatus == SchedulerElevatorStatus.GoingUp) {
 			ArrayList selectFloorListup    = getFloorUpRequestArray();
 			ArrayList selectElevatorListup = getElevatorUpRequestArray();
 
@@ -73,13 +73,14 @@ public class FloorMessageHandler extends Thread {
 		return target;
 	}
 	
-	private FloorRequest getEariestFloorRequest() {
-		FloorRequest floorRequest;
+	private FloorRequestButtonMessage getEariestFloorRequest() {
+		FloorButtonMesssage floorRequest;
+		ArrayList<FloorButtonMessage> floorRequestList = request.getFloorButtonMessageArray();
 		
 		for(int i = 0; i < floorRequestList.size(); i++) {
 			//not sure what time is being named in floor????????????????????????
-			FloorRequest curFloorRequest = floorRequestList.get(i);
-			Date         curRequestTime  = curFloorRequest.time;
+			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
+			Date               curRequestTime  = curFloorRequest.time;
 			
 			if(floorRequest == null || floorRequest.time.compareTo(curRequestTime) > 0){
 				floorRequest = curFloorRequest;
@@ -89,13 +90,15 @@ public class FloorMessageHandler extends Thread {
 		return floorRequest;
 	}
 	
-	private ElevatorRequest getEariestElevatorRequest() {
-		ElevatorRequest elevatorRequest;
+	private ElevatorButtonMessage getEariestElevatorRequest() {
+		ElevatorButtonMessage elevatorRequest;
+		ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray();
+		
 		//go through the elevatorRequestList to find the earliest request
 		//not sure what time is being named in elevator????????????????????????
 		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			ElevatorRequest curElevatorRequest = elevatorRequestList.get(i);
-			Date            curRequestTime     = curElevatorRequest.time;
+			ElevatorButtonMessage curElevatorRequest = elevatorRequestList.get(i);
+			Date                  curRequestTime     = curElevatorRequest.time;
 			
 			if(elevatorRequest == null || elevatorRequest.time.compareTo(curRequestTime) > 0) {
 				elevatorRequest = curElevatorRequest;
@@ -104,12 +107,13 @@ public class FloorMessageHandler extends Thread {
 		return elevatorRequest;
 	}
 	
-	private ArrayList<FloorRequest> getFloorUpRequestArray() {
-		ArrayList<FloorRequest> selectFloorListup = new ArrayList<FloorRequest>();
+	private ArrayList<FloorButtonMessage> getFloorUpRequestArray() {
+		ArrayList<FloorButtonMessage> selectFloorListup = new ArrayList<FloorButtonMessage>();
+		ArrayList<FloorButtonMessage> floorRequestList  = request.getFloorButtonMessageArray();
 		
 		for(int i = 0; i < floorRequestList.size(); i++) {
 			//not sure what time is being named in floor????????????????????????
-			FloorRequest curFloorRequest = floorRequestList.get(i);
+			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
 			
 			if(curFloorRequest.direction == requestUp && 
 			   curFloorRequest.requestFloor > elevatorPosition) {//???
@@ -120,11 +124,12 @@ public class FloorMessageHandler extends Thread {
 		return selectFloorListup;
 	}
 	
-	private ArrayList<ElevatorRequest> getElevatorUpRequestArray() {
-		ArrayList<ElevatorRequest> selectElevatorListup = new ArrayList<ElevatorRequest>();
+	private ArrayList<ElevatorButtonMessage> getElevatorUpRequestArray() {
+		ArrayList<ElevatorButtonMessage> selectElevatorListup = new ArrayList<ElevatorRequest>();
+		ArrayList<ElevatorButtonMessage> elevatorRequestList  = request.getElevatorButtonMessageArray();
 		
 		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			ElevatorRequest curElevatorRequest = elevatorRequestList.get(i);
+			ElevatorButtonMessage curElevatorRequest = elevatorRequestList.get(i);
 			
 			if(curElevatorRequest.requestFloor > elevatorPosition){//???
 					selectElevatorListup.add(curElevatorRequest);
@@ -134,12 +139,13 @@ public class FloorMessageHandler extends Thread {
 		return selectElevatorListup;
 	}
 	
-	private ArrayList<FloorRequest> getFloorDownRequestArray() {
-		ArrayList<FloorRequest> selectFloorListDown = new ArrayList<FloorRequest>();
+	private ArrayList<FloorButtonMessage> getFloorDownRequestArray() {
+		ArrayList<FloorButtonMessage> selectFloorListDown = new ArrayList<FloorButtonMessage>();
+		ArrayList<FloorButtonMessage> floorRequestList    = request.getFloorButtonMessageArray();
 		
 		for(int i = 0; i < floorRequestList.size(); i++) {
 			//not sure what time is being named in floor????????????????????????
-			FloorRequest curFloorRequest = floorRequestList.get(i);
+			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
 			if(curFloorRequest.direction == requestDown && 
 			   curFloorRequest.requestFloor < elevatorPosition){//???
 				selectFloorListDown.add(curFloorRequest);
@@ -149,60 +155,73 @@ public class FloorMessageHandler extends Thread {
 		return selectFloorListDown;
 	}
 	
-	private ArrayList<ElevatorRequest> getElevatorDownRequestArray() {
-		ArrayList<ElevatorRequest> selectElevatorListDown = new ArrayList<ElevatorRequest>();
+	private ArrayList<ElevatorButtonMessage> getElevatorDownRequestArray() {
+		ArrayList<ElevatorButtonMessage> selectElevatorListDown = new ArrayList<ElevatorButtonMessage>();
+		ArrayList<ElevatorButtonMessage> elevatorButtonMessageList = request.getElevatorButtonMessageArray();
 		
-		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			ElevatorRequest curElevatorRequest = elevatorRequestList.get(i);
+		for(int i = 0; i < elevatorButtonMessageList.size(); i++) {
+			ElevatorButtonMessage curElevatorButtonMessage = elevatorButtonMessageList.get(i);
 			
-			if(curElevatorRequest.requestFloor < elevatorPosition){//???
-				selectElevatorListDown.add(curElevatorRequest);
+			if(curElevatorButtonMessage.requestFloor < elevatorPosition){//???
+				selectElevatorListDown.add(curElevatorButtonMessage);
 			}
 		}
 		
 		return selectElevatorListDown;
 	}
 	
-	private int getNearestUpRequest(ArrayList<FloorRequest> seletFloorListup, ArrayList<ElevatorRequest> selectElevatorListup) {
-		int targetFloor = 0;
+	private int getNearestUpRequest(ArrayList<FloorButtonMessage> seletFloorListup, ArrayList<ElevatorButtonMessage> selectElevatorListup) {
+		int targetDistinationFromFloor    = 0;
+		int targetDistinationFromElevator = 0;
 		
 		for(int i = 0 ; i < selectFloorListup.size();i++) {
 			//not sure what time is being named in floor????????????????????????
 			int curRequestFloor = selectFloorListup.get(i).requestFloor;
 			
-			if(targetFloor == 0 || targetFloor > curRequestFloor){
-				targetFloor = curRequestFloor;//???
+			if(targetDistinationFromFloor == 0 || targetDistinationFromFloor > curRequestFloor){
+				targetDistinationFromFloor = curRequestFloor;//???
 			}
 		}
 
 		for(int i = 0; i < selectElevatorListup.size(); i++) {
 			int curRequestFloor = selectElevatorListup.get(i).requestFloor;
-			if(targetFloor == 0 || targetFloor > curRequestFloor) {
-				targetFloor = curRequestFloor;//???
+			if(targetDistinationFromElevator == 0 || targetDistinationFromElevator > curRequestFloor) {
+				targetDistinationFromElevator = curRequestFloor;//???
 			}
 		}
-		return targetFloor;
+		
+		if(targetDistinationFromFloor < targetDistinationFromElevator) {
+			return targetDistinationFromFloor;
+		}
+		
+		return targetDistinationFromElevator;
 	}
 	
-	private int getNearestDownRequest(ArrayList<FloorRequest> seletFloorListDown, ArrayList<ElevatorRequest> selectElevatorListDown) {
-		int targetFloor = 0;
+	private int getNearestDownRequest(ArrayList<FloorButtonMessage> seletFloorListDown, ArrayList<ElevatorButtonMessage> selectElevatorListDown) {
+		int targetDistinationFromFloor    = 0;
+		int targetDistinationFromElevator = 0;
+		
 		for(int i = 0 ;i < selectFloorListDown.size();i++) {
 			//not sure what time is being named in floor????????????????????????
 			int requestFloor = selectFloorListDown.get(i).requestFloor;
 			
-			if(targetFloor == 0 || targetFloor < requestFloor){
-				target = requestFloor;//???
+			if(targetDistinationFromFloor == 0 || targetDistinationFromFloor < requestFloor){
+				targetDistinationFromFloor = requestFloor;//???
 			}
 		}
 
 		for(int i = 0 ; i < selectElevatorListDown.size(); i++) {
 			int requestFloor = selectElevatorListDown.get(i).requestFloor;
 			
-			if(targetFloor == 0 || target < requestFloor){
-				target = requestFloor;//???
+			if(targetDistinationFromElevator == 0 || targetDistinationFromElevator < requestFloor){
+				targetDistinationFromElevator = requestFloor;//???
 			}
 		}
 		
-		return targetFloor;
+		if(targetDistinationFromFloor < targetDistinationFromElevator) {
+			return targetDistinationFromFloor;
+		}
+		
+		return targetDistinationFromElevator;
 	}
 }
