@@ -1,54 +1,28 @@
 package com.sysc3303.floor;
 
 public class FloorButton {
-	private boolean up   = false;
-	private boolean down = false;
+//	private boolean up   = false;
+//	private boolean down = false;
 	
-	public void pressUp() {
-		up = true;
+	//Button Creates an Instance of Lamp every time
+	FloorLamp lamp = new FloorLamp();
+	
+	
+	//If upButtonPressed
+	public void upButtonPressed() {
+		lamp.flashLamp("up");
 	}
 	
-	public void pressDown() {
-		down = true;
+	//If DownButtonPressed
+	public void downButtonPressed() {
+		lamp.flashLamp("down");
 	}
 	
-	public void disableUp() {
-		up = false;
-	}
-	
-	public void disableDown() {
-		down = false;
-	}
-	
-	public boolean isUpButtonEnabled() {
-		return up;
-	}
-	
-	public boolean isDownButtonEnabled() {
-		return down;
-	}
-	
-	/*
-	 * isTopFloor returns true if the Elevator is in the Top Floor
-	 * 
-	 * may be we can take floor number as a parameter here and compare it
-	 */
-	
-	public boolean isTopFloor() {
+	public static void main(String[] args) {
 		
-		up = false;
-		return up;
-	}
-	
-	/*
-	 * isGroundFloor returns true if the Elevator is at the ground level and cannot go further down
-	 * 
-	 * may be we can take floor number as a parameter here and compare it
-	 */
-	
-	public boolean isGroundFloor() {
+		FloorButton buttonTest = new FloorButton();
 		
-		down = false;
-		return up;
+		buttonTest.downButtonPressed();
+		buttonTest.upButtonPressed();
 	}
 }

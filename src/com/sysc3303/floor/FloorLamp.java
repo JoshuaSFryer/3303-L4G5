@@ -2,9 +2,9 @@ package com.sysc3303.floor;
 
 public class FloorLamp {
 	
-	private String up;
-	private String down;
-	private String elevatorArrived;
+	private String up = "up";
+	private String down = "down";
+	private String elevatorArrived = "elevatorArrived";
 	
 	/*
 	 * The Simulator System will send integers for the direction requested by the passenger.
