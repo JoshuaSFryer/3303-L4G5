@@ -1,6 +1,7 @@
 package com.sysc3303.elevator;
 import com.sysc3303.commons.Direction;
 
+@SuppressWarnings("serial")
 public class ElevatorVector implements java.io.Serializable {
 	
 	public final int currentFloor;

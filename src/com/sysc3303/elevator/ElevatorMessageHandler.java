@@ -64,9 +64,11 @@ public class ElevatorMessageHandler extends MessageHandler{
     }
 }
 
+/*
 class BadMessageTypeException extends Exception {
 	
 	public BadMessageTypeException(String msg) {
 		super(msg);
 	}
 }
+*/

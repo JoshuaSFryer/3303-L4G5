@@ -3,15 +3,16 @@ package com.sysc3303.elevator;
 public class ElevatorButton {
 	
 	private int id;
-	private Elevator parent;
+	//private Elevator parent;
+	@SuppressWarnings("unused")
 	private boolean illuminated;
 	
 	public ElevatorButton(Elevator parent, int id) {
 		this.id = id;
+		this.illuminated = false;
 	}
 	
 	public void press() {
-		// Have the elevator call method to send to scheduler, and turn on light.
 		System.out.println("Button " + this.id + " pressed");
 		setLight(true);
 	}

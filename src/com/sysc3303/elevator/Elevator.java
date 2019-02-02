@@ -6,12 +6,11 @@ import java.io.InputStream;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.ArrayList;
-import java.util.Random;
 
 import com.sysc3303.commons.Direction;
-import com.sysc3303.commons.Message;
-import com.sysc3303.commons.SerializationUtil;
-import com.sysc3303.commons.SocketHandler;
+//import com.sysc3303.commons.Message;
+//import com.sysc3303.commons.SerializationUtil;
+//import com.sysc3303.commons.SocketHandler;
 import com.sysc3303.constants.Constants;
 
 /**
@@ -25,14 +24,14 @@ public class Elevator {
 	
 	public final int elevatorID;
 
-	private SocketHandler  		socketHandler;
+	//private SocketHandler  		socketHandler;
 	private ElevatorLamp   		lamp;
 	private Motor          		motor;
 	private Door           		door;
 	private ArrayList<ElevatorButton> 	buttons;
 	private FloorSensor 		sensor;
 	
-	private int				targetFloor;
+	//private int				targetFloor;
 	private int 			currentFloor;
 	
 	private int			currentHeight; // Current height in CM
@@ -57,7 +56,7 @@ public class Elevator {
 		motor         	= new Motor(this);
 		door          	= new Door();
 		currentFloor   	= Elevator.GROUND_FLOOR;
-		targetFloor 	= Elevator.GROUND_FLOOR;
+		//targetFloor 	= Elevator.GROUND_FLOOR;
 		currentState	= new Idle();
 		currentHeight 	= 0; //TODO: de-magicify this number
 		currentDirection = Direction.IDLE;
@@ -187,7 +186,6 @@ public class Elevator {
 		this.mover = new Thread(
 						new MovementHandler(targetFloor, this, this.sensor, 
 											this.motor));
-		//sensor.attachThread(mover);
 		
 		// Launch the mover thread. It will continue until the target floor is
 		// reached, or this elevator receives a new goToFloor request. Upon
@@ -201,7 +199,7 @@ public class Elevator {
 		InputStream                inputStream       = new FileInputStream(Constants.CONFIG_PATH);
 		//InputStream                inputStream       = new FileInputStream("config/config.xml");
 		boolean                    running           = true;
-		SerializationUtil<Message> serializationUtil = new SerializationUtil<Message>();
+		//SerializationUtil<Message> serializationUtil = new SerializationUtil<Message>();
 		
 		properties.loadFromXML(inputStream);
 		
