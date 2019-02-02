@@ -32,7 +32,7 @@ public class MovementHandler implements Runnable {
 				if(sensor.isAtFloor()) {
 					floor = sensor.getFloor();
 					System.out.println("Arrived at floor: " + floor);
-					context.notifyArrival();
+					context.notifyArrival(targetFloor);
 					context.setCurrentFloor(floor);
 				}
 				

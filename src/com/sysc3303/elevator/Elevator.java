@@ -131,8 +131,8 @@ public class Elevator {
 		
 	}
 
-	public void notifyArrival() {
-		ElevatorVector v = new ElevatorVector(this.currentFloor, this.currentDirection);
+	public void notifyArrival(int targetFloor) {
+		ElevatorVector v = new ElevatorVector(this.currentFloor, this.currentDirection, targetFloor);
 		this.messageHandler.sendElevatorState(v, this.elevatorID);
 	}
 	
@@ -187,10 +187,12 @@ public class Elevator {
 						new MovementHandler(targetFloor, this, this.sensor, 
 											this.motor));
 		
+		// Assign this elevator's target floor. This is only kept in order to 
 		// Launch the mover thread. It will continue until the target floor is
 		// reached, or this elevator receives a new goToFloor request. Upon
 		// receiving this request, the elevator will interrupt the thread
 		// and launch a new one by invoking goToFloor() again.
+		
 		mover.start();
 	}
 	
