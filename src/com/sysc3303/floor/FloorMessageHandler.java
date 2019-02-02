@@ -29,7 +29,7 @@ public class FloorMessageHandler extends MessageHandler{
     public synchronized void received(Message message){
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
-            case 0:
+            case OpCodes.FLOOR_BUTTON.getOpcode():
                 // Shouldn't have this on the Floor
                 // TODO what happens when you receive FloorButton
                 break;
@@ -39,7 +39,7 @@ public class FloorMessageHandler extends MessageHandler{
             	floorSystem.floorArrival(floorArrivalMessage.getFloor(), floorArrivalMessage.getCurrentDirection());
                 break;
             case 2:
-                // Shouldn't have this on the scheduler
+                // Shouldn't have this on the Floor
                 // TODO what happens when you receive GoToFloor
                 break;
             case 3:
@@ -49,6 +49,13 @@ public class FloorMessageHandler extends MessageHandler{
             case 4:
                 // Shouldn't have this on the Floor
                 // TODO what happens when you receive ElevatorButton
+                break;
+            case 5:
+                // TODO what happens when you receive FloorButtonSimulationMessage
+                break;
+            case 6:
+                // Shouldn't have this on the Floor
+                // TODO what happens when you receive ElevatorButtonSimulationMessage
                 break;
             default:
                 // TODO what happens when you get an invalid upcode
