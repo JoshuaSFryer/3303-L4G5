@@ -13,7 +13,7 @@ public class FloorArrivalMessage extends Message{
 
     public FloorArrivalMessage(int floor, Direction currentDirection) {
         // Opcode for this message is 1
-        super((byte)1);
+        super(OpCodes.FLOOR_ARRIVAL.getOpCode());
         this.floor = floor;
         this.currentDirection = currentDirection;
     }

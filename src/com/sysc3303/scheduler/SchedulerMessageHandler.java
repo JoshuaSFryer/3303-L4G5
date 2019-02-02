@@ -41,7 +41,7 @@ public class SchedulerMessageHandler extends MessageHandler{
     public synchronized void received(Message message){
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
-            case 0:
+            case OpCodes.FLOOR_BUTTON.getOpcode():
                 // TODO what happens when you receive FloorButton
             	System.out.println("Recieved FloorButtonMessage");
             	FloorButtonMessage floorButtonMessage = (FloorButtonMessage)message;
@@ -99,6 +99,14 @@ public class SchedulerMessageHandler extends MessageHandler{
             	System.out.println(floorArrivalMessage.toString());
             	sendFloorArrival(floorArrivalMessage);
             	break;
+            case 5:
+                // Shouldn't have this on the simulator
+                // TODO what happens when you receive FloorButtonSimulationMessage
+                break;
+            case 6:
+                // Shouldn't have this on the simulator
+                // TODO what happens when you receive ElevatorButtonSimulationMessage
+                break;
             default:
                 // TODO what happens when you get an invalid upcode
         }

@@ -18,7 +18,7 @@ public class FloorButtonMessage extends Message{
 
     public FloorButtonMessage(int floor, Direction direction, Date time) {
         // Opcode for this message is 0
-        super((byte)0);
+        super(OpCodes.FLOOR_BUTTON.getOpCode());
         this.floor = floor;
         this.direction = direction;
         this.time = time;

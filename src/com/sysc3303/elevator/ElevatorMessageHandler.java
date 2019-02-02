@@ -37,9 +37,24 @@ public class ElevatorMessageHandler extends MessageHandler{
     public void received(Message message){
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
+            case OpCodes.FLOOR_BUTTON.getOpcode():
+                // Shouldn't have this on the elevator
+                // TODO what happens when you receive FloorButton
+                break;
+            case 1:
+                // Shouldn't have this on the elevator
+                // TODO what happens when you receive FloorArrival
+                break;
             case 2:
             	GoToFloorMessage castMessage = (GoToFloorMessage) message;
             	context.goToFloor(castMessage.getDestinationFloor());
+                break;
+            case 5:
+                // Shouldn't have this on the elevator
+                // TODO what happens when you receive FloorButtonSimulationMessage
+                break;
+            case 6:
+                // TODO what happens when you receive ElevatorButtonSimulationMessage
                 break;
             default:
             	// throw new BadMessageTypeException("This message cannot be handled by this module!");

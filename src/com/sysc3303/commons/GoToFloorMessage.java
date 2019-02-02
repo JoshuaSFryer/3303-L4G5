@@ -14,7 +14,7 @@ public class GoToFloorMessage extends Message{
 
     public GoToFloorMessage(int destinationFloor) {
         // Opcode for this message is 2
-        super((byte) 2);
+        super(OpCodes.GO_TO_FLOOR.getOpCode());
         this.destinationFloor = destinationFloor;
     }
 
