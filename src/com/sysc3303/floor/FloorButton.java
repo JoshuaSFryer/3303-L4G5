@@ -1,28 +1,44 @@
 package com.sysc3303.floor;
 
 public class FloorButton {
-//	private boolean up   = false;
-//	private boolean down = false;
 	
-	//Button Creates an Instance of Lamp every time
-	FloorLamp lamp = new FloorLamp();
+	String upButton;
+	String downButton;
+	
+	private String up = "up";
+	private String down = "down";
+	private String elevatorArrived = "elevatorArrived";
 	
 	
-	//If upButtonPressed
-	public void upButtonPressed() {
-		lamp.flashLamp("up");
+	FloorButton(){
+		upButton = " Not Pressed";
+		downButton = " Not Pressed";
 	}
 	
-	//If DownButtonPressed
-	public void downButtonPressed() {
-		lamp.flashLamp("down");
+	
+
+	public String getButtonStatus() {
+		return "Up-Button = " + upButton + "  Down-Button = " + downButton;
 	}
 	
-	public static void main(String[] args) {
+	public void setButton(String button) {
+		if (button.equals(up)) {
+			upButton = "Pressed";
+			downButton = "Not Pressed";
+		}
 		
-		FloorButton buttonTest = new FloorButton();
+		else if (button.equals(down)) {
+			downButton = "Pressed";
+			upButton = "Not Pressed";
+		}
 		
-		buttonTest.downButtonPressed();
-		buttonTest.upButtonPressed();
+		else if (button.equals(elevatorArrived)){
+			upButton = "Not Pressed";
+			downButton = "Not Pressed";
+			
+		}
 	}
+	
+	
+
 }
