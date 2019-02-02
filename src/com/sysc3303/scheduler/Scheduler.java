@@ -263,8 +263,23 @@ public class Scheduler {
 	* for elevatorRequestList: just scan and removed
 	* for floorRequestList: need to scan the target floor with the direction
 	*/
-	private updateRequestList(){
-
+	private void removeTargetFloor(int targetFloor, Direction targetDirection) {
+		for(int i = 0; i < elevatorRequestList.size(); i++) {
+			if(elevatorRequestList.get(i).requestFloor == targetFloor) {
+				elevatorRequestList.remove(i);
+				break;
+			}
+		}
+		
+		for(int i = 0; i < floorRequestList.size(); i++) {
+			FloorRequest curFloorRequest = floorRequestList.get(i);
+			
+			if(curFloorRequest.requestFloor == targetFloor && 
+			   curFloorRequest.direction    == targetDirection) {
+				floorRequestList.remove(i);
+				break;
+			}
+		}
 	}
 
 	public Command createCommandForElevator(Message message) {
