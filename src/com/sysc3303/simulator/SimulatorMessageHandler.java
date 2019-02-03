@@ -1,17 +1,40 @@
 package com.sysc3303.simulator;
 
 import com.sysc3303.commons.*;
+import com.sysc3303.constants.Constants;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Properties;
 
 public class SimulatorMessageHandler extends MessageHandler{
     //TODO you need to add the port numbers that will be associated with scheduler
-    final int elevatorPort = 7000;
-    final int floorPort = 7001;
     private InetAddress elevatorAddress;
     private InetAddress floorAddress;
 
+    static int schedulerPort;
+    static int elevatorPort;
+    static int floorPort;
+    static int simulatorPort;
+
+    static {
+        Properties properties = new Properties();
+        try{
+            InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
+            properties.loadFromXML(inputStream);
+
+            schedulerPort = Integer.parseInt(properties.getProperty("schedulerPort"));
+            elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
+            floorPort = Integer.parseInt(properties.getProperty("floorPort"));
+            simulatorPort = Integer.parseInt(properties.getProperty("simulatorPort"));
+        }catch(FileNotFoundException e){
+        }catch(IOException e){
+        }
+    }
 
     public SimulatorMessageHandler(int receivePort){
         super(receivePort);

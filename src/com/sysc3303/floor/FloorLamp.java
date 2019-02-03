@@ -1,6 +1,6 @@
 package com.sysc3303.floor;
 
-import com.sun.javafx.scene.traversal.Direction;
+import com.sysc3303.commons.Direction;
 
 /*
  * FloorLamp class turns on two lamps according to the direction for the elevator
