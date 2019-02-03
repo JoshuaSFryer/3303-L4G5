@@ -9,12 +9,21 @@ import com.sysc3303.commons.FloorButtonMessage;
 import com.sysc3303.commons.GoToFloorMessage;
 import com.sysc3303.elevator.ElevatorVector;
 
+/**
+ * @author Yu Yamanaka Xinrui Zhang
+ * 
+ * Handles message from floor
+ */
 public class FloorMessageHandler implements Runnable {
 	private Request            request;
 	private int                targetFloor;
 	private FloorButtonMessage message;
 	private GoToFloorMessage   goToFloorMessage;
 	
+	/**
+	 * @param request
+	 * @param message
+	 */
 	public FloorMessageHandler(Request request, FloorButtonMessage message) {
 		this.request = request;
 		this.message = message;
@@ -27,10 +36,17 @@ public class FloorMessageHandler implements Runnable {
 		goToFloorMessage = new GoToFloorMessage(targetFloor);
 	}
 	
+	/**
+	 * @return GoToFloorMessage
+	 */
 	public GoToFloorMessage getGoToFloorMessage() {
 		return goToFloorMessage;
 	}
 	
+	/**
+	 * Decides target floor and returns it
+	 * @return int
+	 */
 	private int decideTargetFloor() {
 		ElevatorVector elevatorVector = request.getElevatorVector();
 		Direction      elevatorStatus = elevatorVector.currentDirection;
@@ -68,6 +84,12 @@ public class FloorMessageHandler implements Runnable {
 		return target;
 	}
 	
+	/**
+	 * gets earliest FloorButtonMessage in time, from request 
+	 * floorButtonMessage array 
+	 * 
+	 * @return
+	 */
 	private FloorButtonMessage getEariestFloorRequest() {
 		FloorButtonMessage floorRequest = null;
 		ArrayList<FloorButtonMessage> floorRequestList = request.getFloorButtonMessageArray();
@@ -85,6 +107,12 @@ public class FloorMessageHandler implements Runnable {
 		return floorRequest;
 	}
 	
+	/**
+	 * gets earliest ElevatorButtonMessage in time, from 
+	 * request elevatorButtonMessage array
+	 * 
+	 * @return ElevatorButtonMessage
+	 */
 	private ElevatorButtonMessage getEariestElevatorRequest() {
 		ElevatorButtonMessage elevatorRequest = null;
 		ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray();
@@ -102,6 +130,12 @@ public class FloorMessageHandler implements Runnable {
 		return elevatorRequest;
 	}
 	
+	/**
+	 * gets list of up direction request from FloorButtonMessage
+	 * array in request class
+	 * 
+	 * @return ArrayList<FloorButtonMessage>
+	 */
 	private ArrayList<FloorButtonMessage> getFloorUpRequestArray() {
 		ArrayList<FloorButtonMessage> selectFloorListup = new ArrayList<FloorButtonMessage>();
 		ArrayList<FloorButtonMessage> floorRequestList  = request.getFloorButtonMessageArray();
@@ -119,6 +153,12 @@ public class FloorMessageHandler implements Runnable {
 		return selectFloorListup;
 	}
 	
+	/**
+	 * gets list of elevatorButtonMessage that has up direction
+	 * from from request class
+	 * 
+	 * @return ArrayList<ElevatorButtonMessage>
+	 */
 	private ArrayList<ElevatorButtonMessage> getElevatorUpRequestArray() {
 		ArrayList<ElevatorButtonMessage> selectElevatorListup = new ArrayList<ElevatorButtonMessage>();
 		ArrayList<ElevatorButtonMessage> elevatorRequestList  = request.getElevatorButtonMessageArray();
@@ -134,6 +174,13 @@ public class FloorMessageHandler implements Runnable {
 		return selectElevatorListup;
 	}
 	
+	/**
+	 * 
+	 * gets list of FloorButtonMessage that has down direction
+	 * from request class
+	 * 
+	 * @return ArrayList<FloorButtonMessage>
+	 */
 	private ArrayList<FloorButtonMessage> getFloorDownRequestArray() {
 		ArrayList<FloorButtonMessage> selectFloorListDown = new ArrayList<FloorButtonMessage>();
 		ArrayList<FloorButtonMessage> floorRequestList    = request.getFloorButtonMessageArray();
@@ -150,6 +197,12 @@ public class FloorMessageHandler implements Runnable {
 		return selectFloorListDown;
 	}
 	
+	/**
+	 * gets list of ElevatorButtonMessage that has down direction
+	 * from request class
+	 * 
+	 * @return
+	 */
 	private ArrayList<ElevatorButtonMessage> getElevatorDownRequestArray() {
 		ArrayList<ElevatorButtonMessage> selectElevatorListDown = new ArrayList<ElevatorButtonMessage>();
 		ArrayList<ElevatorButtonMessage> elevatorButtonMessageList = request.getElevatorButtonMessageArray();
@@ -165,6 +218,14 @@ public class FloorMessageHandler implements Runnable {
 		return selectElevatorListDown;
 	}
 	
+	/**
+	 * gets nearest targetDistination from FloorButtonMessage array
+	 * and ElevatorButtonMessage array in parameter, that has up direction
+	 * 
+	 * @param selectFloorListup
+	 * @param selectElevatorListup
+	 * @return int
+	 */
 	private int getNearestUpRequest(ArrayList<FloorButtonMessage> selectFloorListup, ArrayList<ElevatorButtonMessage> selectElevatorListup) {
 		int targetDistinationFromFloor    = 0;
 		int targetDistinationFromElevator = 0;
@@ -192,6 +253,14 @@ public class FloorMessageHandler implements Runnable {
 		return targetDistinationFromElevator;
 	}
 	
+	/**
+	 * gets nearest targetDistination from FloorButtonMessage array
+	 * and ElevatorButtonMessage array in parameter, that has down direction
+	 * 
+	 * @param selectFloorListDown
+	 * @param selectElevatorListDown
+	 * @return int
+	 */
 	private int getNearestDownRequest(ArrayList<FloorButtonMessage> selectFloorListDown, ArrayList<ElevatorButtonMessage> selectElevatorListDown) {
 		int targetDistinationFromFloor    = 0;
 		int targetDistinationFromElevator = 0;
