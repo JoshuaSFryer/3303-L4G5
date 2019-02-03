@@ -8,6 +8,7 @@ package com.sysc3303.commons;
  *
  * @author Mattias Lightstone
  */
+@SuppressWarnings("serial")
 public class GoToFloorMessage extends Message{
     private final int destinationFloor;
 
