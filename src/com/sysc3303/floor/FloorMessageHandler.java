@@ -50,6 +50,9 @@ public class FloorMessageHandler extends MessageHandler{
 
     @Override
     public synchronized void received(Message message){
+    	System.out.println("From Floor");
+    	System.out.println("recieved message!");
+    	System.out.println(message.toString());
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
             case 0:
