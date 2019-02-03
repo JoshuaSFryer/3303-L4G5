@@ -8,6 +8,7 @@ import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorButtonMessage;
 import com.sysc3303.commons.FloorButtonMessage;
 import com.sysc3303.commons.GoToFloorMessage;
+import com.sysc3303.elevator.ElevatorVector;
 
 public class FloorMessageHandler implements Runnable {
 	private Request            request;
@@ -33,10 +34,10 @@ public class FloorMessageHandler implements Runnable {
 	
 	private int decideTargetFloor() {
 		ElevatorVector elevatorVector = request.getElevatorVector();
-		ElevatorStatus elevatorStatus = elevatorVector.getStatus();
+		Direction      elevatorStatus = elevatorVector.currentDirection;
 		
 		int target = -1;
-		if(elevatorStatus == SchedulerElevatorStatus.Idle) {
+		if(elevatorStatus == Direction.IDLE) {
 			// want to set to null, this may need to be changed
 			FloorButtonMessage    floorRequest    = getEariestFloorRequest();
 			ElevatorButtonMessage elevatorRequest = getEariestElevatorRequest();
@@ -49,7 +50,7 @@ public class FloorMessageHandler implements Runnable {
 				target = floorRequest.getFloor();
 			}
 		}
-		else if(elevatorStatus == SchedulerElevatorStatus.GoingUp) {
+		else if(elevatorStatus == Direction.UP) {
 			ArrayList<FloorButtonMessage>    selectFloorListup    = getFloorUpRequestArray();
 			ArrayList<ElevatorButtonMessage> selectElevatorListup = getElevatorUpRequestArray();
 
@@ -111,7 +112,7 @@ public class FloorMessageHandler implements Runnable {
 			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
 			
 			if(curFloorRequest.getDirection() == Direction.UP && 
-			   curFloorRequest.getFloor() > request.getElevatorVector().getPosition()) {//???
+			   curFloorRequest.getFloor() > request.getElevatorVector().currentFloor) {//???
 				selectFloorListup.add(curFloorRequest);
 			}
 		}
@@ -126,7 +127,7 @@ public class FloorMessageHandler implements Runnable {
 		for(int i = 0; i < elevatorRequestList.size(); i++) {
 			ElevatorButtonMessage curElevatorRequest = elevatorRequestList.get(i);
 			
-			if(curElevatorRequest.getDestinationFloor() > request.getElevatorVector().getPosition()){//???
+			if(curElevatorRequest.getDestinationFloor() > request.getElevatorVector().currentFloor){//???
 					selectElevatorListup.add(curElevatorRequest);
 			}
 		}
@@ -142,7 +143,7 @@ public class FloorMessageHandler implements Runnable {
 			//not sure what time is being named in floor????????????????????????
 			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
 			if(curFloorRequest.getDirection() == Direction.DOWN && 
-			   curFloorRequest.getFloor() < request.getElevatorVector().getPosition()){//???
+			   curFloorRequest.getFloor() < request.getElevatorVector().currentFloor){//???
 				selectFloorListDown.add(curFloorRequest);
 			}
 		}
@@ -157,7 +158,7 @@ public class FloorMessageHandler implements Runnable {
 		for(int i = 0; i < elevatorButtonMessageList.size(); i++) {
 			ElevatorButtonMessage curElevatorButtonMessage = elevatorButtonMessageList.get(i);
 			
-			if(curElevatorButtonMessage.getDestinationFloor() < request.getElevatorVector().getPosition()){//???
+			if(curElevatorButtonMessage.getDestinationFloor() < request.getElevatorVector().currentFloor){//???
 				selectElevatorListDown.add(curElevatorButtonMessage);
 			}
 		}

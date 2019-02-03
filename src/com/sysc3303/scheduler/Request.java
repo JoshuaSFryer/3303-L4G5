@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.sysc3303.commons.ElevatorButtonMessage;
 import com.sysc3303.commons.FloorButtonMessage;
+import com.sysc3303.elevator.ElevatorVector;
 
 public class Request {
 	//This list stores the raw data from floor, need to add <type>!!!!!!!!!!!!!!!!!!!!
@@ -15,14 +16,14 @@ public class Request {
 		public Request() {
 			floorRequestList    = new ArrayList<FloorButtonMessage>();
 			elevatorRequestList = new ArrayList<ElevatorButtonMessage>();
-			elevatorVector      = new ElevatorVector();
+			elevatorVector      = null;
 		}
 		
 		public synchronized ElevatorVector getElevatorVector() {
 			return elevatorVector;
 		}
 
-		public synchronized setElevatorVector(ElevatorVector elevatorVector) {
+		public synchronized void setElevatorVector(ElevatorVector elevatorVector) {
 			this.elevatorVector = elevatorVector;
 		}
 

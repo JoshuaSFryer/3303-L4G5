@@ -10,13 +10,11 @@ import java.util.*;
 // import java.util.ArrayList;
 
 import com.sysc3303.commons.Command;
-import com.sysc3303.commons.ElevatorButtonMessage;
 import com.sysc3303.commons.FloorArrivalMessage;
 import com.sysc3303.commons.FloorButtonMessage;
 import com.sysc3303.commons.GoToFloorMessage;
 import com.sysc3303.commons.Message;
 import com.sysc3303.commons.SerializationUtil;
-import com.sysc3303.commons.SocketHandler;
 import com.sysc3303.constants.Constants;
 
 
@@ -57,18 +55,16 @@ public class Scheduler {
 	//This function update the target floor based on the floorRequestList, elevatorRequestList
 	//and elevator's position and status		
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
-		Properties                 properties           = new Properties();
-		InputStream                inputStream          = new FileInputStream(Constants.CONFIG_PATH);
-		boolean                    running              = true;
-		InetAddress                elevatorIp           = InetAddress.getLocalHost();
-		SerializationUtil<Message> msgSerializationUtil = new SerializationUtil<Message>();
-		SerializationUtil<Command> cmdSerializationUtil = new SerializationUtil<Command>();
+		Properties  properties  = new Properties();
+		InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
+		InetAddress elevatorIp  = InetAddress.getLocalHost();
 
 		properties.loadFromXML(inputStream);
-
+		
 		int       port         = Integer.parseInt(properties.getProperty("schedulerPort"));
 		int       elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
 		Scheduler scheduler    = new Scheduler();
 		
+		SchedulerMessageHandler messageHandler = new SchedulerMessageHandler(port, scheduler);
 	}
 }

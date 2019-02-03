@@ -9,6 +9,7 @@ import com.sysc3303.commons.ElevatorStateMessage;
 import com.sysc3303.commons.FloorArrivalMessage;
 import com.sysc3303.commons.FloorButtonMessage;
 import com.sysc3303.commons.Message;
+import com.sysc3303.elevator.ElevatorVector;
 
 public class ElevatorMessageHandler implements Runnable {
 	private Request  request;
@@ -24,21 +25,21 @@ public class ElevatorMessageHandler implements Runnable {
 		if(message instanceof ElevatorStateMessage) {
 			ElevatorStateMessage message          = (ElevatorStateMessage)this.message;
 			ElevatorVector       elevatorVector   = message.getElevatorVector();
-			int                  destinationFloor = elevatorVector.getDestinationFloor();
+			int                  destinationFloor = elevatorVector.targetFloor;
 		   
 			request.setElevatorVector(elevatorVector);
 			
 			if(elevatorVector.currentFloor != destinationFloor) {
-				continue;
+				return;
 			}	
 	
-			removeTargetFloor(destinationFloor, elevatorVector.getDirection());
-			floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.direction);
+			removeTargetFloor(destinationFloor, elevatorVector.currentDirection);
+			floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection);
 		
 			// dont forget to create message and send it to floor
 		}
 		else if(message instanceof ElevatorButtonMessage) {
-			ElevatorButtonMessage message = (ElevatorButtonMessage)message;
+			ElevatorButtonMessage message = (ElevatorButtonMessage)this.message;
 			request.addElevatorButtonMessage(message);
 		}
 
