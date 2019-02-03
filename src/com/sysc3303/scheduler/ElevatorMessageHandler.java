@@ -10,21 +10,31 @@ import com.sysc3303.commons.FloorButtonMessage;
 import com.sysc3303.commons.Message;
 import com.sysc3303.elevator.ElevatorVector;
 
+/**
+ * Handle the message from elevator
+ * @author Xinrui Zhang Yu Yamanaka
+ *
+ */
 public class ElevatorMessageHandler implements Runnable {
 	private Request  request;
 	private Message  message;
 	private FloorArrivalMessage floorArrivalMessage;
 	
+	/**
+	 * elevator message handler constructor
+	 * @para request
+	 * @para message
+	 */
 	public ElevatorMessageHandler(Request request, Message message) {
 		this.request = request;
 		this.message = message;         
 	}
 	
+
 	public void run() {
 		if(message instanceof ElevatorStateMessage) {
 			ElevatorStateMessage message          = (ElevatorStateMessage)this.message;
-			ElevatorVector       elevatorVector   = message.getElevatorVector();
-			int                  destinationFloor = elevatorVector.targetFloor;
+			ElevatorVector       elevatorVector   = message.getElevatorVector(); int                  destinationFloor = elevatorVector.targetFloor;
 		   
 			request.setElevatorVector(elevatorVector);
 			
@@ -43,18 +53,21 @@ public class ElevatorMessageHandler implements Runnable {
 		}
 
 	}
-	
+	/**
+	 * @return floorArrialMessage
+	 */
 	public FloorArrivalMessage getFloorArrivalMessage() {
 		return floorArrivalMessage;
 	}
 	
 	/**
-	    * need another function which is to update the floorRequestList and elevatorRequestList
-		* once the elevator arrived a target floor, the target floor needs to be removed potentially
-		* both from floorRequestList and elevatorRequestList.
-		* for elevatorRequestList: just scan and removed
-		* for floorRequestList: need to scan the target floor with the direction
-		*/
+	 * This function is to update the floorRequestList and elevatorRequestList
+	 * once the elevator arrived a target floor, the target floor needs to be removed potentially
+	 * both from floorRequestList and elevatorRequestList.
+	 * 
+	 * @para targetFloor
+	 * @para targetDirection
+	 */
 	private void removeTargetFloor(int targetFloor, Direction targetDirection) {
 		ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray();
 		ArrayList<FloorButtonMessage>    floorRequestList    = request.getFloorButtonMessageArray();

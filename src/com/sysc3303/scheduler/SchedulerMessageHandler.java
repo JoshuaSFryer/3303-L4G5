@@ -5,6 +5,11 @@ import com.sysc3303.commons.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * This class handles all the message sending to scheduler
+ * @author Xinrui Zhang Yu Yamanaka
+ *
+ */
 public class SchedulerMessageHandler extends MessageHandler{
     //TODO you need to add the port numbers that will be associated with floor and elevator
     final int elevatorPort = 7000;
@@ -12,6 +17,12 @@ public class SchedulerMessageHandler extends MessageHandler{
     private InetAddress elevatorAddress;
     private InetAddress floorAddress;
     private Scheduler   scheduler;
+    
+    /**
+     * The schedulerMessageHandler's constructer
+     * @para receivePort
+     * @para scheduler
+     */
     
     public SchedulerMessageHandler(int receivePort, Scheduler scheduler){
         super(receivePort);
@@ -21,7 +32,11 @@ public class SchedulerMessageHandler extends MessageHandler{
         }catch(UnknownHostException e){
         }
     }
-
+    /**
+     * Handles three situations for scheduler which is receiving floorButtonMessage
+     * ElevatorStateMessage and ElevatorButtonMessage.
+     * @para message
+     */
     @Override
     public synchronized void received(Message message){
         // TODO Whatever functionality you want when your receive a message
@@ -89,12 +104,16 @@ public class SchedulerMessageHandler extends MessageHandler{
         }
     }
 
-    // TODO Rename this if you would like to
+    /**
+     * @return goToFloorMessage
+     */
     public void sendGoToFloor(GoToFloorMessage goToFloorMessage){
         send(goToFloorMessage, elevatorAddress, elevatorPort);
     }
 
-    // TODO Rename this if you would like to
+    /**
+     * @return floorArrialMessage
+     */
     public void sendFloorArrival(FloorArrivalMessage floorArrivalMessage){
         send(floorArrivalMessage, floorAddress, floorPort);
     }
