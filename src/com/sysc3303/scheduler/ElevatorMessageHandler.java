@@ -1,61 +1,51 @@
 package com.sysc3303.scheduler;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 
-public class ElevatorMessageHandler extends Thread {
-	private Request                request;
-	private MessageHandler         messageHandler;
-	private SchedulerElevatorStatus         elevatorStatus;
-	private InetAddress            floorAddress;
-	private int                    floorPort;
-	private CommunicationHandler   communicationHandler;
-	private ElevatorMessageHandler elevatorMessageHandler;
-	private ElevatorVector         elevatorVector;
-	private ElevatorStatus         elevatorStatus;
+import com.sysc3303.commons.Direction;
+import com.sysc3303.commons.ElevatorButtonMessage;
+import com.sysc3303.commons.ElevatorStateMessage;
+import com.sysc3303.commons.FloorArrivalMessage;
+import com.sysc3303.commons.FloorButtonMessage;
+import com.sysc3303.commons.Message;
+
+public class ElevatorMessageHandler implements Runnable {
+	private Request  request;
+	private Message  message;
+	private FloorArrivalMessage floorArrivalMessage;
 	
-	public ElevatorMessageHandler(Request request, MessageHandler messageHandler, SchedulerElevatorStatus elevatorStatus,
-			                      InetAddress floorAddress, int floorPort, CommunicationHandler communicationHandler, 
-			                      ElevatorMessageHandler elevatorMessageHandler) {
-		this.request                = request;
-		this.messageHandler         = messageHandler;
-		this.elevatorStatus         = elevatorStatus;
-		this.floorAddress           = floorAddress;
-		this.floorPort              = floorPort;
-		this.communicationHandler   = communicationHandler;
-		this.elevatorMessageHandler = elevatorMessageHandler;
-	}
-	
-	public ElevatorVector getElevatorVector() {
-		return elevatorVector;
+	public ElevatorMessageHandler(Request request, Message message) {
+		this.request = request;
+		this.message = message;         
 	}
 	
 	public void run() {
-		boolean running = true;
+		if(message instanceof ElevatorStateMessage) {
+			ElevatorStateMessage message          = (ElevatorStateMessage)this.message;
+			ElevatorVector       elevatorVector   = message.getElevatorVector();
+			int                  destinationFloor = elevatorVector.getDestinationFloor();
+		   
+			request.setElevatorVector(elevatorVector);
+			
+			if(elevatorVector.currentFloor != destinationFloor) {
+				continue;
+			}	
+	
+			removeTargetFloor(destinationFloor, elevatorVector.getDirection());
+			floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.direction);
 		
-		while(running) {
-			if(messageHandler.recievedElevatorStateMessage) {
-				
-				elevatorVector       = messageHandler.getElevatorVector();
-				int destinationFloor = elevatorVector.getDestinationFloor();
-				
-				request.addElevatorButtonMessage(messageHandler.getElevatorButtonMessage);
-				request.setElevatorVector(elevatorVector);
-				
-				if(elevatorVector.currentFloor != destinationFloor) {
-					continue;
-				}	
-
-				removeTargetFloor(destinationFloor, elevatorVector.direction);
-				FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.direction);
-				
-				communicationHandler.send(floorArrivalMessage, floorAddress, floorPort);
-				
-				// dont forget to create message and send it to floor
-			}
-			/*else if(messageHandler.recievedElevatorRequestMessage) {
-				request.addRecievedElevatorReqeustMessage(messageHandler.getElevatorRequestMessage());
-			}*/
+			// dont forget to create message and send it to floor
 		}
+		else if(message instanceof ElevatorButtonMessage) {
+			ElevatorButtonMessage message = (ElevatorButtonMessage)message;
+			request.addElevatorButtonMessage(message);
+		}
+
+	}
+	
+	public FloorArrivalMessage getFloorArrivalMessage() {
+		return floorArrivalMessage;
 	}
 	
 	/**
@@ -65,28 +55,28 @@ public class ElevatorMessageHandler extends Thread {
 		* for elevatorRequestList: just scan and removed
 		* for floorRequestList: need to scan the target floor with the direction
 		*/
-		private void removeTargetFloor(int targetFloor, Direction targetDirection) {
-			ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray();
-			ArrayList<FloorButtonMessage>    floorRequestList    = request.getFloorButtonMessageArray();
-			
-			for(int i = 0; i < elevatorRequestList.size(); i++) {
-				if(elevatorRequestList.get(i).requestFloor == targetFloor) {
-					elevatorRequestList.remove(i);
-					break;
-				}
+	private void removeTargetFloor(int targetFloor, Direction targetDirection) {
+		ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray();
+		ArrayList<FloorButtonMessage>    floorRequestList    = request.getFloorButtonMessageArray();
+		
+		for(int i = 0; i < elevatorRequestList.size(); i++) {
+			if(elevatorRequestList.get(i).getDestinationFloor() == targetFloor) {
+				elevatorRequestList.remove(i);
+				break;
 			}
-			
-			for(int i = 0; i < floorRequestList.size(); i++) {
-				FloorRequest curFloorRequest = floorRequestList.get(i);
-				
-				if(curFloorRequest.requestFloor == targetFloor && 
-				   curFloorRequest.direction    == targetDirection) {
-					floorRequestList.remove(i);
-					break;
-				}
-			}
-			
-			request.setElevatorRequestList(elevatorRequestList);
-			request.setFloorRequestList(floorRequestList);
 		}
+		
+		for(int i = 0; i < floorRequestList.size(); i++) {
+			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
+			
+			if(curFloorRequest.getFloor()     == targetFloor && 
+			   curFloorRequest.getDirection() == targetDirection) {
+				floorRequestList.remove(i);
+				break;
+			}
+		}
+		
+		request.setElevatorButtonMessageArray(elevatorRequestList);
+		request.setFloorButtonMessageArray(floorRequestList);
+	}
 }

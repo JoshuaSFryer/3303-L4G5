@@ -2,12 +2,21 @@ package com.sysc3303.scheduler;
 
 import java.util.ArrayList;
 
+import com.sysc3303.commons.ElevatorButtonMessage;
+import com.sysc3303.commons.FloorButtonMessage;
+
 public class Request {
 	//This list stores the raw data from floor, need to add <type>!!!!!!!!!!!!!!!!!!!!
-		private ArrayList<FloorButtonMessage> floorRequestList;
+		private ArrayList<FloorButtonMessage>    floorRequestList;
 		//This list stores the raw data from elevator,need to add <type>!!!!!!!!!!!!!!!!!!!!
-		private ArrayList<ElevatonButtonMessage> elevatorRequestList;
-		private ElevatorVector                elevatorVector;
+		private ArrayList<ElevatorButtonMessage> elevatorRequestList;
+		private ElevatorVector                   elevatorVector;
+		
+		public Request() {
+			floorRequestList    = new ArrayList<FloorButtonMessage>();
+			elevatorRequestList = new ArrayList<ElevatorButtonMessage>();
+			elevatorVector      = new ElevatorVector();
+		}
 		
 		public synchronized ElevatorVector getElevatorVector() {
 			return elevatorVector;
@@ -41,4 +50,11 @@ public class Request {
 			elevatorRequestList.add(elevatorButtonMessage);
 		}
 		
+		public synchronized void setFloorButtonMessageArray(ArrayList<FloorButtonMessage> floorButtonMessageArr) {
+			floorRequestList = floorButtonMessageArr;
+		}
+		
+		public synchronized void setElevatorButtonMessageArray(ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr) {
+			elevatorRequestList = elevatorButtonMessageArr;
+		}	
 }
