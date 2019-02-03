@@ -24,6 +24,8 @@ class BadMessageTypeException extends Exception {
 
 public class ElevatorMessageHandler extends MessageHandler{
     //TODO you need to add the port numbers that will be associated with scheduler
+    private static ElevatorMessageHandler instance;
+
     private InetAddress schedulerAddress;
     private Elevator context;
 
@@ -45,6 +47,13 @@ public class ElevatorMessageHandler extends MessageHandler{
         }catch(FileNotFoundException e){
         }catch(IOException e){
         }
+    }
+
+    public static ElevatorMessageHandler getInstance(int receivePort, Elevator context){
+        if (instance == null){
+            instance = new ElevatorMessageHandler(receivePort, context);
+        }
+        return instance;
     }
 
     public ElevatorMessageHandler(int receivePort, Elevator context){

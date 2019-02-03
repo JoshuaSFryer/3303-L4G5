@@ -60,7 +60,7 @@ public class Elevator {
 		currentHeight 	= 0; //TODO: de-magicify this number
 		currentDirection = Direction.IDLE;
 		
-		messageHandler = new ElevatorMessageHandler(port, this);
+		messageHandler = ElevatorMessageHandler.getInstance(port, this);
 	}
 	
 	/**

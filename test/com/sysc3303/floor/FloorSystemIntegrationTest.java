@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import static java.lang.Thread.sleep;
+
 public class FloorSystemIntegrationTest {
 
 
@@ -23,9 +25,6 @@ public class FloorSystemIntegrationTest {
     private static int simulatorPort;
 
     private static FloorSystem floorSystem;
-
-    private static SchedulerMessageHandlerMock schedulerMessageHandlerMock;
-    private static SimulatorMessageHandlerMock simulatorMessageHandlerMock;
 
     @BeforeClass
     public static void classSetUp() throws FileNotFoundException,IOException{
@@ -37,10 +36,7 @@ public class FloorSystemIntegrationTest {
         elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
         floorPort = Integer.parseInt(properties.getProperty("floorPort"));
         simulatorPort = Integer.parseInt(properties.getProperty("simulatorPort"));
-
         floorSystem = new FloorSystem();
-        schedulerMessageHandlerMock = new SchedulerMessageHandlerMock(schedulerPort);
-        simulatorMessageHandlerMock = new SimulatorMessageHandlerMock(simulatorPort);
     }
 
     @Before
@@ -48,10 +44,16 @@ public class FloorSystemIntegrationTest {
     }
 
     @Test
-    public void testArrivalMessage(){
+    public void testArrivalMessage() throws InterruptedException{
+        SchedulerMessageHandlerMock schedulerMessageHandlerMock = SchedulerMessageHandlerMock.getInstance(8100);
+        SimulatorMessageHandlerMock simulatorMessageHandlerMock = SimulatorMessageHandlerMock.getInstance(simulatorPort);
+
         simulatorMessageHandlerMock.sendFloorButtonClickSimulation(1, Direction.DOWN);
+        sleep(1000);
         simulatorMessageHandlerMock.sendFloorButtonClickSimulation(5, Direction.UP);
+        sleep(1000);
         simulatorMessageHandlerMock.sendFloorButtonClickSimulation(3, Direction.DOWN);
+        sleep(5000);
     }
 
     @Test
