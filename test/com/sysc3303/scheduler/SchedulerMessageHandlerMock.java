@@ -1,4 +1,4 @@
-package com.sysc3303.simulator;
+package com.sysc3303.scheduler;
 
 import com.sysc3303.commons.*;
 import com.sysc3303.constants.Constants;
@@ -11,8 +11,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-public class SimulatorMessageHandler extends MessageHandler{
-    //TODO you need to add the port numbers that will be associated with scheduler
+public class SchedulerMessageHandlerMock extends MessageHandler{
+    //TODO you need to add the port numbers that will be associated with floor and elevator
     private InetAddress elevatorAddress;
     private InetAddress floorAddress;
 
@@ -36,11 +36,11 @@ public class SimulatorMessageHandler extends MessageHandler{
         }
     }
 
-    public SimulatorMessageHandler(int receivePort){
+    public SchedulerMessageHandlerMock(int receivePort){
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{
-            floorAddress = elevatorAddress = InetAddress.getLocalHost();
+            elevatorAddress = floorAddress = InetAddress.getLocalHost();
         }catch(UnknownHostException e){
         }
     }
@@ -48,26 +48,32 @@ public class SimulatorMessageHandler extends MessageHandler{
     @Override
     public void received(Message message){
         // TODO Whatever functionality you want when your receive a message
-
         switch (message.getOpcode()){
             case 0:
-                // Shouldn't have this on the simulator
                 // TODO what happens when you receive FloorButton
+                FloorButtonMessage floorButtonMessage = (FloorButtonMessage) message;
+                System.out.println("Received Floor button message");
+                System.out.println(floorButtonMessage);
                 break;
             case 1:
+                // Shouldn't have this on the scheduler
                 // TODO what happens when you receive FloorArrival
                 break;
             case 2:
-                // Shouldn't have this on the simulator
+                // Shouldn't have this on the scheduler
                 // TODO what happens when you receive GoToFloor
                 break;
             case 3:
-                // Shouldn't have this on the simulator
                 // TODO what happens when you receive ElevatorState
+                ElevatorStateMessage elevatorStateMessage = (ElevatorStateMessage) message;
+                System.out.println("Received Elevator state");
+                System.out.println(elevatorStateMessage);
                 break;
             case 4:
-                // Shouldn't have this on the simulator
                 // TODO what happens when you receive ElevatorButton
+                ElevatorButtonMessage elevatorButtonMessage = (ElevatorButtonMessage) message;
+                System.out.println("Received Elevetor Button Message");
+                System.out.println(elevatorButtonMessage);
                 break;
             case 5:
                 // Shouldn't have this on the simulator
@@ -82,12 +88,15 @@ public class SimulatorMessageHandler extends MessageHandler{
         }
     }
 
-    public void sendFloorButtonClickSimulation(int floor, Direction direction){
-        FloorClickSimulationMessage floorClickSimulationMessage = new FloorClickSimulationMessage(floor, direction);
-        send(floorClickSimulationMessage, floorAddress, floorPort);
+    // TODO Rename this if you would like to
+    public void sendGoToFloor(int floor){
+        GoToFloorMessage goToFloorMessage = new GoToFloorMessage(floor);
+        send(goToFloorMessage, elevatorAddress, elevatorPort);
     }
-    public void sendElevatorButtonClickSimulation(int floor, int elevatorId){
-        ElevatorClickSimulationMessage elevatorButtonClickSimulation = new ElevatorClickSimulationMessage(floor, elevatorId);
-        send(elevatorButtonClickSimulation, elevatorAddress, elevatorPort);
+
+    // TODO Rename this if you would like to
+    public void sendFloorArival(int floor, Direction direction){
+        FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
+        send(floorArrivalMessage, floorAddress, floorPort);
     }
 }

@@ -11,7 +11,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-public class SimulatorMessageHandler extends MessageHandler{
+public class SimulatorMessageHandlerMock extends MessageHandler{
     //TODO you need to add the port numbers that will be associated with scheduler
     private InetAddress elevatorAddress;
     private InetAddress floorAddress;
@@ -36,7 +36,7 @@ public class SimulatorMessageHandler extends MessageHandler{
         }
     }
 
-    public SimulatorMessageHandler(int receivePort){
+    public SimulatorMessageHandlerMock(int receivePort){
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{

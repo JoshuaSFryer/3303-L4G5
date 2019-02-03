@@ -1,4 +1,4 @@
-package com.sysc3303.simulator;
+package com.sysc3303.floor;
 
 import com.sysc3303.commons.*;
 import com.sysc3303.constants.Constants;
@@ -9,12 +9,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.Properties;
 
-public class SimulatorMessageHandler extends MessageHandler{
+public class FloorMessageHandlerMock extends MessageHandler {
     //TODO you need to add the port numbers that will be associated with scheduler
-    private InetAddress elevatorAddress;
-    private InetAddress floorAddress;
+    private InetAddress schedulerAddress;
+    private InetAddress simulatorAddress;
 
     static int schedulerPort;
     static int elevatorPort;
@@ -36,58 +37,64 @@ public class SimulatorMessageHandler extends MessageHandler{
         }
     }
 
-    public SimulatorMessageHandler(int receivePort){
+    public FloorMessageHandlerMock(int receivePort){
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{
-            floorAddress = elevatorAddress = InetAddress.getLocalHost();
+            schedulerAddress = simulatorAddress = InetAddress.getLocalHost();
         }catch(UnknownHostException e){
         }
     }
 
     @Override
-    public void received(Message message){
+    public synchronized void received(Message message){
         // TODO Whatever functionality you want when your receive a message
-
         switch (message.getOpcode()){
             case 0:
-                // Shouldn't have this on the simulator
+                // Shouldn't have this on the Floor
                 // TODO what happens when you receive FloorButton
                 break;
             case 1:
                 // TODO what happens when you receive FloorArrival
+                FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
+                System.out.println("Floor arrival method called");
+                System.out.println(floorArrivalMessage);
                 break;
             case 2:
-                // Shouldn't have this on the simulator
+                // Shouldn't have this on the Floor
                 // TODO what happens when you receive GoToFloor
                 break;
             case 3:
-                // Shouldn't have this on the simulator
-                // TODO what happens when you receive ElevatorState
+                // Shouldn't have this on the Floor
+                // TODO what happens when you receive ElevatoirState
                 break;
             case 4:
-                // Shouldn't have this on the simulator
+                // Shouldn't have this on the Floor
                 // TODO what happens when you receive ElevatorButton
                 break;
             case 5:
-                // Shouldn't have this on the simulator
                 // TODO what happens when you receive FloorButtonSimulationMessage
+                FloorClickSimulationMessage floorClickSimulationMessage = (FloorClickSimulationMessage) message;
+                System.out.println("FloorClickSimulatorMethodCalled");
+                System.out.println(floorClickSimulationMessage);
                 break;
             case 6:
-                // Shouldn't have this on the simulator
+                // Shouldn't have this on the Floor
                 // TODO what happens when you receive ElevatorButtonSimulationMessage
                 break;
             default:
-                // TODO what happens when you get an invalid upcode
+                // TODO what happens when you get an invalid opcode
         }
     }
 
-    public void sendFloorButtonClickSimulation(int floor, Direction direction){
-        FloorClickSimulationMessage floorClickSimulationMessage = new FloorClickSimulationMessage(floor, direction);
-        send(floorClickSimulationMessage, floorAddress, floorPort);
+    public void sendFloorButton(int floor, Direction direction){
+        FloorButtonMessage floorButtonMessage = new FloorButtonMessage(floor, direction, new Date());
+        send(floorButtonMessage, schedulerAddress, schedulerPort);
     }
-    public void sendElevatorButtonClickSimulation(int floor, int elevatorId){
-        ElevatorClickSimulationMessage elevatorButtonClickSimulation = new ElevatorClickSimulationMessage(floor, elevatorId);
-        send(elevatorButtonClickSimulation, elevatorAddress, elevatorPort);
+
+    public void sendFloorArrival(int floor, Direction direction) {
+        FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
+        send(floorArrivalMessage, simulatorAddress, simulatorPort);
     }
 }
+

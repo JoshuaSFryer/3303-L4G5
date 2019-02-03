@@ -1,19 +1,42 @@
 package com.sysc3303.floor;
 
 import com.sysc3303.commons.*;
+import com.sysc3303.constants.Constants;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.Properties;
 
 public class FloorMessageHandler extends MessageHandler{
     //TODO you need to add the port numbers that will be associated with scheduler
-    final int schedulerPort = 7002;
-    final int simulatorPort = 7003;
     private InetAddress schedulerAddress;
     private InetAddress simulatorAddress;
     private FloorSystem floorSystem;
 
+    static int schedulerPort;
+    static int elevatorPort;
+    static int floorPort;
+    static int simulatorPort;
+
+    static {
+        Properties properties = new Properties();
+        try{
+            InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
+            properties.loadFromXML(inputStream);
+
+            schedulerPort = Integer.parseInt(properties.getProperty("schedulerPort"));
+            elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
+            floorPort = Integer.parseInt(properties.getProperty("floorPort"));
+            simulatorPort = Integer.parseInt(properties.getProperty("simulatorPort"));
+        }catch(FileNotFoundException e){
+        }catch(IOException e){
+        }
+    }
 
     public FloorMessageHandler(int receivePort, FloorSystem floorSystem){
         super(receivePort);
@@ -35,8 +58,12 @@ public class FloorMessageHandler extends MessageHandler{
                 break;
             case 1:
                 // TODO what happens when you receive FloorArrival
-            	FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
-            	floorSystem.floorArrival(floorArrivalMessage.getFloor(), floorArrivalMessage.getCurrentDirection());
+                try {
+                    FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
+                    floorSystem.floorArrival(floorArrivalMessage.getFloor(), floorArrivalMessage.getCurrentDirection());
+                }catch(InterruptedException e){
+                    System.out.println(e.getStackTrace());
+                }
                 break;
             case 2:
                 // Shouldn't have this on the Floor
@@ -52,13 +79,15 @@ public class FloorMessageHandler extends MessageHandler{
                 break;
             case 5:
                 // TODO what happens when you receive FloorButtonSimulationMessage
+                FloorClickSimulationMessage floorClickSimulationMessage = (FloorClickSimulationMessage) message;
+                floorSystem.buttonPress(floorClickSimulationMessage.getFloor(), floorClickSimulationMessage.getDirection());
                 break;
             case 6:
                 // Shouldn't have this on the Floor
                 // TODO what happens when you receive ElevatorButtonSimulationMessage
                 break;
             default:
-                // TODO what happens when you get an invalid upcode
+                // TODO what happens when you get an invalid opcode
         }
     }
 
