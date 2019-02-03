@@ -1,30 +1,67 @@
 package com.sysc3303.floor;
 
+import com.sysc3303.commons.Direction;
+
 public class FloorLamp {
-	private boolean up   = false;
-	private boolean down = false;
 	
-	public void lightUp() {
-		up = true;
+	private boolean upLamp;
+	private boolean downLamp;
+	
+	FloorLamp() {
+		this.upLamp = false;
+		this.downLamp = false;
 	}
 	
-	public void lightDown() {
-		down = true;
+
+	public String getLampStatus() {
+		return "UP-Lamp = " + upLamp + "  DOWN-Lamp = " + downLamp + "\n";
 	}
 	
-	public void disableLightUp() {
-		up = false;
+	public void turnUpLampON() {
+		upLamp = true;
 	}
 	
-	public void disableLightDown() {
-		down = false;
+	public void turnUpLampOFF() {
+		upLamp = false;
 	}
 	
-	public boolean isUpLightEnabled() {
-		return up;
+	public void turnDownLampON() {
+		downLamp = true;
 	}
 	
-	public boolean isDownLightEnabled() {
-		return down;
+	public void turnDownLampOFF() {
+		downLamp = false;
+	}
+	
+	public void turnBothLampON() {
+		upLamp = true;
+		downLamp = true;
+	}
+	
+	public void turnBothLampOFF() {
+		upLamp = false;
+		downLamp = false;
+	}
+	
+	
+	
+	public void flashLamp(Direction direction) {
+		if (Direction.UP == direction){
+			turnUpLampON();
+		}
+		
+		else if (Direction.DOWN == direction) {
+			turnDownLampON();
+		}
+	}
+
+
+	public boolean isUpLamp() {
+		return upLamp;
+	}
+
+
+	public boolean isDownLamp() {
+		return downLamp;
 	}
 }

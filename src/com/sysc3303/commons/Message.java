@@ -1,62 +1,27 @@
 package com.sysc3303.commons;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 
-public class Message implements Serializable{
-	private static final long serialVersionUID = 1097867564019283746L;
-	private Date   requestTime;
-	private int    floorNumber;
-	private int    destinationFloor;
-	private String direction;
-	
-	public Message(Date requestTime, int floorNumber, String direction, int destinationFloor) {
-		this.requestTime      = requestTime;
-		this.floorNumber      = floorNumber;
-		this.direction        = direction;
-		this.destinationFloor = destinationFloor;
+/**
+ * Messages are the data type that can be sent between different Communication Handlers
+ * Messages are an abstract class that should be subclassed for each type of message to be sent
+ * @author	Mattias Lightstone
+ */
+
+public abstract class Message implements Serializable {
+	public static final long serialVersionUID = 1097867564019283746L;
+	// Opcodes are used to identify the type of message
+	public final byte   	opcode;
+
+	public Message(byte opcode){
+	    this.opcode = opcode;
 	}
-	
-	public Date getRequestTime() {
-		return requestTime;
+
+	public String toString(){
+	    return "Message with opcode: " + opcode;
 	}
-	
-	public String toStringRequestTime() {
-		SimpleDateFormat formatter = new SimpleDateFormat("hh:mm:ss.S");
-		return formatter.format(requestTime);
-	}
-	
-	public void setRequestTime(Date requestTime) {
-		this.requestTime = requestTime;
-	}
-	
-	public int getFloorNumber() {
-		return floorNumber;
-	}
-	
-	public void setFloorNumber(int floorNumber) {
-		this.floorNumber = floorNumber;
-	}
-	
-	public int getDestinationFloor() {
-		return destinationFloor;
-	}
-	
-	public void setDestinationFloor(int destinationFloor) {
-		this.destinationFloor = destinationFloor;
-	}
-	
-	public String getDirection() {
-		return direction;
-	}
-	
-	public void setDirection(String direction) {
-		this.direction = direction;
-	}
-	
-	public String toString() {
-		String output = toStringRequestTime() + " " + floorNumber + " " + direction + " " + destinationFloor;
-		return output;
+
+	public byte getOpcode(){
+		return opcode;
 	}
 }

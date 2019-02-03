@@ -1,0 +1,82 @@
+@startuml
+
+class Direction{
+}
+together {
+  class Timer
+  class TimerTask
+}
+
+TimerTask <|-- TimedEvent
+Timer <|-- EventTimer
+EventTimer ..> TimedEvent: "schedules" >
+
+together {
+  class FloorReceiver<<(S, blue)>>{
+    + receiveElevatorArrived(int floor, Direction direction)
+  }
+
+  class ElevatorSender<<(S, blue)>>{
+    + sendElevatorClick(int elevatorNum, int floor)
+  }
+  class FloorSender <<(S, blue)>>{
+    + sendFloorClick(int floor, Direction direction)
+  }
+}
+
+together {
+  class EventTimer<<(S, blue)>>{
+    + add(Event): boolean
+  }
+
+  class TriggeredEventMap<<(S, blue)>>{
+    HashMap<floor: HashMap<direction: Event>>
+    + add(Event event)
+    + send(int floor, Direction direction, int elevatorNum)
+  }
+
+  class TimedEvent{
+    - event: Event
+    + run(): void
+  }
+
+}
+
+together {
+  class Event{
+    - time: dateTime
+    - floor: int
+    - direction: Direction
+    - elevatorButton: int
+  }
+}
+
+
+
+together {
+  class EventMaker<<(S, blue)>>{
+    + addEventsFromFileToTimer(String filename): void
+    - createEvenatAndAddToTimer(String[] stringArray): boolean;
+  }
+  class FileParser<<(S, blue)>>{
+    - parsed: List<String[]>
+    + parse(String filename): void
+    + getParsed(): List<String[]>
+  }
+}
+
+EventMaker .> Event: "creates"
+EventMaker .> EventTimer: "adds events"
+
+TriggeredEventMap "[floor, direction]" o-- Event
+TimedEvent o-- Event
+
+Event o-- Direction
+
+TimedEvent ..> FloorSender: sends event using
+TriggeredEventMap ..> ElevatorSender: sends events using
+TriggeredEventMap <.. FloorReceiver: triggers
+
+ FileParser <. EventMaker : gets event data from file using
+
+@enduml

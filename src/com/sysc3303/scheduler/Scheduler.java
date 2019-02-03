@@ -25,22 +25,22 @@ public class Scheduler {
 		elevatorSocketHandler = new SocketHandler();
 	}
 	
-	public byte[] recieveMessageFromFloor(byte[] data) {
+	public byte[] receiveMessageFromFloor(byte[] data) {
 		data = floorSocketHandler.waitForPacket(data, false);
 		return data;
 	}
 
-	public byte[] recieveMessageFromElevator(byte[] data) {
+	public byte[] receiveMessageFromElevator(byte[] data) {
 		data = elevatorSocketHandler.waitForPacket(data, true);
 		return data;
 	}
 	
-	public int getElevatorRecievePacketLength() {
-		return elevatorSocketHandler.getRecievePacketLength();
+	public int getElevatorReceivePacketLength() {
+		return elevatorSocketHandler.getReceivePacketLength();
 	}
 
-	public int getFloorRecievePacketLength() {
-		return floorSocketHandler.getRecievePacketLength();
+	public int getFloorReceivePacketLength() {
+		return floorSocketHandler.getReceivePacketLength();
 	}
 	
 	public void sendMessageToElevator(byte[] data, int length, InetAddress address, int port) {
@@ -48,7 +48,7 @@ public class Scheduler {
 	}
 	
 	public void sendMessageToFloor(byte[] data, int length) {
-		floorSocketHandler.sendSocketToRecievedHost(data, length);
+		floorSocketHandler.sendSocketToReceivedHost(data, length);
 	}
 	
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
@@ -65,34 +65,34 @@ public class Scheduler {
 		Scheduler scheduler    = new Scheduler(port);
 		
 		while(running) {
-			byte[]  recieveData = new byte[300];
-			int     recieveLength;
+			byte[]  receiveData = new byte[400];
+			int     receiveLength;
 			Message message;
 			
 			System.out.println("----------");
 			System.out.println("Waiting for message from floor");
 			
-			recieveData   = scheduler.recieveMessageFromFloor(recieveData);
-			recieveLength = scheduler.getFloorRecievePacketLength();	
-			message       = serializationUtil.deserialize(recieveData, recieveLength);
+			receiveData   = scheduler.receiveMessageFromFloor(receiveData);
+			receiveLength = scheduler.getFloorReceivePacketLength();
+			message       = serializationUtil.deserialize(receiveData, receiveLength);
 			
-			System.out.println("Recieved following message from floor: ");
+			System.out.println("Received following message from floor: ");
 			System.out.println(message.toString());
  			System.out.println("Forwarding message to elevator");
  			
- 			scheduler.sendMessageToElevator(recieveData, recieveLength, elevatorIp, elevatorPort);
+ 			scheduler.sendMessageToElevator(receiveData, receiveLength, elevatorIp, elevatorPort);
  			
  			System.out.println("Wating for message from elevator");
  			
- 			recieveData   = scheduler.recieveMessageFromElevator(new byte[300]);
- 			recieveLength = scheduler.getElevatorRecievePacketLength();
- 			message       = serializationUtil.deserialize(recieveData, recieveLength);
+ 			receiveData   = scheduler.receiveMessageFromElevator(new byte[400]);
+ 			receiveLength = scheduler.getElevatorReceivePacketLength();
+ 			message       = serializationUtil.deserialize(receiveData, receiveLength);
  			
- 			System.out.println("Recieved following message from elevator: ");
+ 			System.out.println("Received following message from elevator: ");
  			System.out.println(message.toString());
  			System.out.println("Forwarding message to floor");
  			
- 			scheduler.sendMessageToFloor(recieveData, recieveLength);
+ 			scheduler.sendMessageToFloor(receiveData, receiveLength);
  			
  			System.out.println("Message sent");
  			System.out.println("----------");
