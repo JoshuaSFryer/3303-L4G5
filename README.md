@@ -56,8 +56,8 @@ The Simulator system reads from the provided input file and sends messages
 using the read data to simulate button presses within the Floor and Elevator
 systems. 
 
-## Directory Structure
-- Binaries are located in /bin.
+# Directory Structure
+- Compiled binaries/*.class files are located in /bin.
 - Documentation such as diagrams are located in /doc.
 - All source code is located in /src. The subdirectories follow a structure.
 commonly used in Java programs, and particularly Android applications,wherein
