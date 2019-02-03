@@ -13,8 +13,8 @@ After code review, it can be pushed to the branch "iteration#"
 
 
 # Running the System
-Run the Floor, Scheduler, and Elevator systems, in any order. Then, run the
-Simulator system, which will begin loading from an input file located at
+Run the FloorSystem, Scheduler, and Elevator systems, in any order. Then, run the
+Runner class of the Simulator system, which will begin loading from an input file located at
 /src/resources/inputFile.txt. Please place the input file you wish to test
 with at this location.
 
