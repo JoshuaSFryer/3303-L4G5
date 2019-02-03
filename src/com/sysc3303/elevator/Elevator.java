@@ -276,13 +276,7 @@ public class Elevator {
 							0); //TODO: De-magicify this number.
 		
 		while(running) {
-			elevator.generateRandomRequest();
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 			
 		}
 	}
