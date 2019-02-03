@@ -22,14 +22,12 @@ public class Elevator {
 	
 	public final int elevatorID;
 
-	//private SocketHandler  		socketHandler;
 	private ElevatorLamp   		lamp;
 	private Motor          		motor;
 	private Door           		door;
 	private ArrayList<ElevatorButton> 	buttons;
 	private FloorSensor 		sensor;
 	
-	//private int				targetFloor;
 	private int 			currentFloor;
 	
 	private int			currentHeight; // Current height in CM
@@ -52,14 +50,12 @@ public class Elevator {
 	 */
 	public Elevator(int port, int numFloors, int ID) {
 		elevatorID 		= ID;
-		//socketHandler 	= new SocketHandler(port);
 		lamp          	= new ElevatorLamp();
 		buttons       	= generateButtons(numFloors);
 		sensor 			= new FloorSensor(this);
 		motor         	= new Motor(this);
 		door          	= new Door();
 		currentFloor   	= Elevator.GROUND_FLOOR;
-		//targetFloor 	= Elevator.GROUND_FLOOR;
 		currentState	= new Idle();
 		currentHeight 	= 0; //TODO: de-magicify this number
 		currentDirection = Direction.IDLE;
@@ -263,9 +259,7 @@ public class Elevator {
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
 		Properties                 properties        = new Properties();
 		InputStream                inputStream       = new FileInputStream(Constants.CONFIG_PATH);
-		//InputStream                inputStream       = new FileInputStream("config/config.xml");
 		boolean                    running           = true;
-		//SerializationUtil<Message> serializationUtil = new SerializationUtil<Message>();
 		
 		properties.loadFromXML(inputStream);
 		
@@ -276,8 +270,7 @@ public class Elevator {
 							0); //TODO: De-magicify this number.
 		
 		while(running) {
-			
-			
+
 		}
 	}
 }

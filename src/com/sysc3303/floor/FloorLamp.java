@@ -29,7 +29,7 @@ public class FloorLamp {
 	 */
 	public void turnUpLampON() {
 		upLamp = true;
-		//System.out.println("Up Lamp is =" + upLamp);
+		System.out.println("Up Lamp is =" + upLamp);
 	}
 	
 	/*
@@ -38,7 +38,7 @@ public class FloorLamp {
 	
 	public void turnUpLampOFF() {
 		upLamp = false;
-		//System.out.println("Up Lamp is =" + upLamp);
+		System.out.println("Up Lamp is =" + upLamp);
 	}
 	
 	/*
@@ -47,7 +47,7 @@ public class FloorLamp {
 	
 	public void turnDownLampON() {
 		downLamp = true;
-		//System.out.println("Down Lamp is =" + downLamp);
+		System.out.println("Down Lamp is =" + downLamp);
 	}
 	
 	
@@ -56,7 +56,7 @@ public class FloorLamp {
 	 */
 	public void turnDownLampOFF() {
 		downLamp = false;
-		//System.out.println("Down Lamp is =" + downLamp);
+		System.out.println("Down Lamp is =" + downLamp);
 	}
 	
 	public void turnBothLampON() {
