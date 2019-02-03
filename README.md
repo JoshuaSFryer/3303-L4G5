@@ -12,12 +12,12 @@ After code review, it can be pushed to the branch "iteration#"
 - Xinrui Zhang
 
 
-## Running the System
+# Running the System
 Run the Floor, Scheduler, and Elevator systems, in any order. Then, run the
 Simulator system, which will begin loading from the input file located at
 /src/resources/inputFile.txt.
 
-
+#Subsystems
 This Elevator System Consists of four subsystems:
 ## Floor System
 FloorSystem is responsible for simulating passenger actions on the floors of
