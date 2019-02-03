@@ -38,7 +38,6 @@ public class ElevatorMessageHandler extends MessageHandler{
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
             case 2:
-            	//context.closeDoors();
             	GoToFloorMessage castMessage = (GoToFloorMessage) message;
             	context.goToFloor(castMessage.getDestinationFloor());
                 break;
@@ -50,10 +49,12 @@ public class ElevatorMessageHandler extends MessageHandler{
     }
 
     public void sendElevatorState(ElevatorVector elevatorVector, int elevatorId){
+    	System.out.println("Arrived at a floor, notifying scheduler");
         ElevatorStateMessage elevatorStateMessage = new ElevatorStateMessage(elevatorVector, elevatorId);
         send(elevatorStateMessage, schedulerAddress, schedulerPort);
     }
     public void sendElevatorButton(int destinationFloor, int elevatorId){
+    	System.out.println("Elevator button pressed, notifying scheduler");
         ElevatorButtonMessage elevatorButtonMessage = new ElevatorButtonMessage(destinationFloor, elevatorId, new Date());
         send(elevatorButtonMessage, schedulerAddress, schedulerPort);
     }

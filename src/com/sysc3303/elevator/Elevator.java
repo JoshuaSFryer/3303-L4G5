@@ -79,7 +79,7 @@ public class Elevator {
 		}
 		return buttonList;
 	}
-
+	
 	/**
 	 * Get the current state.
 	 * @return	The current ElevatorState
@@ -106,6 +106,7 @@ public class Elevator {
 	 * @param targetFloor
 	 */
 	public void receiveMessageFromScheduler(int targetFloor) {
+		System.out.println("Received new message from scheduler");
 		// Interrupt the movement handler
 		try {
 			this.mover.interrupt();
@@ -183,7 +184,7 @@ public class Elevator {
 	 */
 	public void setCurrentFloor(int floor) {
 		this.currentFloor = floor;
-		this.lamp.setCurrentFloor(floor);
+		this.lamp.setCurrentFloor(floor, currentDirection);
 	}
 	
 	/**
@@ -235,8 +236,18 @@ public class Elevator {
 	 * @param targetFloor	The number of the floor to travel to.
 	 */
 	public void goToFloor(int targetFloor) {
-		// Close the doors before proceeding!
+		// Close the doors before proceeding. Safety first!
 		closeDoors();
+		// Set the current direction and update the lamp.
+		if(targetFloor > currentFloor) {
+			this.currentDirection = Direction.UP;
+		} else if (targetFloor < currentFloor) {
+			this.currentDirection = Direction.DOWN;
+		} else {
+			this.currentDirection = Direction.IDLE;
+		}
+		this.lamp.setCurrentFloor(currentFloor, currentDirection);
+		
 		this.mover = new Thread(
 						new MovementHandler(targetFloor, this, this.sensor, 
 											this.motor));
