@@ -37,8 +37,16 @@ public class FloorMessageHandler extends MessageHandler{
         }catch(IOException e){
         }
     }
+    private static FloorMessageHandler instance;
 
-    public FloorMessageHandler(int receivePort, FloorSystem floorSystem){
+    public static FloorMessageHandler getInstance(int receivePort, FloorSystem floorSystem){
+        if (instance == null){
+            return new FloorMessageHandler(receivePort, floorSystem);
+        }
+        return instance;
+    }
+
+    private FloorMessageHandler(int receivePort, FloorSystem floorSystem){
         super(receivePort);
         this.floorSystem = floorSystem;
         //TODO currently for localhost this is how it looks

@@ -36,7 +36,16 @@ public class SchedulerMessageHandlerMock extends MessageHandler{
         }
     }
 
-    public SchedulerMessageHandlerMock(int receivePort){
+    private static SchedulerMessageHandlerMock instance;
+
+    public static SchedulerMessageHandlerMock getInstance(int receivePort){
+        if (instance == null){
+            instance = new SchedulerMessageHandlerMock(receivePort);
+        }
+        return instance;
+    }
+
+    private SchedulerMessageHandlerMock(int receivePort){
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{

@@ -17,6 +17,7 @@ public class ElevatorMessageHandlerMock extends MessageHandler{
     static int elevatorPort;
     static int floorPort;
     static int simulatorPort;
+    static ElevatorMessageHandlerMock instance;
 
     static {
         Properties properties = new Properties();
@@ -33,9 +34,16 @@ public class ElevatorMessageHandlerMock extends MessageHandler{
         }
     }
 
+    public static ElevatorMessageHandlerMock getInstance(int receiverPort){
+        if (instance == null){
+            return new ElevatorMessageHandlerMock(receiverPort);
+        }
+        return instance;
+    }
+
     private InetAddress schedulerAddress;
 
-    public ElevatorMessageHandlerMock(int receivePort){
+    private ElevatorMessageHandlerMock(int receivePort){
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{
