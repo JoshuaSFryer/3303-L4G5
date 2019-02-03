@@ -63,6 +63,7 @@ public class Scheduler {
 		int       elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
 		Scheduler scheduler    = new Scheduler();
 		
+		System.out.println("Starting Scheduler Message Handler...");
 		SchedulerMessageHandler messageHandler = new SchedulerMessageHandler(port, scheduler);
 	}
 }

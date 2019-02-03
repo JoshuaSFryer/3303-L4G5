@@ -40,6 +40,8 @@ public class SchedulerMessageHandler extends MessageHandler{
 					e.printStackTrace();
 				}
             	GoToFloorMessage goToFloorMessage = scheduler.getGoToFloorMessage();
+            	System.out.println("Sending Message to elevator");
+            	System.out.println(goToFloorMessage.toString());
             	sendGoToFloor(goToFloorMessage);
                 break;
             case 1:
@@ -78,7 +80,9 @@ public class SchedulerMessageHandler extends MessageHandler{
 					e.printStackTrace();
 				}
             	FloorArrivalMessage floorArrivalMessage = scheduler.getFloorArrivalMessage();
-                sendFloorArrival(floorArrivalMessage);
+            	System.out.println("Sending Message to Floor");
+            	System.out.println(floorArrivalMessage.toString());
+            	sendFloorArrival(floorArrivalMessage);
             	break;
             default:
                 // TODO what happens when you get an invalid upcode
