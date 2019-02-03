@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.*;
-// import java.util.InvalidPropertiesFormatException;
-// import java.util.Properties;
-// import java.util.ArrayList;
 
 import com.sysc3303.commons.FloorArrivalMessage;
 import com.sysc3303.commons.FloorButtonMessage;
@@ -17,41 +14,53 @@ import com.sysc3303.constants.Constants;
 
 
 /**
- * @author
- *
+ * @author Yu Yamanaaka Xinrui Zhang
+ * Scheduler subsystem
  */
 public class Scheduler {
 	private Runnable floorMessageHandler    = null;
 	private Runnable elevatorMessageHandler = null;
 	private Request  request; 
 
-
 	public Scheduler() {		
 		request  = new Request();
 	}
 	
+	/**
+	 * Starts new thread for handling floor message
+	 * @param message
+	 */
 	public void startFloorMessageHandler(Message message) {
 		Runnable floorMessageHandler = new FloorMessageHandler(request, (FloorButtonMessage)message);
 		new Thread(floorMessageHandler).start();
 	}
 	
+	/**
+	 * Starts new thread for handling elevator message
+	 * @param message
+	 */
 	public void startElevatorMessageHandler(Message message) {
 		Runnable elevatorMessageHandler = new ElevatorMessageHandler(request, message);
 		new Thread(elevatorMessageHandler).start();
 	}
 	
+	/**
+	 * 
+	 * @return FloorArrivalMessage
+	 */
 	public FloorArrivalMessage getFloorArrivalMessage() {
 		ElevatorMessageHandler elevatorMessageHandler = (ElevatorMessageHandler)this.elevatorMessageHandler;
 		return elevatorMessageHandler.getFloorArrivalMessage();
 	}
 	
+	/**
+	 * @return GoToFloorMessage
+	 */
 	public GoToFloorMessage getGoToFloorMessage() {
 		FloorMessageHandler floorMessageHandler = (FloorMessageHandler)this.floorMessageHandler;
 		return floorMessageHandler.getGoToFloorMessage();
 	}
-	
-	//This function update the target floor based on the floorRequestList, elevatorRequestList
-	//and elevator's position and status		
+		
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
 		Properties  properties  = new Properties();
 		InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);

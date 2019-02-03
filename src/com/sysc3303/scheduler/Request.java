@@ -7,9 +7,7 @@ import com.sysc3303.commons.FloorButtonMessage;
 import com.sysc3303.elevator.ElevatorVector;
 
 public class Request {
-	//This list stores the raw data from floor, need to add <type>!!!!!!!!!!!!!!!!!!!!
 		private ArrayList<FloorButtonMessage>    floorRequestList;
-		//This list stores the raw data from elevator,need to add <type>!!!!!!!!!!!!!!!!!!!!
 		private ArrayList<ElevatorButtonMessage> elevatorRequestList;
 		private ElevatorVector                   elevatorVector;
 		
@@ -19,14 +17,25 @@ public class Request {
 			elevatorVector      = null;
 		}
 		
+		/**
+		 * 
+		 * @return ElevatorVector
+		 */
 		public synchronized ElevatorVector getElevatorVector() {
 			return elevatorVector;
 		}
 
+		/**
+		 * @param elevatorVector
+		 */
 		public synchronized void setElevatorVector(ElevatorVector elevatorVector) {
 			this.elevatorVector = elevatorVector;
 		}
 
+		/**
+		 * @param index
+		 * @return FloorButtonMessage
+		 */
 		public synchronized FloorButtonMessage getFloorButtonMessage(int index) {
 			return floorRequestList.get(index);
 		}
