@@ -141,9 +141,7 @@ public class Elevator {
 	 * @return	The random result.
 	 */
 	private int generateRandomInt(int min, int max) {
-		//Random r = new Random();
 		return (int)(Math.random() * ((max-min) + 1) + min);
-		
 	}
 	
 	/**
@@ -237,7 +235,8 @@ public class Elevator {
 	 * @param targetFloor	The number of the floor to travel to.
 	 */
 	public void goToFloor(int targetFloor) {
-		
+		// Close the doors before proceeding!
+		closeDoors();
 		this.mover = new Thread(
 						new MovementHandler(targetFloor, this, this.sensor, 
 											this.motor));
@@ -268,7 +267,7 @@ public class Elevator {
 		while(running) {
 			elevator.generateRandomRequest();
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(10000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

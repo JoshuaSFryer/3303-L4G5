@@ -1,7 +1,7 @@
 package com.sysc3303.elevator;
 
 public class MovementHandler implements Runnable {
-	public static final int MOVEMENTDELAY = 1000;
+	public static final int MOVEMENTDELAY = 250;
 	
 	int targetFloor;
 	Motor motor;
@@ -50,7 +50,8 @@ public class MovementHandler implements Runnable {
 						moveDown();
 					} else {
 						// Don't need to move any more, so kill this thread.
-						//context.openDoors();
+						System.out.println("Arrived at destination!");
+						context.openDoors();
 						return;
 					}
 				}
@@ -63,12 +64,12 @@ public class MovementHandler implements Runnable {
 	
 	public void moveUp() {
 		motor.moveUp();
-		System.out.println(context.getCurrentHeight());
+		System.out.println("Height: " + context.getCurrentHeight() + " cm");
 	}
 	
 	public void moveDown() {
 		motor.moveDown();
-		System.out.println(context.getCurrentHeight());
+		System.out.println("Height: " + context.getCurrentHeight() + " cm");
 	}
 
 }

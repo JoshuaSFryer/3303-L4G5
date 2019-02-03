@@ -38,7 +38,7 @@ public class ElevatorMessageHandler extends MessageHandler{
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
             case 2:
-                // TODO what happens when you receive GoToFloor
+            	//context.closeDoors();
             	GoToFloorMessage castMessage = (GoToFloorMessage) message;
             	context.goToFloor(castMessage.getDestinationFloor());
                 break;

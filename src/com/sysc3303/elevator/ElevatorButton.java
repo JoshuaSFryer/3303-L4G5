@@ -37,6 +37,7 @@ public class ElevatorButton {
 	 * @param state	True to turn on the light, false to turn it off.
 	 */
 	private void setLight(boolean state) {
+		System.out.println("Button " + this.id + "'s light is on.");
 		this.illuminated = state;
 	}
 }
