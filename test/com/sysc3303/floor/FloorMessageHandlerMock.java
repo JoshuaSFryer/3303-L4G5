@@ -12,11 +12,10 @@ import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Properties;
 
-public class FloorMessageHandler extends MessageHandler{
+public class FloorMessageHandlerMock extends MessageHandler {
     //TODO you need to add the port numbers that will be associated with scheduler
     private InetAddress schedulerAddress;
     private InetAddress simulatorAddress;
-    private FloorSystem floorSystem;
 
     static int schedulerPort;
     static int elevatorPort;
@@ -38,9 +37,8 @@ public class FloorMessageHandler extends MessageHandler{
         }
     }
 
-    public FloorMessageHandler(int receivePort, FloorSystem floorSystem){
+    public FloorMessageHandlerMock(int receivePort){
         super(receivePort);
-        this.floorSystem = floorSystem;
         //TODO currently for localhost this is how it looks
         try{
             schedulerAddress = simulatorAddress = InetAddress.getLocalHost();
@@ -58,13 +56,9 @@ public class FloorMessageHandler extends MessageHandler{
                 break;
             case 1:
                 // TODO what happens when you receive FloorArrival
-            	FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
-            	try {
-            			floorSystem.floorArrival(floorArrivalMessage.getFloor(), floorArrivalMessage.getCurrentDirection());
-            	} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-            		e.printStackTrace();
-            	}
+                FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
+                System.out.println("Floor arrival method called");
+                System.out.println(floorArrivalMessage);
                 break;
             case 2:
                 // Shouldn't have this on the Floor
@@ -72,7 +66,7 @@ public class FloorMessageHandler extends MessageHandler{
                 break;
             case 3:
                 // Shouldn't have this on the Floor
-                // TODO what happens when you receive ElevatorState
+                // TODO what happens when you receive ElevatoirState
                 break;
             case 4:
                 // Shouldn't have this on the Floor
@@ -81,7 +75,8 @@ public class FloorMessageHandler extends MessageHandler{
             case 5:
                 // TODO what happens when you receive FloorButtonSimulationMessage
                 FloorClickSimulationMessage floorClickSimulationMessage = (FloorClickSimulationMessage) message;
-                floorSystem.buttonPress(floorClickSimulationMessage.getFloor(), floorClickSimulationMessage.getDirection());
+                System.out.println("FloorClickSimulatorMethodCalled");
+                System.out.println(floorClickSimulationMessage);
                 break;
             case 6:
                 // Shouldn't have this on the Floor
@@ -96,9 +91,10 @@ public class FloorMessageHandler extends MessageHandler{
         FloorButtonMessage floorButtonMessage = new FloorButtonMessage(floor, direction, new Date());
         send(floorButtonMessage, schedulerAddress, schedulerPort);
     }
-    
+
     public void sendFloorArrival(int floor, Direction direction) {
-    	FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
-    	send(floorArrivalMessage, simulatorAddress, simulatorPort);
+        FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
+        send(floorArrivalMessage, simulatorAddress, simulatorPort);
     }
 }
+

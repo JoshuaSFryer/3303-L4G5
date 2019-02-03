@@ -12,16 +12,17 @@ import java.util.List;
 
 import com.sysc3303.commons.Direction;
 
+import static com.sysc3303.floor.FloorMessageHandler.floorPort;
+
+
 public class FloorSystem {
 	//TODO change this number to properties file value
-	private static int floorPort = 8000;			//Arbitary Port number just to test the class
 	private static int totalNumberofFloors = 5;
 	static int passengerIsOnFloor;
 	static String direction = "None";
 	private List<FloorGeneral> floorList;
 	private FloorMessageHandler floorMessageHandler;
-	
-	
+
 	//Constructor
 	public FloorSystem(){
 		floorList = new ArrayList<>();
@@ -80,7 +81,7 @@ public class FloorSystem {
 	 * 	2. It takes the message from the Simulator or input file
 	 * 	3. It turns on the lamp based on the direction of the Elevator 
 	 */
-	
+
 	public void buttonPress(int requestFloor, Direction buttonDirection) {
 		System.out.println(buttonDirection + " button pressed on floor " + requestFloor);
 		FloorGeneral arriveFloor = floorList.get(requestFloor-1);
@@ -92,6 +93,12 @@ public class FloorSystem {
 		}
 		//send floor button request
 		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection);
+	}
+
+	public void main(){
+	    FloorSystem floorSystem = new FloorSystem();
+		while(true){
+		}
 	}
 	
 }

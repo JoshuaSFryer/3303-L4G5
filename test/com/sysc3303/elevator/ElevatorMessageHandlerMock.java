@@ -1,5 +1,4 @@
-package com.sysc3303.floor;
-
+package com.sysc3303.elevator;
 import com.sysc3303.commons.*;
 import com.sysc3303.constants.Constants;
 
@@ -12,12 +11,8 @@ import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Properties;
 
-public class FloorMessageHandler extends MessageHandler{
+public class ElevatorMessageHandlerMock extends MessageHandler{
     //TODO you need to add the port numbers that will be associated with scheduler
-    private InetAddress schedulerAddress;
-    private InetAddress simulatorAddress;
-    private FloorSystem floorSystem;
-
     static int schedulerPort;
     static int elevatorPort;
     static int floorPort;
@@ -38,67 +33,65 @@ public class FloorMessageHandler extends MessageHandler{
         }
     }
 
-    public FloorMessageHandler(int receivePort, FloorSystem floorSystem){
+    private InetAddress schedulerAddress;
+
+    public ElevatorMessageHandlerMock(int receivePort){
         super(receivePort);
-        this.floorSystem = floorSystem;
         //TODO currently for localhost this is how it looks
         try{
-            schedulerAddress = simulatorAddress = InetAddress.getLocalHost();
+            schedulerAddress = InetAddress.getLocalHost();
         }catch(UnknownHostException e){
         }
     }
 
     @Override
-    public synchronized void received(Message message){
+    public void received(Message message){
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
             case 0:
-                // Shouldn't have this on the Floor
+                // Shouldn't have this on the elevator
                 // TODO what happens when you receive FloorButton
                 break;
             case 1:
+                // Shouldn't have this on the elevator
                 // TODO what happens when you receive FloorArrival
-            	FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
-            	try {
-            			floorSystem.floorArrival(floorArrivalMessage.getFloor(), floorArrivalMessage.getCurrentDirection());
-            	} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-            		e.printStackTrace();
-            	}
                 break;
             case 2:
-                // Shouldn't have this on the Floor
                 // TODO what happens when you receive GoToFloor
+                GoToFloorMessage goToFloorMessage = (GoToFloorMessage) message;
+                System.out.println("Received Go to floor command");
+                System.out.println(goToFloorMessage);
                 break;
             case 3:
-                // Shouldn't have this on the Floor
+                // Shouldn't have this on the elevator
                 // TODO what happens when you receive ElevatorState
                 break;
             case 4:
-                // Shouldn't have this on the Floor
+                // Shouldn't have this on the elevator
                 // TODO what happens when you receive ElevatorButton
                 break;
             case 5:
+                // Shouldn't have this on the elevator
                 // TODO what happens when you receive FloorButtonSimulationMessage
-                FloorClickSimulationMessage floorClickSimulationMessage = (FloorClickSimulationMessage) message;
-                floorSystem.buttonPress(floorClickSimulationMessage.getFloor(), floorClickSimulationMessage.getDirection());
                 break;
             case 6:
-                // Shouldn't have this on the Floor
                 // TODO what happens when you receive ElevatorButtonSimulationMessage
+                ElevatorClickSimulationMessage elevatorClickSimulationMessage = (ElevatorClickSimulationMessage) message;
+                System.out.println("Received Elevator Button Simulation Message");
+                System.out.println(elevatorClickSimulationMessage);
                 break;
             default:
-                // TODO what happens when you get an invalid opcode
+                // TODO what happens when you get an invalid upcode
         }
     }
 
-    public void sendFloorButton(int floor, Direction direction){
-        FloorButtonMessage floorButtonMessage = new FloorButtonMessage(floor, direction, new Date());
-        send(floorButtonMessage, schedulerAddress, schedulerPort);
+    // TODO Rename this if you would like to
+    public void sendElevatorState(ElevatorVector elevatorVector, int elevatorId){
+        ElevatorStateMessage elevatorStateMessage = new ElevatorStateMessage(elevatorVector, elevatorId);
+        send(elevatorStateMessage, schedulerAddress, schedulerPort);
     }
-    
-    public void sendFloorArrival(int floor, Direction direction) {
-    	FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
-    	send(floorArrivalMessage, simulatorAddress, simulatorPort);
+    public void sendElevatorButton(int destinationFloor, int elevatorId){
+        ElevatorButtonMessage elevatorButtonMessage = new ElevatorButtonMessage(destinationFloor, elevatorId, new Date());
+        send(elevatorButtonMessage, schedulerAddress, schedulerPort);
     }
 }
