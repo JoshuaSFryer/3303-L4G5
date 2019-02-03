@@ -8,9 +8,6 @@ import java.util.Properties;
 import java.util.ArrayList;
 
 import com.sysc3303.commons.Direction;
-//import com.sysc3303.commons.Message;
-//import com.sysc3303.commons.SerializationUtil;
-//import com.sysc3303.commons.SocketHandler;
 import com.sysc3303.constants.Constants;
 
 /**
@@ -98,8 +95,9 @@ public class Elevator {
 	}
 	
 	/**
-	 * 
-	 * @param targetFloor
+	 * Handle a new instruction received from the scheduler.
+	 * Interrupt the old movement and start moving towards the new target floor.
+	 * @param targetFloor	The number of the new target floor
 	 */
 	public void receiveMessageFromScheduler(int targetFloor) {
 		System.out.println("Received new message from scheduler");
@@ -110,7 +108,7 @@ public class Elevator {
 			//e.printStackTrace();
 			System.out.println("No movement thread to interrupt!");
 		}
-		// Assign the new target floor
+		// Assign the new target floor and move towards it.
 		goToFloor(targetFloor);
 	}
 	
@@ -118,6 +116,7 @@ public class Elevator {
 	 * Instruct the elevator to go to a random floor.
 	 * This method should only be used for testing purposes.
 	 */
+	@SuppressWarnings("unused")
 	private void generateRandomRequest() {
 		// Interrupt the movement handler
 		try {
