@@ -14,10 +14,16 @@ After code review, it can be pushed to the branch "iteration#"
 
 # Running the System
 Run the Floor, Scheduler, and Elevator systems, in any order. Then, run the
-Simulator system, which will begin loading from the input file located at
-/src/resources/inputFile.txt.
+Simulator system, which will begin loading from an input file located at
+/src/resources/inputFile.txt. Please place the input file you wish to test
+with at this location.
 
-#Subsystems
+## Running from Eclipse
+In Eclipse, to to File -> Open Projects from File System, and select the root
+(3303-L4G5) folder. Then, either open or right click the files, and run them
+as Java Applications.
+
+# Subsystems
 This Elevator System Consists of four subsystems:
 ## Floor System
 FloorSystem is responsible for simulating passenger actions on the floors of
@@ -51,13 +57,13 @@ using the read data to simulate button presses within the Floor and Elevator
 systems. 
 
 ## Directory Structure
-- Binaries are located in /bin
-- Documentation such as diagrams are located in /doc
-- All source code is located in /src. The subdirectories follow a structure
+- Binaries are located in /bin.
+- Documentation such as diagrams are located in /doc.
+- All source code is located in /src. The subdirectories follow a structure.
 commonly used in Java programs, and particularly Android applications,wherein
 the directories spell out a reversed domain name (in this case, com.sysc3303).
 Within this domain package are packages for each of the subsystems, as well as
 commons, which contains classes used by multiple subsystems, and a Constants
 class.
 - Test files are located in /test, and its directory structure mirrors the one
-found in /src
+found in /src.
