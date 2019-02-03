@@ -37,7 +37,16 @@ public class FloorMessageHandlerMock extends MessageHandler {
         }
     }
 
-    public FloorMessageHandlerMock(int receivePort){
+    private static FloorMessageHandlerMock instance;
+
+    public static FloorMessageHandlerMock getInstance(int receivePort){
+        if (instance == null){
+            instance = new FloorMessageHandlerMock(receivePort);
+        }
+        return instance;
+    }
+
+    private FloorMessageHandlerMock(int receivePort){
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{

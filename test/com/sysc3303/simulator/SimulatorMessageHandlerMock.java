@@ -36,7 +36,16 @@ public class SimulatorMessageHandlerMock extends MessageHandler{
         }
     }
 
-    public SimulatorMessageHandlerMock(int receivePort){
+    private static SimulatorMessageHandlerMock instance;
+
+    public static SimulatorMessageHandlerMock getInstance(int receivePort){
+        if (instance == null){
+            instance = new SimulatorMessageHandlerMock(receivePort);
+        }
+        return instance;
+    }
+
+    private SimulatorMessageHandlerMock(int receivePort){
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{
