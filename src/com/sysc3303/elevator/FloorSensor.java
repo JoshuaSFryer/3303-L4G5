@@ -15,7 +15,6 @@ public class FloorSensor {
 	
 	public FloorSensor(Elevator parent) {
 		this.parent = parent;
-		//this.movementThread = null;
 	}
 	
 	/**
