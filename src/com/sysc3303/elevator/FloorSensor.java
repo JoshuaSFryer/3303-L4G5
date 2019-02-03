@@ -12,7 +12,6 @@ public class FloorSensor {
 	public static final int FLOORHEIGHT = 5;
 	
 	private Elevator parent;
-	//private Thread movementThread;
 	
 	public FloorSensor(Elevator parent) {
 		this.parent = parent;
