@@ -54,4 +54,14 @@ public class FloorLamp {
 			turnDownLampON();
 		}
 	}
+
+
+	public boolean isUpLamp() {
+		return upLamp;
+	}
+
+
+	public boolean isDownLamp() {
+		return downLamp;
+	}
 }

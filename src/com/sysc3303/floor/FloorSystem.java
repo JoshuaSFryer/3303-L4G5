@@ -7,42 +7,52 @@ package com.sysc3303.floor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.javafx.scene.traversal.Direction;
+import com.sysc3303.commons.Direction;
 
 public class FloorSystem {
+	//TODO change this number to properties file value
+	private static int floorPort = 8000;
 	
 	private static int totalNumberofFloors = 5;
 	static int passengerIsOnFloor;
 	static String direction = "None";
 	private List<FloorGeneral> floorList;
+	private FloorMessageHandler floorMessageHandler;
 	
 	public FloorSystem(){
 		floorList = new ArrayList<>();
+		floorMessageHandler = new FloorMessageHandler(floorPort, this);
+		
 		for (int i=0; i< FloorSystem.totalNumberofFloors; i++) {
 			floorList.add(new FloorGeneral(i+1));
 		}
 	}
+	
+	public List<FloorGeneral> getFloorList() {
+		return floorList;
+	}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
-		
 		}
 	
-	public void floorArrival (int arrivalFloor, Direction direction) {
+	public void floorArrival (int arrivalFloor,  Direction direction) throws InterruptedException {
 		
 		//If the Elevator has Arrived on the passenger floor where requested
 		FloorGeneral arriveFloor = floorList.get(arrivalFloor-1);
 		if (direction == Direction.UP) {
 			//turning uplight off
+			arriveFloor.getLamps().turnUpLampON();
+			arriveFloor.getButtons().setUpButtonLight(false);
 			arriveFloor.getLamps().turnUpLampOFF();
-			// send arrival message to Simulator
 		}
 		else if(direction == Direction.DOWN) {
 			//turning uplight off
 			arriveFloor.getLamps().turnDownLampOFF();
-			// send arrival message to simulator
+			arriveFloor.getButtons().setDownButtonLight(false);
+			arriveFloor.getLamps().turnUpLampOFF();
 		}
+		floorMessageHandler.sendFloorArrival(arrivalFloor, direction);
 	}
 
 	/*
@@ -50,7 +60,7 @@ public class FloorSystem {
 	 */
 	
 	public void buttonPress(int requestFloor, Direction buttonDirection) {
-		
+		System.out.println(buttonDirection + " button pressed on floor " + requestFloor);
 		FloorGeneral arriveFloor = floorList.get(requestFloor-1);
 		if(buttonDirection == Direction.UP) {
 			arriveFloor.getButtons().setUpButtonLight(true);
@@ -59,11 +69,9 @@ public class FloorSystem {
 			arriveFloor.getButtons().setDownButtonLight(true);
 		}
 		//send floor button request
+		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection);
 	}
-
-			
-		
-		
+	
 }
 
 
