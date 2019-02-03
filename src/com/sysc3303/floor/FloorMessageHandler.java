@@ -36,7 +36,12 @@ public class FloorMessageHandler extends MessageHandler{
             case 1:
                 // TODO what happens when you receive FloorArrival
             	FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
-            	floorSystem.floorArrival(floorArrivalMessage.getFloor(), floorArrivalMessage.getCurrentDirection());
+            	try {
+            			floorSystem.floorArrival(floorArrivalMessage.getFloor(), floorArrivalMessage.getCurrentDirection());
+            	} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+            		e.printStackTrace();
+            	}
                 break;
             case 2:
                 // Shouldn't have this on the scheduler

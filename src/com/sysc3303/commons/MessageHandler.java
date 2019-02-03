@@ -19,6 +19,7 @@ public abstract class MessageHandler{
     /**
      * Called by Communication handler when a message is received
      * Add in the actions that the module should take on package receive
+     * @throws InterruptedException 
      */
     public void received(Message message){
         return;
