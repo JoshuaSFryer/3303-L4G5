@@ -6,5 +6,5 @@ package com.sysc3303.commons;
  *
  */
 public enum Direction {
-	UP, DOWN
+	UP, DOWN, IDLE
 }

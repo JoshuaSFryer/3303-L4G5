@@ -4,98 +4,75 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.util.InvalidPropertiesFormatException;
-import java.util.Properties;
+import java.util.*;
 
+import com.sysc3303.commons.FloorArrivalMessage;
+import com.sysc3303.commons.FloorButtonMessage;
+import com.sysc3303.commons.GoToFloorMessage;
 import com.sysc3303.commons.Message;
-import com.sysc3303.commons.SerializationUtil;
-import com.sysc3303.commons.SocketHandler;
 import com.sysc3303.constants.Constants;
 
+
 /**
- * @author 
- *
+ * @author Yu Yamanaaka Xinrui Zhang
+ * Scheduler subsystem
  */
 public class Scheduler {
-	private SocketHandler floorSocketHandler;
-	private SocketHandler elevatorSocketHandler;
-	
-	public Scheduler(int port) {
-		floorSocketHandler    = new SocketHandler(port);
-		elevatorSocketHandler = new SocketHandler();
-	}
-	
-	public byte[] receiveMessageFromFloor(byte[] data) {
-		data = floorSocketHandler.waitForPacket(data, false);
-		return data;
-	}
+	private Runnable floorMessageHandler    = null;
+	private Runnable elevatorMessageHandler = null;
+	private Request  request; 
 
-	public byte[] receiveMessageFromElevator(byte[] data) {
-		data = elevatorSocketHandler.waitForPacket(data, true);
-		return data;
+	public Scheduler() {		
+		request  = new Request();
 	}
 	
-	public int getElevatorReceivePacketLength() {
-		return elevatorSocketHandler.getReceivePacketLength();
-	}
-
-	public int getFloorReceivePacketLength() {
-		return floorSocketHandler.getReceivePacketLength();
-	}
-	
-	public void sendMessageToElevator(byte[] data, int length, InetAddress address, int port) {
-		elevatorSocketHandler.sendSocket(data, address, port, length);
+	/**
+	 * Starts new thread for handling floor message
+	 * @param message
+	 */
+	public void startFloorMessageHandler(Message message) {
+		Runnable floorMessageHandler = new FloorMessageHandler(request, (FloorButtonMessage)message);
+		new Thread(floorMessageHandler).start();
 	}
 	
-	public void sendMessageToFloor(byte[] data, int length) {
-		floorSocketHandler.sendSocketToReceivedHost(data, length);
+	/**
+	 * Starts new thread for handling elevator message
+	 * @param message
+	 */
+	public void startElevatorMessageHandler(Message message) {
+		Runnable elevatorMessageHandler = new ElevatorMessageHandler(request, message);
+		new Thread(elevatorMessageHandler).start();
 	}
 	
-	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
-		Properties                 properties        = new Properties();
-		InputStream                inputStream       = new FileInputStream(Constants.CONFIG_PATH);
-		boolean                    running           = true;
-		InetAddress                elevatorIp        = InetAddress.getLocalHost();
-		SerializationUtil<Message> serializationUtil = new SerializationUtil<Message>();
+	/**
+	 * 
+	 * @return FloorArrivalMessage
+	 */
+	public FloorArrivalMessage getFloorArrivalMessage() {
+		ElevatorMessageHandler elevatorMessageHandler = (ElevatorMessageHandler)this.elevatorMessageHandler;
+		return elevatorMessageHandler.getFloorArrivalMessage();
+	}
+	
+	/**
+	 * @return GoToFloorMessage
+	 */
+	public GoToFloorMessage getGoToFloorMessage() {
+		FloorMessageHandler floorMessageHandler = (FloorMessageHandler)this.floorMessageHandler;
+		return floorMessageHandler.getGoToFloorMessage();
+	}
 		
+	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
+		Properties  properties  = new Properties();
+		InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
+		InetAddress elevatorIp  = InetAddress.getLocalHost();
+
 		properties.loadFromXML(inputStream);
 		
 		int       port         = Integer.parseInt(properties.getProperty("schedulerPort"));
 		int       elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
-		Scheduler scheduler    = new Scheduler(port);
+		Scheduler scheduler    = new Scheduler();
 		
-		while(running) {
-			byte[]  receiveData = new byte[400];
-			int     receiveLength;
-			Message message;
-			
-			System.out.println("----------");
-			System.out.println("Waiting for message from floor");
-			
-			receiveData   = scheduler.receiveMessageFromFloor(receiveData);
-			receiveLength = scheduler.getFloorReceivePacketLength();
-			message       = serializationUtil.deserialize(receiveData, receiveLength);
-			
-			System.out.println("Received following message from floor: ");
-			System.out.println(message.toString());
- 			System.out.println("Forwarding message to elevator");
- 			
- 			scheduler.sendMessageToElevator(receiveData, receiveLength, elevatorIp, elevatorPort);
- 			
- 			System.out.println("Wating for message from elevator");
- 			
- 			receiveData   = scheduler.receiveMessageFromElevator(new byte[400]);
- 			receiveLength = scheduler.getElevatorReceivePacketLength();
- 			message       = serializationUtil.deserialize(receiveData, receiveLength);
- 			
- 			System.out.println("Received following message from elevator: ");
- 			System.out.println(message.toString());
- 			System.out.println("Forwarding message to floor");
- 			
- 			scheduler.sendMessageToFloor(receiveData, receiveLength);
- 			
- 			System.out.println("Message sent");
- 			System.out.println("----------");
-		}
+		System.out.println("Starting Scheduler Message Handler...");
+		SchedulerMessageHandler messageHandler = new SchedulerMessageHandler(port, scheduler);
 	}
 }
