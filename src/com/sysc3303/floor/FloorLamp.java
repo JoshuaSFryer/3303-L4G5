@@ -1,30 +1,95 @@
 package com.sysc3303.floor;
 
+import com.sun.javafx.scene.traversal.Direction;
+
+/*
+ * FloorLamp class turns on two lamps according to the direction for the elevator
+ */
+
 public class FloorLamp {
-	private boolean up   = false;
-	private boolean down = false;
 	
-	public void lightUp() {
-		up = true;
+	private boolean upLamp;
+	private boolean downLamp;
+	
+	// Constructor
+	FloorLamp() {
+		this.upLamp = false;
+		this.downLamp = false;
 	}
 	
-	public void lightDown() {
-		down = true;
+	/*
+	 * method getLampStatus returns the current Status of the lamps
+	 */
+	public String getLampStatus() {
+		return "UP-Lamp = " + upLamp + "  DOWN-Lamp = " + downLamp + "\n";
 	}
 	
-	public void disableLightUp() {
-		up = false;
+	/*
+	 * This method turns the UP Lamps ON
+	 */
+	public void turnUpLampON() {
+		upLamp = true;
+		//System.out.println("Up Lamp is =" + upLamp);
 	}
 	
-	public void disableLightDown() {
-		down = false;
+	/*
+	 * This Method turns the UP Lamp OFF
+	 */
+	
+	public void turnUpLampOFF() {
+		upLamp = false;
+		//System.out.println("Up Lamp is =" + upLamp);
 	}
 	
-	public boolean isUpLightEnabled() {
-		return up;
+	/*
+	 * This Method turns the Down Lamp ON
+	 */
+	
+	public void turnDownLampON() {
+		downLamp = true;
+		//System.out.println("Down Lamp is =" + downLamp);
 	}
 	
-	public boolean isDownLightEnabled() {
-		return down;
+	
+	/*
+	 * Turns the Down Lamp OFF
+	 */
+	public void turnDownLampOFF() {
+		downLamp = false;
+		//System.out.println("Down Lamp is =" + downLamp);
+	}
+	
+	public void turnBothLampON() {
+		upLamp = true;
+		downLamp = true;
+	}
+	
+	public void turnBothLampOFF() {
+		upLamp = false;
+		downLamp = false;
+	}
+	
+	/*
+	 * This method compares the direction of the elevator and turns on the lamps accordingly
+	 */
+	
+	public void flashLamp(Direction direction) {
+		if (Direction.UP == direction){
+			turnUpLampON();
+		}
+		
+		else if (Direction.DOWN == direction) {
+			turnDownLampON();
+		}
+	}
+
+
+	public boolean isUpLamp() {
+		return upLamp;
+	}
+
+
+	public boolean isDownLamp() {
+		return downLamp;
 	}
 }

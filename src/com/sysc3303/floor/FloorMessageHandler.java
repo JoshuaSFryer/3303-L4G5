@@ -9,20 +9,24 @@ import java.util.Date;
 public class FloorMessageHandler extends MessageHandler{
     //TODO you need to add the port numbers that will be associated with scheduler
     final int schedulerPort = 7002;
+    final int simulatorPort = 7003;
     private InetAddress schedulerAddress;
+    private InetAddress simulatorAddress;
+    private FloorSystem floorSystem;
 
 
-    public FloorMessageHandler(int receivePort){
+    public FloorMessageHandler(int receivePort, FloorSystem floorSystem){
         super(receivePort);
+        this.floorSystem = floorSystem;
         //TODO currently for localhost this is how it looks
         try{
-            schedulerAddress = InetAddress.getLocalHost();
+            schedulerAddress = simulatorAddress = InetAddress.getLocalHost();
         }catch(UnknownHostException e){
         }
     }
 
     @Override
-    public void received(Message message){
+    public synchronized void received(Message message){
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
             case 0:
@@ -31,6 +35,13 @@ public class FloorMessageHandler extends MessageHandler{
                 break;
             case 1:
                 // TODO what happens when you receive FloorArrival
+            	FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
+            	try {
+            			floorSystem.floorArrival(floorArrivalMessage.getFloor(), floorArrivalMessage.getCurrentDirection());
+            	} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+            		e.printStackTrace();
+            	}
                 break;
             case 2:
                 // Shouldn't have this on the scheduler
@@ -49,9 +60,13 @@ public class FloorMessageHandler extends MessageHandler{
         }
     }
 
-    // TODO Rename this if you would like to
     public void sendFloorButton(int floor, Direction direction){
         FloorButtonMessage floorButtonMessage = new FloorButtonMessage(floor, direction, new Date());
         send(floorButtonMessage, schedulerAddress, schedulerPort);
+    }
+    
+    public void sendFloorArrival(int floor, Direction direction) {
+    	FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
+    	send(floorArrivalMessage, simulatorAddress, simulatorPort);
     }
 }
