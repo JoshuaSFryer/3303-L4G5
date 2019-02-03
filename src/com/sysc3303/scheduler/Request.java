@@ -40,6 +40,9 @@ public class Request {
 			return floorRequestList.get(index);
 		}
 		
+		/**
+		 * @return ArrayList<FloorButtonMessage>
+		 */
 		public synchronized ArrayList<FloorButtonMessage> getFloorButtonMessageArray() {
 			return floorRequestList;
 		}
