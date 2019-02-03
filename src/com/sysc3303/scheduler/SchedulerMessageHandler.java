@@ -28,6 +28,10 @@ public class SchedulerMessageHandler extends MessageHandler{
         switch (message.getOpcode()){
             case 0:
                 // TODO what happens when you receive FloorButton
+            	System.out.println("Recieved FloorButtonMessage");
+            	FloorButtonMessage floorButtonMessage = (FloorButtonMessage)message;
+            	System.out.println(floorButtonMessage.toString());
+            	
             	scheduler.startFloorMessageHandler(message);
             	try {
 					Thread.sleep(200);
@@ -48,6 +52,10 @@ public class SchedulerMessageHandler extends MessageHandler{
                 break;
             case 3:
                 // TODO what happens when you receive ElevatorState
+            	System.out.println("Recieved ElevatorStateMessage");
+            	ElevatorStateMessage ElevatorStateMessage = (ElevatorStateMessage)message;
+            	System.out.println(ElevatorStateMessage.toString());
+            	
             	scheduler.startElevatorMessageHandler(message);
 				try {
 					Thread.sleep(200);
@@ -58,6 +66,10 @@ public class SchedulerMessageHandler extends MessageHandler{
             	break;
             case 4:
                 // TODO what happens when you receive ElevatorButton
+            	System.out.println("Recieved ElevatorButtonMessage");
+            	ElevatorButtonMessage elevatorButtonMessage = (ElevatorButtonMessage)message;
+            	System.out.println(elevatorButtonMessage.toString());
+                   
             	scheduler.startElevatorMessageHandler(message);
 				try {
 					Thread.sleep(200);

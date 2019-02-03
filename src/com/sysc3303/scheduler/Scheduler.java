@@ -9,12 +9,10 @@ import java.util.*;
 // import java.util.Properties;
 // import java.util.ArrayList;
 
-import com.sysc3303.commons.Command;
 import com.sysc3303.commons.FloorArrivalMessage;
 import com.sysc3303.commons.FloorButtonMessage;
 import com.sysc3303.commons.GoToFloorMessage;
 import com.sysc3303.commons.Message;
-import com.sysc3303.commons.SerializationUtil;
 import com.sysc3303.constants.Constants;
 
 

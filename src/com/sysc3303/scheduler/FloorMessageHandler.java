@@ -1,6 +1,5 @@
 package com.sysc3303.scheduler;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Date;
 
