@@ -1,7 +1,5 @@
 package com.sysc3303.elevator;
 
-//import java.math.*;
-import java.math.BigDecimal;
 
 /**
  * Represents a sensor in the elevator that determines whether the elevator has
@@ -28,26 +26,7 @@ public class FloorSensor {
 	 * 			floors.
 	 */
 	public int getFloor() {
-		// TODO: Refactor this to account for height now being an integer.
 		
-		/*
-		// Get the elevator's height as a BigDecimal.
-		// Use BigDecimal for safe floating-point division.
-		BigDecimal height = new BigDecimal(parent.getCurrentHeight());
-		
-		// Divide the current height by the height of a single floor.
-		// Store the value and remainder in an BigDecimal array.
-		BigDecimal[] result = height.divideAndRemainder(
-							  new BigDecimal(FLOORHEIGHT));
-		
-		// If the remainder is zero, then return the current floor number
-		// as an integer. Otherwise, return -1.
-		if(result[1].compareTo(BigDecimal.ZERO) == 0) {
-			return result[0].intValue();
-		} else {
-			return -1;
-		}
-		*/
 		int height = parent.getCurrentHeight();
 		// If the elevator's height is a whole multiple of FLOORHEIGHT, it has
 		// arrived at a floor.
@@ -83,13 +62,4 @@ public class FloorSensor {
 	public boolean hasArrived(int target) {
 		return (getFloor() == target);
 	}
-	/*
-	public void attachThread(Thread t) {
-		this.movementThread = t;
-	}
-	
-	public void detachThread() {
-		this.movementThread = null;
-	}
-	*/
 }
