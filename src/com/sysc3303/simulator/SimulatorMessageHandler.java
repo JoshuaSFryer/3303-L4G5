@@ -20,6 +20,7 @@ public class SimulatorMessageHandler extends MessageHandler{
     static int elevatorPort;
     static int floorPort;
     static int simulatorPort;
+    static SimulatorMessageHandler instance;
 
     static {
         Properties properties = new Properties();
@@ -36,6 +37,13 @@ public class SimulatorMessageHandler extends MessageHandler{
         }
     }
 
+    public static SimulatorMessageHandler getInstance(int receivePort){
+        if (instance == null){
+            instance = new SimulatorMessageHandler(receivePort);
+        }
+        return instance;
+    }
+
     public SimulatorMessageHandler(int receivePort){
         super(receivePort);
         //TODO currently for localhost this is how it looks
@@ -44,6 +52,7 @@ public class SimulatorMessageHandler extends MessageHandler{
         }catch(UnknownHostException e){
         }
     }
+
 
     @Override
     public void received(Message message){

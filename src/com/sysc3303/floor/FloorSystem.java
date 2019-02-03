@@ -18,8 +18,6 @@ import static com.sysc3303.floor.FloorMessageHandler.floorPort;
 public class FloorSystem {
 	//TODO change this number to properties file value
 	private static int totalNumberofFloors = 5;
-	static int passengerIsOnFloor;
-	static String direction = "None";
 	private List<FloorGeneral> floorList;
 	private FloorMessageHandler floorMessageHandler;
 
@@ -43,10 +41,12 @@ public class FloorSystem {
 	
 	
 	//Main method Not is use right Now. Left for Future testing
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		}
-	
+    public static void main(String[] args){
+        FloorSystem floorSystem = new FloorSystem();
+        while(true){
+        }
+    }
+
 	/*
 	 * floorArrival method does the follwoing things
 	 * 	1. It takes the message from the scheduler
@@ -95,12 +95,7 @@ public class FloorSystem {
 		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection);
 	}
 
-	public void main(){
-	    FloorSystem floorSystem = new FloorSystem();
-		while(true){
-		}
-	}
-	
+
 }
 
 
