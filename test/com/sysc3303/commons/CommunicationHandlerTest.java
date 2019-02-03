@@ -24,7 +24,7 @@ public class CommunicationHandlerTest{
         TestMessageHandler schedulerMessageHandler = new TestMessageHandler(schedulerPort);
         TestMessageHandler floorMessageHandler = new TestMessageHandler(floorPort);
 
-        elevatorMessageHandler.sendElevatorStateMessage(new ElevatorVector(), 1);
+        elevatorMessageHandler.sendElevatorStateMessage(new ElevatorVector(1, Direction.DOWN, 5), 1);
         elevatorMessageHandler.sendElevatorButtonMessage(5, 1, new Date());
         schedulerMessageHandler.sendGoToFloorMessage(5);
         schedulerMessageHandler.sendFloorArrivalMessage(5, Direction.DOWN);

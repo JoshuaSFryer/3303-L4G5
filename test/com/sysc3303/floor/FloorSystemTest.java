@@ -1,12 +1,10 @@
 package com.sysc3303.floor;
 import static org.junit.Assert.fail;
-import static org.junit.jupiter.api.Assertions.*;
-
-import org.junit.jupiter.api.Test;
 
 import com.sysc3303.commons.Direction;
 
 import junit.framework.Assert;
+import org.junit.Test;
 
 
 @SuppressWarnings("deprecation")

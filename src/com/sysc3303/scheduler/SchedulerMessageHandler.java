@@ -64,6 +64,8 @@ public class SchedulerMessageHandler extends MessageHandler{
     @Override
     public synchronized void received(Message message){
         // TODO Whatever functionality you want when your receive a message
+    	System.out.println("Redcieved Message!");
+    	System.out.println(message.toString());
         switch (message.getOpcode()){
             case 0:
                 // TODO what happens when you receive FloorButton

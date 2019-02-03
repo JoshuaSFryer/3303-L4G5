@@ -270,7 +270,7 @@ public class Elevator {
 							0); //TODO: De-magicify this number.
 		
 		while(running) {
-				
+
 		}
 	}
 }
