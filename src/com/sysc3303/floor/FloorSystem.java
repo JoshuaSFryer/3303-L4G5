@@ -31,7 +31,8 @@ public class FloorSystem {
 		}
 	}
 	
-	/*
+	/**
+	 * Method getFloorList() is a regular 
 	 * Getter Method To get The Floor List
 	 */
 	
@@ -47,8 +48,8 @@ public class FloorSystem {
         }
     }
 
-	/*
-	 * floorArrival method does the follwoing things
+	/**
+	 * Method floorArrival method does the follwoing things
 	 * 	1. It takes the message from the scheduler
 	 * 	2. It sends message to the simulator
 	 * 	3. It turns off the lamp once the Elevator Has arrived in the destination Floor
@@ -75,7 +76,7 @@ public class FloorSystem {
 		floorMessageHandler.sendFloorArrival(arrivalFloor, direction);
 	}
 
-	/*
+	/**
 	 * Method buttonPress does the following things
 	 * 	1. It sends the information to Scheduler about which button from which floor has been pressedn
 	 * 	2. It takes the message from the Simulator or input file

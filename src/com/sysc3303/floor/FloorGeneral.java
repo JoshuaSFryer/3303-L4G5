@@ -19,14 +19,14 @@ public class FloorGeneral {
 		this.lamps = new FloorLamp();
 	}
 	
-	/*
+	/**
 	 * Regular getter Method
 	 */
 	public FloorButton getButtons() {
 		return this.buttons;
 	}
 	
-	/*
+	/**
 	 * Regular Setter Method
 	 */
 	

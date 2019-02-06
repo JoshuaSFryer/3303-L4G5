@@ -1,6 +1,6 @@
 package com.sysc3303.floor;
 
-/*
+/**
  * Class FloorButton deals with the clicks of Button
  */
 
@@ -15,7 +15,7 @@ public class FloorButton {
 		this.downButtonLight = false;
 	}
 	
-	/*
+	/**
 	 * Getter Method to get the status of the current status of the buttons
 	 */
 
@@ -28,7 +28,7 @@ public class FloorButton {
 		return upButtonLight;
 	}
 	
-	/*
+	/**
 	 * Sets the Up Button Light
 	 * @param upButtonLight
 	 */
@@ -41,7 +41,7 @@ public class FloorButton {
 		return downButtonLight;
 	}
 	
-	/*
+	/**
 	 * Sets the Down Button Light
 	 * @param downButtonLight
 	 */

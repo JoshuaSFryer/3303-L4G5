@@ -2,7 +2,7 @@ package com.sysc3303.floor;
 
 import com.sysc3303.commons.Direction;
 
-/*
+/**
  * FloorLamp class turns on two lamps according to the direction for the elevator
  */
 
@@ -17,14 +17,14 @@ public class FloorLamp {
 		this.downLamp = false;
 	}
 	
-	/*
+	/**
 	 * method getLampStatus returns the current Status of the lamps
 	 */
 	public String getLampStatus() {
 		return "UP-Lamp = " + upLamp + "  DOWN-Lamp = " + downLamp + "\n";
 	}
 	
-	/*
+	/**
 	 * This method turns the UP Lamps ON
 	 */
 	public void turnUpLampON() {
@@ -32,7 +32,7 @@ public class FloorLamp {
 		System.out.println("Up Lamp is =" + upLamp);
 	}
 	
-	/*
+	/**
 	 * This Method turns the UP Lamp OFF
 	 */
 	
@@ -41,7 +41,7 @@ public class FloorLamp {
 		System.out.println("Up Lamp is =" + upLamp);
 	}
 	
-	/*
+	/**
 	 * This Method turns the Down Lamp ON
 	 */
 	
@@ -51,7 +51,7 @@ public class FloorLamp {
 	}
 	
 	
-	/*
+	/**
 	 * Turns the Down Lamp OFF
 	 */
 	public void turnDownLampOFF() {
@@ -69,7 +69,7 @@ public class FloorLamp {
 		downLamp = false;
 	}
 	
-	/*
+	/**
 	 * This method compares the direction of the elevator and turns on the lamps accordingly
 	 */
 	
