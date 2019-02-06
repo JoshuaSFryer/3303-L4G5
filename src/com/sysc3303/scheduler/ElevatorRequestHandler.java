@@ -15,7 +15,7 @@ import com.sysc3303.elevator.ElevatorVector;
  * @author Xinrui Zhang Yu Yamanaka
  *
  */
-public class ElevatorMessageHandler implements Runnable {
+public class ElevatorRequestHandler implements Runnable {
 	private Request  request;
 	private Message  message;
 	private FloorArrivalMessage floorArrivalMessage;
@@ -25,16 +25,21 @@ public class ElevatorMessageHandler implements Runnable {
 	 * @para request
 	 * @para message
 	 */
-	public ElevatorMessageHandler(Request request, Message message) {
+	public ElevatorRequestHandler(Request request, Message message) {
 		this.request = request;
 		this.message = message;         
 	}
 	
 
 	public void run() {
+		System.out.println("ElevatorRequestHandler starting..");
+		System.out.println("Current requests: ");
+		System.out.println(request.toString());
+		
 		if(message instanceof ElevatorStateMessage) {
 			ElevatorStateMessage message          = (ElevatorStateMessage)this.message;
-			ElevatorVector       elevatorVector   = message.getElevatorVector(); int                  destinationFloor = elevatorVector.targetFloor;
+			ElevatorVector       elevatorVector   = message.getElevatorVector(); 
+			int                  destinationFloor = elevatorVector.targetFloor;
 		   
 			request.setElevatorVector(elevatorVector);
 			
@@ -43,21 +48,55 @@ public class ElevatorMessageHandler implements Runnable {
 			}	
 	
 			removeTargetFloor(destinationFloor, elevatorVector.currentDirection);
-			floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection);
-		
+			
+			FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection);
+			
+			setFloorArrivalMessage(floorArrivalMessage);
 			// dont forget to create message and send it to floor
 		}
 		else if(message instanceof ElevatorButtonMessage) {
 			ElevatorButtonMessage message = (ElevatorButtonMessage)this.message;
 			request.addElevatorButtonMessage(message);
 		}
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
+	
+	private synchronized void setFloorArrivalMessage(FloorArrivalMessage floorArrivalMessage) {
+		this.floorArrivalMessage = floorArrivalMessage;
+		notifyAll();
+	}
+	
 	/**
 	 * @return floorArrialMessage
 	 */
-	public FloorArrivalMessage getFloorArrivalMessage() {
+	public synchronized FloorArrivalMessage getFloorArrivalMessage() {
+		waitUntilFloorArrivalMessageExists();
+		
+		FloorArrivalMessage floorArrivalMessage = this.floorArrivalMessage;
+		
+		this.floorArrivalMessage = null;
+		
+		notifyAll();
+		
 		return floorArrivalMessage;
+	}
+	
+	private void waitUntilFloorArrivalMessageExists() {
+		while(floorArrivalMessage == null) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**

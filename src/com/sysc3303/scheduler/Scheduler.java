@@ -25,13 +25,13 @@ public class Scheduler {
 	public Scheduler() {		
 		request  = new Request();
 	}
-	
+
 	/**
 	 * Starts new thread for handling floor message
 	 * @param message
 	 */
 	public void startFloorMessageHandler(Message message) {
-		Runnable floorMessageHandler = new FloorMessageHandler(request, (FloorButtonMessage)message);
+		floorMessageHandler = new FloorRequestHandler(request, (FloorButtonMessage)message);
 		new Thread(floorMessageHandler).start();
 	}
 	
@@ -40,7 +40,7 @@ public class Scheduler {
 	 * @param message
 	 */
 	public void startElevatorMessageHandler(Message message) {
-		Runnable elevatorMessageHandler = new ElevatorMessageHandler(request, message);
+		elevatorMessageHandler = new ElevatorRequestHandler(request, message);
 		new Thread(elevatorMessageHandler).start();
 	}
 	
@@ -49,7 +49,7 @@ public class Scheduler {
 	 * @return FloorArrivalMessage
 	 */
 	public FloorArrivalMessage getFloorArrivalMessage() {
-		ElevatorMessageHandler elevatorMessageHandler = (ElevatorMessageHandler)this.elevatorMessageHandler;
+		ElevatorRequestHandler elevatorMessageHandler = (ElevatorRequestHandler)this.elevatorMessageHandler;
 		return elevatorMessageHandler.getFloorArrivalMessage();
 	}
 	
@@ -57,7 +57,7 @@ public class Scheduler {
 	 * @return GoToFloorMessage
 	 */
 	public GoToFloorMessage getGoToFloorMessage() {
-		FloorMessageHandler floorMessageHandler = (FloorMessageHandler)this.floorMessageHandler;
+		FloorRequestHandler floorMessageHandler = (FloorRequestHandler)this.floorMessageHandler;
 		return floorMessageHandler.getGoToFloorMessage();
 	}
 		

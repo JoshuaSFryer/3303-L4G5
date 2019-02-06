@@ -14,7 +14,7 @@ import com.sysc3303.elevator.ElevatorVector;
  * 
  * Handles message from floor
  */
-public class FloorMessageHandler implements Runnable {
+public class FloorRequestHandler implements Runnable {
 	private Request            request;
 	private int                targetFloor;
 	private FloorButtonMessage message;
@@ -24,22 +24,63 @@ public class FloorMessageHandler implements Runnable {
 	 * @param request
 	 * @param message
 	 */
-	public FloorMessageHandler(Request request, FloorButtonMessage message) {
+	public FloorRequestHandler(Request request, FloorButtonMessage message) {
 		this.request = request;
 		this.message = message;
 	}
 	
 	public void run() {
+		System.out.println("FloorRequestHandler starting..");
+		System.out.println("Current requests: ");
+		System.out.println(request.toString());
+		
 		request.addFloorButtonMessage(message);
-			
-		targetFloor      = decideTargetFloor();
+		
+		if(request.hasSingleFloorButtonMessage() || request.elevatorButtonMessagesIsEmpty()) {
+			targetFloor  = message.getFloor();
+		}
+		else {
+			targetFloor = decideTargetFloor();
+		}
+		
+		setGoToFloorMessage(targetFloor);	
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private synchronized void setGoToFloorMessage(int targetFloor) {
 		goToFloorMessage = new GoToFloorMessage(targetFloor);
+		notifyAll();
+	}
+	
+	private void waitUntilGoToFloorMessageExists() {
+		while(goToFloorMessage == null) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/**
 	 * @return GoToFloorMessage
 	 */
-	public GoToFloorMessage getGoToFloorMessage() {
+	public synchronized GoToFloorMessage getGoToFloorMessage() {
+		waitUntilGoToFloorMessageExists();
+		
+		GoToFloorMessage goToFloorMessage = this.goToFloorMessage;
+		
+		this.goToFloorMessage = null;
+		
+		notifyAll();
+		
 		return goToFloorMessage;
 	}
 	
@@ -57,8 +98,7 @@ public class FloorMessageHandler implements Runnable {
 			FloorButtonMessage    floorRequest    = getEariestFloorRequest();
 			ElevatorButtonMessage elevatorRequest = getEariestElevatorRequest();
 			
-			//NOT SURE what the objects are called!!!!!!!!!!!!!!!!!!!!
-			if(floorRequest.getTime().compareTo(elevatorRequest.getTime()) > 0) {
+			if(floorRequest == null || floorRequest.getTime().compareTo(elevatorRequest.getTime()) > 0) {
 				target = elevatorRequest.getDestinationFloor();
 			}
 			else {

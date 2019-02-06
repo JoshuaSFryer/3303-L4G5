@@ -50,6 +50,7 @@ public class SchedulerMessageHandler extends MessageHandler{
 
     public SchedulerMessageHandler(int receivePort, Scheduler scheduler){
         super(receivePort);
+        this.scheduler = scheduler;
         //TODO currently for localhost this is how it looks
         try{
             elevatorAddress = floorAddress = InetAddress.getLocalHost();
@@ -65,7 +66,7 @@ public class SchedulerMessageHandler extends MessageHandler{
     public synchronized void received(Message message){
         // TODO Whatever functionality you want when your receive a message
     	System.out.println("Redcieved Message!");
-    	System.out.println(message.toString());
+  
         switch (message.getOpcode()){
             case 0:
                 // TODO what happens when you receive FloorButton
@@ -74,12 +75,7 @@ public class SchedulerMessageHandler extends MessageHandler{
             	System.out.println(floorButtonMessage.toString());
             	
             	scheduler.startFloorMessageHandler(message);
-            	try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+           
             	GoToFloorMessage goToFloorMessage = scheduler.getGoToFloorMessage();
             	System.out.println("Sending Message to elevator");
             	System.out.println(goToFloorMessage.toString());
@@ -96,16 +92,23 @@ public class SchedulerMessageHandler extends MessageHandler{
             case 3:
                 // TODO what happens when you receive ElevatorState
             	System.out.println("Recieved ElevatorStateMessage");
-            	ElevatorStateMessage ElevatorStateMessage = (ElevatorStateMessage)message;
-            	System.out.println(ElevatorStateMessage.toString());
             	
+            	ElevatorStateMessage elevatorStateMessage = (ElevatorStateMessage)message;
+            	
+            	System.out.println(elevatorStateMessage.toString());
+            	//System.out.println(elevatorStateMessage.getElevatorVector().toString());
+           
             	scheduler.startElevatorMessageHandler(message);
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+            	
+            	if(elevatorStateMessage.getElevatorVector().currentFloor == elevatorStateMessage.getElevatorVector().targetFloor) {
+            		FloorArrivalMessage floorArrivalMessage = scheduler.getFloorArrivalMessage();
+            		
+            		System.out.println("Sending Message to Floor");
+                	System.out.println(floorArrivalMessage.toString());
+                	
+                	sendFloorArrival(floorArrivalMessage);
+            	}
+          
             	break;
             case 4:
                 // TODO what happens when you receive ElevatorButton
@@ -114,16 +117,6 @@ public class SchedulerMessageHandler extends MessageHandler{
             	System.out.println(elevatorButtonMessage.toString());
                    
             	scheduler.startElevatorMessageHandler(message);
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            	FloorArrivalMessage floorArrivalMessage = scheduler.getFloorArrivalMessage();
-            	System.out.println("Sending Message to Floor");
-            	System.out.println(floorArrivalMessage.toString());
-            	sendFloorArrival(floorArrivalMessage);
             	break;
             case 5:
                 // Shouldn't have this on the simulator
