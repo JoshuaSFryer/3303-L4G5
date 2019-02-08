@@ -11,19 +11,29 @@ import com.sysc3303.elevator.ElevatorVector;
  * @author Yu Yamanaka Xinrui Zhang
  *
  */
-public class Request_backup {
-		private ArrayList<FloorButtonMessage>    floorButtonMessages;
-		private ArrayList<ElevatorButtonMessage> elevatorButtonMessages;
-		private ElevatorVector                   elevatorVector;
+public class Request_New {
+		private ArrayList<FloorButtonMessage>    floorButtonMsgList;
 		
-		public Request_backup() {
-			floorButtonMessages    = new ArrayList<FloorButtonMessage>();
-			elevatorButtonMessages = new ArrayList<ElevatorButtonMessage>();
-			elevatorVector         = new ElevatorVector(0, Direction.IDLE, 0);
+		private ArrayList<ElevatorButtonMessage> ButtonMsgListFromElevatorId0;
+		private ArrayList<ElevatorButtonMessage> ButtonMsgListFromElevatorId1;
+		private ArrayList<ElevatorButtonMessage> ButtonMsgListFromElevatorId2;
+		private ArrayList<ElevatorButtonMessage> ButtonMsgListFromElevatorId3;
+		
+		private ArrayList<ElevatorVector> elevatorVectorList;
+			
+		public Request_New() {
+			floorButtonMsgList    		  = new ArrayList<FloorButtonMessage>();
+			
+			ButtonMsgListFromElevatorId0 = new ArrayList<ElevatorButtonMessage>();
+			ButtonMsgListFromElevatorId1 = new ArrayList<ElevatorButtonMessage>();
+			ButtonMsgListFromElevatorId2 = new ArrayList<ElevatorButtonMessage>();
+			ButtonMsgListFromElevatorId3 = new ArrayList<ElevatorButtonMessage>();
+			
+			elevatorVectorList        	  = new ArrayList<ElevatorVector>();
 		}
 		
-		public synchronized void waitUntilElevatorArrives() {
-			while(elevatorVector.currentFloor != elevatorVector.targetFloor) {
+		public synchronized void waitUntilElevatorIdxArrives(int elevatorIdx) {
+			while(elevatorVectorList.get(elevatorIdx).currentFloor != elevatorVectorList.get(elevatorIdx).targetFloor) {
 				try {
 					wait();
 				} catch (InterruptedException e) {
@@ -38,7 +48,7 @@ public class Request_backup {
 			
 			boolean hasSingleFloorButtonMessage = false;
 			
-			if(floorButtonMessages.size() == 1) {
+			if(floorButtonMsgList.size() == 1) {
 				hasSingleFloorButtonMessage = true;
 			}
 			
@@ -48,13 +58,18 @@ public class Request_backup {
 			
 		}
 		
-		public boolean elevatorButtonMessagesIsEmpty() {
-			if(elevatorButtonMessages.isEmpty()) {
-				return true;
-			}
-			return false;
+		public boolean ButtonMsgListFromElevatorIdxIsEmpty(int elevatorIdx) {
+			switch elevatorIdx:
+				case 0: 
+					return ButtonMsgListFromElevatorId0.isEmpty(); 
+				case 1:
+					return ButtonMsgListFromElevatorId1.isEmpty(); 
+				case 2:
+					return ButtonMsgListFromElevatorId2.isEmpty(); 
+				case 3:
+					return ButtonMsgListFromElevatorId3.isEmpty(); 		
 		}
-		
+//modified until here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		private void waitUntilFloorButtonMessageExists() {
 			while(floorButtonMessages.isEmpty()) {
 				try {
@@ -70,8 +85,8 @@ public class Request_backup {
 		 * 
 		 * @return ElevatorVector
 		 */
-		public synchronized ElevatorVector getElevatorVector() {
-			while(elevatorVector == null) {
+		public synchronized ArrayList<ElevatorVector> getElevatorVectorList() {
+			while(elevatorVectorList.size() == 0) {
 				try {
 					wait();
 				} catch (InterruptedException e) {
@@ -81,14 +96,14 @@ public class Request_backup {
 			}
 			notifyAll();
 			
-			return elevatorVector;
+			return elevatorVectorList;
 		}
 
 		/**
 		 * @param elevatorVector
 		 */
-		public synchronized void setElevatorVector(ElevatorVector elevatorVector) {
-			this.elevatorVector = elevatorVector;
+		public synchronized void addElevatorVector(ElevatorVector elevatorVector) {
+			elevatorVectorList.add(elevatorVector);
 		}
 
 		/**
