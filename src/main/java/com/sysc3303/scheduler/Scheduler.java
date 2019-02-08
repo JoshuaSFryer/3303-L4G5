@@ -19,12 +19,14 @@ import com.sysc3303.constants.Constants;
  * Scheduler subsystem
  */
 public class Scheduler {
-	private Runnable floorMessageHandler    = null;
-	private Runnable elevatorMessageHandler = null;
-	private Request  request; 
+	private Runnable            floorMessageHandler;
+	private Runnable            elevatorMessageHandler;
+	private Request             request; 
+	private GoToFloorMessageBox goToFloorMessageBox;
 
 	public Scheduler() {		
-		request  = new Request();
+		request             = new Request();
+		goToFloorMessageBox = new GoToFloorMessageBox();
 	}
 
 	/**
@@ -32,7 +34,7 @@ public class Scheduler {
 	 * @param message
 	 */
 	public void startFloorMessageHandler(Message message) {
-		floorMessageHandler = new FloorRequestHandler(request, (FloorButtonMessage)message);
+		floorMessageHandler = new FloorRequestHandler(request, (FloorButtonMessage)message, goToFloorMessageBox);
 		new Thread(floorMessageHandler).start();
 	}
 	
@@ -41,7 +43,7 @@ public class Scheduler {
 	 * @param message
 	 */
 	public void startElevatorMessageHandler(Message message) {
-		elevatorMessageHandler = new ElevatorRequestHandler(request, message);
+		elevatorMessageHandler = new ElevatorRequestHandler(request, message, goToFloorMessageBox);
 		new Thread(elevatorMessageHandler).start();
 	}
 	
@@ -58,8 +60,7 @@ public class Scheduler {
 	 * @return GoToFloorMessage
 	 */
 	public GoToFloorMessage getGoToFloorMessage() {
-		FloorRequestHandler floorMessageHandler = (FloorRequestHandler)this.floorMessageHandler;
-		return floorMessageHandler.getGoToFloorMessage();
+		return goToFloorMessageBox.getGoToFloorMessage();
 	}
 		
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
