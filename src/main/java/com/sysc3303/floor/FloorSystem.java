@@ -59,6 +59,7 @@ public class FloorSystem {
 	public void floorArrival (int arrivalFloor,  Direction direction, int elevatorId) throws InterruptedException {
 		
 		//If the Elevator has Arrived on the passenger floor where requested
+		//FIXME Check out of bounds
 		FloorGeneral arriveFloor = floorList.get(arrivalFloor);
 		
 		if (direction == Direction.UP) {
@@ -85,6 +86,7 @@ public class FloorSystem {
 
 	public void buttonPress(int requestFloor, Direction buttonDirection) {
 		System.out.println(buttonDirection + " button pressed on floor " + requestFloor);
+		//FIXME Check for index out of bounds
 		FloorGeneral arriveFloor = floorList.get(requestFloor);
 		if(buttonDirection == Direction.UP) {
 			arriveFloor.getButtons().setUpButtonLight(true);
