@@ -18,7 +18,7 @@ import static com.sysc3303.floor.FloorMessageHandler.floorPort;
 public class FloorSystem {
 	//TODO change this number to properties file value
 	private static int totalNumberofFloors = 5;
-	private List<FloorGeneral> floorList;
+	private List<Floor> floorList;
 	private FloorMessageHandler floorMessageHandler;
 
 	//Constructor
@@ -27,7 +27,7 @@ public class FloorSystem {
 		floorMessageHandler = FloorMessageHandler.getInstance(floorPort, this);
 		
 		for (int i=0; i< FloorSystem.totalNumberofFloors; i++) {
-			floorList.add(new FloorGeneral(i+1));
+			floorList.add(new Floor(i+1));
 		}
 	}
 	
@@ -36,7 +36,7 @@ public class FloorSystem {
 	 * Getter Method To get The Floor List
 	 */
 	
-	public List<FloorGeneral> getFloorList() {
+	public List<Floor> getFloorList() {
 		return floorList;
 	}
 	
@@ -60,7 +60,7 @@ public class FloorSystem {
 		
 		//If the Elevator has Arrived on the passenger floor where requested
 		//FIXME Check out of bounds
-		FloorGeneral arriveFloor = floorList.get(arrivalFloor);
+		Floor arriveFloor = floorList.get(arrivalFloor);
 		
 		if (direction == Direction.UP) {
 			//turning uplight off
@@ -87,7 +87,7 @@ public class FloorSystem {
 	public void buttonPress(int requestFloor, Direction buttonDirection) {
 		System.out.println(buttonDirection + " button pressed on floor " + requestFloor);
 		//FIXME Check for index out of bounds
-		FloorGeneral arriveFloor = floorList.get(requestFloor);
+		Floor arriveFloor = floorList.get(requestFloor);
 		if(buttonDirection == Direction.UP) {
 			arriveFloor.getButtons().setUpButtonLight(true);
 		}
