@@ -1,5 +1,7 @@
 package com.sysc3303.elevator;
 
+import com.sysc3303.commons.Direction;
+
 public class MovementHandler implements Runnable {
 	public static final int MOVEMENTDELAY = 250;
 	
@@ -33,6 +35,9 @@ public class MovementHandler implements Runnable {
 					floor = sensor.getFloor();
 					context.setCurrentFloor(floor);
 					System.out.println("Arrived at floor: " + floor);
+					if(context.getCurrentFloor() == targetFloor) {
+						context.setCurrentDirection(Direction.IDLE);
+					}
 					context.notifyArrival(targetFloor);
 					context.setCurrentFloor(floor);
 				}

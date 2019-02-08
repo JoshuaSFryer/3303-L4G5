@@ -24,7 +24,7 @@ public class Elevator {
 	
 	private int 			currentFloor;
 	
-	private int			currentHeight; // Current height in CM
+	private int				currentHeight; // Current height in CM
 	private ElevatorState 	currentState;
 	private Direction		currentDirection;
 	
@@ -159,6 +159,8 @@ public class Elevator {
 	public void closeDoors() {
 		door.closeDoors();
 	}
+
+	public void setCurrentDirection(Direction dir) { this.currentDirection = dir;}
 	
 	/**
 	 * Get this elevator's current floor.
