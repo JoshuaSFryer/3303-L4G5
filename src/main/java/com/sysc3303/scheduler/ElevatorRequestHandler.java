@@ -7,6 +7,7 @@ import com.sysc3303.communication.ElevatorButtonMessage;
 import com.sysc3303.communication.ElevatorStateMessage;
 import com.sysc3303.communication.FloorArrivalMessage;
 import com.sysc3303.communication.FloorButtonMessage;
+import com.sysc3303.communication.GoToFloorMessage;
 import com.sysc3303.communication.Message;
 import com.sysc3303.elevator.ElevatorVector;
 
@@ -16,18 +17,22 @@ import com.sysc3303.elevator.ElevatorVector;
  *
  */
 public class ElevatorRequestHandler implements Runnable {
-	private Request  request;
-	private Message  message;
+	private Request             request;
+	private Message             message;
 	private FloorArrivalMessage floorArrivalMessage;
+	private TargetFloorDecider  targetFloorDecider; 
+	private GoToFloorMessageBox goToFloorMessageBox;
 	
 	/**
 	 * elevator message handler constructor
 	 * @para request
 	 * @para message
 	 */
-	public ElevatorRequestHandler(Request request, Message message) {
-		this.request = request;
-		this.message = message;         
+	public ElevatorRequestHandler(Request request, Message message, GoToFloorMessageBox goToFloorMessageBox) {
+		this.request             = request;
+		this.message             = message;   
+		this.goToFloorMessageBox = goToFloorMessageBox;
+		targetFloorDecider = new TargetFloorDecider();
 	}
 
 	public void run() {
@@ -39,9 +44,11 @@ public class ElevatorRequestHandler implements Runnable {
 			ElevatorStateMessage message          = (ElevatorStateMessage)this.message;
 			ElevatorVector       elevatorVector   = message.getElevatorVector();
 			int                  destinationFloor = elevatorVector.targetFloor;
-			int                  elevatorId = message.getElevatorId();
+			int                  elevatorId       = message.getElevatorId();
 
 			request.setElevatorVector(elevatorVector);
+			
+			System.out.println("Setting elevator vector: " + elevatorVector.toString());
 			
 			if(elevatorVector.currentFloor != destinationFloor) {
 				return;
@@ -52,11 +59,18 @@ public class ElevatorRequestHandler implements Runnable {
 			FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection, elevatorId);
 			
 			setFloorArrivalMessage(floorArrivalMessage);
-			// dont forget to create message and send it to floor
 		}
 		else if(message instanceof ElevatorButtonMessage) {
 			ElevatorButtonMessage message = (ElevatorButtonMessage)this.message;
+			
 			request.addElevatorButtonMessage(message);
+			
+			int              targetFloor      = targetFloorDecider.decideTargetFloor(request);
+			GoToFloorMessage goToFloorMessage = new GoToFloorMessage(targetFloor);
+			
+			System.out.println("Decided target floor! : " + targetFloor);
+			
+			goToFloorMessageBox.setGoToFloorMessage(goToFloorMessage);
 		}
 		
 		try {

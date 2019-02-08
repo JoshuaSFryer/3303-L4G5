@@ -41,8 +41,10 @@ public class SchedulerMessageHandler extends MessageHandler{
     @Override
     public synchronized void received(Message message){
         // TODO Whatever functionality you want when your receive a message
+    	GoToFloorMessage goToFloorMessage;
+    	
     	System.out.println("Received Message!");
-  
+    	
         switch (message.getOpcode()){
             case 0:
                 // TODO what happens when you receive FloorButton
@@ -52,7 +54,7 @@ public class SchedulerMessageHandler extends MessageHandler{
             	
             	scheduler.startFloorMessageHandler(message);
            
-            	GoToFloorMessage goToFloorMessage = scheduler.getGoToFloorMessage();
+            	goToFloorMessage = scheduler.getGoToFloorMessage();
             	System.out.println("Sending Message to elevator");
             	System.out.println(goToFloorMessage.toString());
             	sendGoToFloor(goToFloorMessage);
@@ -90,10 +92,19 @@ public class SchedulerMessageHandler extends MessageHandler{
             case 4:
                 // TODO what happens when you receive ElevatorButton
             	System.out.println("Received ElevatorButtonMessage");
+            	
             	ElevatorButtonMessage elevatorButtonMessage = (ElevatorButtonMessage)message;
+            	
             	System.out.println(elevatorButtonMessage.toString());
-                   
+                
             	scheduler.startElevatorMessageHandler(message);
+            	
+            	goToFloorMessage = scheduler.getGoToFloorMessage();
+            	
+            	System.out.println("Sending Message to elevator after recieving ElevatorButtonMessage");
+            	System.out.println(goToFloorMessage.toString());
+            	
+            	sendGoToFloor(goToFloorMessage);
             	break;
             case 5:
                 // Shouldn't have this on the simulator
