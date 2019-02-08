@@ -31,6 +31,7 @@ public class MovementHandler implements Runnable {
 				// Check whether the elevator has arrived at a floor.
 				if(sensor.isAtFloor()) {
 					floor = sensor.getFloor();
+					context.setCurrentFloor(floor);
 					System.out.println("Arrived at floor: " + floor);
 					context.notifyArrival(targetFloor);
 					context.setCurrentFloor(floor);
@@ -39,6 +40,7 @@ public class MovementHandler implements Runnable {
 				// If not at a floor yet, move towards the target.
 				if(targetFloor > floor) {
 					moveUp();
+
 				} else if(targetFloor < floor) {
 					moveDown();
 				} else { // already at the target floor

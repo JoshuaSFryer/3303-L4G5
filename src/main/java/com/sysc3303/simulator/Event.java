@@ -22,6 +22,13 @@ public class Event {
     private int floor, elevatorButton;
     private Direction direction;
 
+    /**
+     * Constructor that takes the correct data types for attributes as parameters
+     * @param timestamp
+     * @param floor
+     * @param elevatorButton
+     * @param direction
+     */
     public Event(Date timestamp, int floor, int elevatorButton, Direction direction) {
         this.timestamp = timestamp;
         this.floor = floor;
@@ -29,6 +36,11 @@ public class Event {
         this.elevatorButton = elevatorButton;
     }
 
+    /**
+     * Constructor that takes the parameters as one array of strings that need to be parsed
+     * @param stringArray
+     * @throws ParseException
+     */
     public Event(String[] stringArray) throws ParseException{
         this.timestamp = parseDate(stringArray[0]);
         this.floor = Integer.parseInt(stringArray[1]);

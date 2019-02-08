@@ -77,6 +77,7 @@ public class SchedulerMessageHandler extends MessageHandler{
             	scheduler.startElevatorMessageHandler(message);
             	
             	if(elevatorStateMessage.getElevatorVector().currentFloor == elevatorStateMessage.getElevatorVector().targetFloor) {
+            	    System.out.println("\n\nThe elevator has arrived at floor " + elevatorStateMessage.getElevatorVector().currentFloor);
             		FloorArrivalMessage floorArrivalMessage = scheduler.getFloorArrivalMessage();
             		
             		System.out.println("Sending Message to Floor");

@@ -211,12 +211,12 @@ public class Elevator {
 	 * @param num	The floor number of the button to press.
 	 */
 	public void pressButton(int num) {
-		if(num > this.buttons.size() || num < 1) {
+		if(num > this.buttons.size() || num < 0) {
 			//TODO: Throw an exception here?
 			System.out.println("Invalid button press, out of bounds!");
 			return;
 		}
-		this.buttons.get(num+1).press();
+		this.buttons.get(num).press();
 		// Notify the scheduler that a 
 		messageHandler.sendElevatorButton(num, this.elevatorID);
 	}
@@ -258,7 +258,7 @@ public class Elevator {
 		// Create a new Elevator instance.
 		int      port     = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
 		Elevator elevator = new Elevator(port, 
-							Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators")),
+							Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors")),
 							0); //TODO: De-magicify this number.
 		
 		while(running) {

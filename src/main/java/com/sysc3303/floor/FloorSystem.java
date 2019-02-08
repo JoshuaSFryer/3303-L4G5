@@ -54,12 +54,12 @@ public class FloorSystem {
 	 * 	2. It sends message to the simulator
 	 * 	3. It turns off the lamp once the Elevator Has arrived in the destination Floor
 	 * 
-	 * @param arrivedFloor Number and Directio
+	 * @param arrivalFloor Number and Directio
 	 */
 	public void floorArrival (int arrivalFloor,  Direction direction, int elevatorId) throws InterruptedException {
 		
 		//If the Elevator has Arrived on the passenger floor where requested
-		FloorGeneral arriveFloor = floorList.get(arrivalFloor-1);
+		FloorGeneral arriveFloor = floorList.get(arrivalFloor);
 		
 		if (direction == Direction.UP) {
 			//turning uplight off
@@ -85,7 +85,7 @@ public class FloorSystem {
 
 	public void buttonPress(int requestFloor, Direction buttonDirection) {
 		System.out.println(buttonDirection + " button pressed on floor " + requestFloor);
-		FloorGeneral arriveFloor = floorList.get(requestFloor-1);
+		FloorGeneral arriveFloor = floorList.get(requestFloor);
 		if(buttonDirection == Direction.UP) {
 			arriveFloor.getButtons().setUpButtonLight(true);
 		}

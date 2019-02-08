@@ -84,6 +84,8 @@ public class FloorMessageHandler extends MessageHandler {
     }
 
     public void sendFloorButton(int floor, Direction direction){
+        System.out.println("\nSending floor button press to " +
+                "scheduler \n\tFloor: " + floor + "\n\tDirection: "+direction);
         FloorButtonMessage floorButtonMessage = new FloorButtonMessage(floor, direction, new Date());
         send(floorButtonMessage, schedulerAddress, schedulerPort);
         try {
@@ -95,6 +97,8 @@ public class FloorMessageHandler extends MessageHandler {
     }
     
     public void sendFloorArrival(int floor, Direction direction, int elevatorId) {
+        System.out.println("\nSending floor arrival to " +
+                "simulator \n\tFloor: " + floor + "\n\tDirection: "+direction +"\n\tElevator ID: " + elevatorId);
     	FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction, elevatorId);
     	send(floorArrivalMessage, simulatorAddress, simulatorPort);
     	try {
