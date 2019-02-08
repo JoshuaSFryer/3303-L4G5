@@ -1,13 +1,13 @@
-package com.sysc3303.commons;
+package commons;
 
-import com.sysc3303.elevator.ElevatorVector;
+import com.sysc3303.commons.Direction;
+import com.sysc3303.commons.ElevatorVector;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Date;
 
 import static java.lang.Thread.sleep;
-import static org.junit.Assert.fail;
 
 public class CommunicationHandlerTest{
     @Test

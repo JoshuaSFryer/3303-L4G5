@@ -1,10 +1,12 @@
-package com.sysc3303.simulator;
+package com.simulator;
 
-import com.sysc3303.commons.*;
+import com.sysc3303.commons.ConfigProperties;
+import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.ElevatorClickSimulationMessage;
 import com.sysc3303.communication.FloorClickSimulationMessage;
 import com.sysc3303.communication.Message;
 import com.sysc3303.communication.MessageHandler;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 

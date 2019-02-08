@@ -1,7 +1,9 @@
-package com.sysc3303.scheduler;
+package scheduler;
 
-import com.sysc3303.commons.*;
+import com.sysc3303.commons.ConfigProperties;
+import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.*;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 

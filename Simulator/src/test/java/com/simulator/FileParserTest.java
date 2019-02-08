@@ -1,13 +1,14 @@
-package com.sysc3303.simulator;
+package com.simulator;
 
+import com.sysc3303.simulator.Event;
+import com.sysc3303.simulator.FileParser;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Locale;
 
 
 public class FileParserTest {

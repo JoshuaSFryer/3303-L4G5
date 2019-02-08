@@ -1,8 +1,9 @@
-package com.sysc3303.scheduler;
+package scheduler;
 
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.elevator.ElevatorMessageHandlerMock;
 import com.sysc3303.floor.FloorMessageHandlerMock;
+import com.sysc3303.scheduler.Scheduler;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;

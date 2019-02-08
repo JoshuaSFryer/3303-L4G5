@@ -7,7 +7,7 @@ import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.ElevatorButtonMessage;
 import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.communication.GoToFloorMessage;
-import com.sysc3303.elevator.ElevatorVector;
+import com.sysc3303.commons.ElevatorVector;
 
 /**
  * @author Yu Yamanaka Xinrui Zhang

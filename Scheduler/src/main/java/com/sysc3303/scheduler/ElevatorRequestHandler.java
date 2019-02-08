@@ -8,7 +8,7 @@ import com.sysc3303.communication.ElevatorStateMessage;
 import com.sysc3303.communication.FloorArrivalMessage;
 import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.communication.Message;
-import com.sysc3303.elevator.ElevatorVector;
+import com.sysc3303.commons.ElevatorVector;
 
 /**
  * Handle the message from elevator
