@@ -1,4 +1,8 @@
-
+// figure of suitability (FS)
+// d is the distance between the car and the landing floor, 
+// d=|car floor - landing floor| 
+// N is the number of floors.
+// from: http://www.diva-portal.se/smash/get/diva2:811554/FULLTEXT01.pdf
 public class selectCar {
 	/**
 	 * Select an elevator to handle a floor request
