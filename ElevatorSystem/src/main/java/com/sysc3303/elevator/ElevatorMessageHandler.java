@@ -1,6 +1,7 @@
 package com.sysc3303.elevator;
 
 import com.sysc3303.commons.ConfigProperties;
+import com.sysc3303.commons.ElevatorVector;
 import com.sysc3303.communication.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
+import com.sysc3303.commons.ElevatorVector;
 
 /**
  * @author Joshua Fryer, Yu Yamanaka

@@ -1,4 +1,4 @@
-package com.sysc3303.elevator;
+package com.sysc3303.commons;
 import com.sysc3303.commons.Direction;
 
 @SuppressWarnings("serial")

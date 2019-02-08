@@ -1,6 +1,6 @@
 package com.sysc3303.communication;
 
-import com.sysc3303.elevator.ElevatorVector;
+import com.sysc3303.commons.ElevatorVector;
 
 /**
  * Message sent from Elevator to Scheduler to update
