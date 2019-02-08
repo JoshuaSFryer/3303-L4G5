@@ -29,7 +29,6 @@ public class ElevatorRequestHandler implements Runnable {
 		this.request = request;
 		this.message = message;         
 	}
-	
 
 	public void run() {
 		System.out.println("ElevatorRequestHandler starting..");
