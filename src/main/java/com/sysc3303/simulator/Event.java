@@ -56,6 +56,10 @@ public class Event {
         return finalTime.getTime();
     }
 
+    public String toString(){
+        return "Event:\n\tTimestamp: " + timestamp + "\n\tFloor: " + floor + "\n\tDirection: " + direction + "\n\tElevator Button: " + elevatorButton;
+    }
+
     public Date getTimestamp() {
         return timestamp;
     }
