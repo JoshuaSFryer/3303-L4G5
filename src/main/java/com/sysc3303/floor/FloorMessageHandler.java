@@ -13,15 +13,15 @@ import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Properties;
 
-public class FloorMessageHandlerMock extends MessageHandler {
+public class FloorMessageHandler extends MessageHandler {
     //TODO you need to add the port numbers that will be associated with scheduler
     private InetAddress schedulerAddress;
     private InetAddress simulatorAddress;
+    private FloorSystem floorSystem;
 
-    static int schedulerPort;
-    static int elevatorPort;
-    static int floorPort;
-    static int simulatorPort;
+    static int schedulerPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("schedulerPort"));
+    static int floorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("floorPort"));
+    static int simulatorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("simulatorPort"));
 
     static {
         Properties properties = new Properties();
@@ -29,26 +29,22 @@ public class FloorMessageHandlerMock extends MessageHandler {
             InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
             properties.loadFromXML(inputStream);
 
-            schedulerPort = Integer.parseInt(properties.getProperty("schedulerPort"));
-            elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
-            floorPort = Integer.parseInt(properties.getProperty("floorPort"));
-            simulatorPort = Integer.parseInt(properties.getProperty("simulatorPort"));
         }catch(FileNotFoundException e){
         }catch(IOException e){
         }
     }
+    private static FloorMessageHandler instance;
 
-    private static FloorMessageHandlerMock instance;
-
-    public static FloorMessageHandlerMock getInstance(int receivePort){
+    public static FloorMessageHandler getInstance(int receivePort, FloorSystem floorSystem){
         if (instance == null){
-            instance = new FloorMessageHandlerMock(receivePort);
+            return new FloorMessageHandler(receivePort, floorSystem);
         }
         return instance;
     }
 
-    private FloorMessageHandlerMock(int receivePort){
+    private FloorMessageHandler(int receivePort, FloorSystem floorSystem){
         super(receivePort);
+        this.floorSystem = floorSystem;
         //TODO currently for localhost this is how it looks
         try{
             schedulerAddress = simulatorAddress = InetAddress.getLocalHost();
@@ -58,6 +54,9 @@ public class FloorMessageHandlerMock extends MessageHandler {
 
     @Override
     public synchronized void received(Message message){
+    	System.out.println("From Floor");
+    	System.out.println("received message!");
+    	System.out.println(message.toString());
         // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
             case 0:
@@ -66,9 +65,13 @@ public class FloorMessageHandlerMock extends MessageHandler {
                 break;
             case 1:
                 // TODO what happens when you receive FloorArrival
-                FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
-                System.out.println("Floor arrival method called");
-                System.out.println(floorArrivalMessage);
+            	FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
+            	try {
+            			floorSystem.floorArrival(floorArrivalMessage.getFloor(), floorArrivalMessage.getCurrentDirection());
+            	} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+            		e.printStackTrace();
+            	}
                 break;
             case 2:
                 // Shouldn't have this on the Floor
@@ -76,7 +79,7 @@ public class FloorMessageHandlerMock extends MessageHandler {
                 break;
             case 3:
                 // Shouldn't have this on the Floor
-                // TODO what happens when you receive ElevatoirState
+                // TODO what happens when you receive ElevatorState
                 break;
             case 4:
                 // Shouldn't have this on the Floor
@@ -85,8 +88,7 @@ public class FloorMessageHandlerMock extends MessageHandler {
             case 5:
                 // TODO what happens when you receive FloorButtonSimulationMessage
                 FloorClickSimulationMessage floorClickSimulationMessage = (FloorClickSimulationMessage) message;
-                System.out.println("FloorClickSimulatorMethodCalled");
-                System.out.println(floorClickSimulationMessage);
+                floorSystem.buttonPress(floorClickSimulationMessage.getFloor(), floorClickSimulationMessage.getDirection());
                 break;
             case 6:
                 // Shouldn't have this on the Floor
@@ -100,11 +102,22 @@ public class FloorMessageHandlerMock extends MessageHandler {
     public void sendFloorButton(int floor, Direction direction){
         FloorButtonMessage floorButtonMessage = new FloorButtonMessage(floor, direction, new Date());
         send(floorButtonMessage, schedulerAddress, schedulerPort);
+        try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
-
+    
     public void sendFloorArrival(int floor, Direction direction) {
-        FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
-        send(floorArrivalMessage, simulatorAddress, simulatorPort);
+    	FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
+    	send(floorArrivalMessage, simulatorAddress, simulatorPort);
+    	try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }
-

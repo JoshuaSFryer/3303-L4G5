@@ -1,5 +1,6 @@
 package com.sysc3303.commons;
 
+import com.sysc3303.communication.*;
 import com.sysc3303.elevator.ElevatorVector;
 
 import java.net.InetAddress;

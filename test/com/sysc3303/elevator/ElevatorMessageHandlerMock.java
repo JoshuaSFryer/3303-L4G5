@@ -1,5 +1,5 @@
 package com.sysc3303.elevator;
-import com.sysc3303.commons.*;
+import com.sysc3303.communication.*;
 import com.sysc3303.constants.Constants;
 
 import java.io.FileInputStream;
@@ -11,7 +11,7 @@ import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.Properties;
 
-public class ElevatorMessageHandlerMock extends MessageHandler{
+public class ElevatorMessageHandlerMock extends MessageHandler {
     //TODO you need to add the port numbers that will be associated with scheduler
     static int schedulerPort;
     static int elevatorPort;

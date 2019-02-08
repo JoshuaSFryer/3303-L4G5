@@ -1,6 +1,7 @@
 package com.sysc3303.scheduler;
 
 import com.sysc3303.commons.*;
+import com.sysc3303.communication.*;
 import com.sysc3303.constants.Constants;
 
 import java.io.FileInputStream;
@@ -11,7 +12,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-public class SchedulerMessageHandlerMock extends MessageHandler{
+public class SchedulerMessageHandlerMock extends MessageHandler {
     //TODO you need to add the port numbers that will be associated with floor and elevator
     private InetAddress elevatorAddress;
     private InetAddress floorAddress;

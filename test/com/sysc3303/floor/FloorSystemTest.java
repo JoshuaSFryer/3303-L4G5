@@ -3,7 +3,6 @@ import static org.junit.Assert.fail;
 
 import com.sysc3303.commons.Direction;
 
-import junit.framework.Assert;
 import org.junit.Test;
 
 
