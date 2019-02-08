@@ -49,7 +49,9 @@ public class FloorMessageHandler extends MessageHandler {
                 // TODO what happens when you receive FloorArrival
             	FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
             	try {
-            			floorSystem.floorArrival(floorArrivalMessage.getFloor(), floorArrivalMessage.getCurrentDirection());
+            			floorSystem.floorArrival(floorArrivalMessage.getFloor(),
+                                floorArrivalMessage.getCurrentDirection(),
+                                floorArrivalMessage.getElevatorId());
             	} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
             		e.printStackTrace();
@@ -92,8 +94,8 @@ public class FloorMessageHandler extends MessageHandler {
 		}
     }
     
-    public void sendFloorArrival(int floor, Direction direction) {
-    	FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
+    public void sendFloorArrival(int floor, Direction direction, int elevatorId) {
+    	FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction, elevatorId);
     	send(floorArrivalMessage, simulatorAddress, simulatorPort);
     	try {
 			Thread.sleep(2000);

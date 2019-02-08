@@ -78,8 +78,8 @@ public class FloorMessageHandlerMock extends MessageHandler {
         send(floorButtonMessage, schedulerAddress, schedulerPort);
     }
 
-    public void sendFloorArrival(int floor, Direction direction) {
-        FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
+    public void sendFloorArrival(int floor, Direction direction, int elevatorId) {
+        FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction, elevatorId);
         send(floorArrivalMessage, simulatorAddress, simulatorPort);
     }
 }

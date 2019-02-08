@@ -18,7 +18,7 @@ class FloorSystemTest {
 		floor.getButtons().setDownButtonLight(true);
 		
 		try {
-			floorSystem.floorArrival(1, Direction.UP);
+			floorSystem.floorArrival(1, Direction.UP, 1);
 		} catch (InterruptedException e){
 			fail();
 		}

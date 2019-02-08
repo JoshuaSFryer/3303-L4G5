@@ -83,8 +83,8 @@ public class SchedulerMessageHandlerMock extends MessageHandler {
     }
 
     // TODO Rename this if you would like to
-    public void sendFloorArival(int floor, Direction direction){
-        FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction);
+    public void sendFloorArival(int floor, Direction direction, int elevatorId){
+        FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction, elevatorId);
         send(floorArrivalMessage, floorAddress, floorPort);
     }
 }

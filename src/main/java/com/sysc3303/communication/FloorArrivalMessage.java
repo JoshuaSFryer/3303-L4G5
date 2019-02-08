@@ -12,12 +12,14 @@ import com.sysc3303.commons.Direction;
 public class FloorArrivalMessage extends Message{
     private int floor;
     private Direction currentDirection;
+    private int elevatorId;
 
-    public FloorArrivalMessage(int floor, Direction currentDirection) {
+    public FloorArrivalMessage(int floor, Direction currentDirection, int elevatorId) {
         // Opcode for this message is 1
         super(OpCodes.FLOOR_ARRIVAL.getOpCode());
         this.floor = floor;
         this.currentDirection = currentDirection;
+        this.elevatorId = elevatorId;
     }
 
     public String toString(){
@@ -32,4 +34,6 @@ public class FloorArrivalMessage extends Message{
     public Direction getCurrentDirection() {
         return currentDirection;
     }
+
+    public int getElevatorId() { return elevatorId; }
 }

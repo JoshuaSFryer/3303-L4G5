@@ -56,7 +56,7 @@ public class FloorSystem {
 	 * 
 	 * @param arrivedFloor Number and Directio
 	 */
-	public void floorArrival (int arrivalFloor,  Direction direction) throws InterruptedException {
+	public void floorArrival (int arrivalFloor,  Direction direction, int elevatorId) throws InterruptedException {
 		
 		//If the Elevator has Arrived on the passenger floor where requested
 		FloorGeneral arriveFloor = floorList.get(arrivalFloor-1);
@@ -73,7 +73,7 @@ public class FloorSystem {
 			arriveFloor.getButtons().setDownButtonLight(false);
 			arriveFloor.getLamps().turnUpLampOFF();
 		}
-		floorMessageHandler.sendFloorArrival(arrivalFloor, direction);
+		floorMessageHandler.sendFloorArrival(arrivalFloor, direction, elevatorId);
 	}
 
 	/**

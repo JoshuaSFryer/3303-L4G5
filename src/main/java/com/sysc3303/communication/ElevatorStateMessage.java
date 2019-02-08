@@ -28,4 +28,5 @@ public class ElevatorStateMessage extends Message{
     public ElevatorVector getElevatorVector() {
         return elevatorVector;
     }
+    public int getElevatorId() { return elevatorId; }
 }

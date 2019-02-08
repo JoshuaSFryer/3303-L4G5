@@ -1,10 +1,8 @@
 package com.sysc3303.simulator;
 
 import com.sysc3303.commons.*;
-import com.sysc3303.communication.ElevatorClickSimulationMessage;
-import com.sysc3303.communication.FloorClickSimulationMessage;
-import com.sysc3303.communication.Message;
-import com.sysc3303.communication.MessageHandler;
+import com.sysc3303.communication.*;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -46,6 +44,10 @@ public class SimulatorMessageHandler extends MessageHandler {
                 break;
             case 1:
                 // TODO what happens when you receive FloorArrival
+                FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
+                FloorReceiver.getInstance().receiveElevatorArrival(floorArrivalMessage.getFloor(),
+                        floorArrivalMessage.getCurrentDirection(),
+                        floorArrivalMessage.getElevatorId());
                 break;
             case 2:
                 // Shouldn't have this on the simulator

@@ -37,9 +37,10 @@ public class ElevatorRequestHandler implements Runnable {
 		
 		if(message instanceof ElevatorStateMessage) {
 			ElevatorStateMessage message          = (ElevatorStateMessage)this.message;
-			ElevatorVector       elevatorVector   = message.getElevatorVector(); 
+			ElevatorVector       elevatorVector   = message.getElevatorVector();
 			int                  destinationFloor = elevatorVector.targetFloor;
-		   
+			int                  elevatorId = message.getElevatorId();
+
 			request.setElevatorVector(elevatorVector);
 			
 			if(elevatorVector.currentFloor != destinationFloor) {
@@ -47,8 +48,8 @@ public class ElevatorRequestHandler implements Runnable {
 			}	
 	
 			removeTargetFloor(destinationFloor, elevatorVector.currentDirection);
-			
-			FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection);
+
+			FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection, elevatorId);
 			
 			setFloorArrivalMessage(floorArrivalMessage);
 			// dont forget to create message and send it to floor
@@ -73,7 +74,7 @@ public class ElevatorRequestHandler implements Runnable {
 	}
 	
 	/**
-	 * @return floorArrialMessage
+	 * @return floorArrivalMessage
 	 */
 	public synchronized FloorArrivalMessage getFloorArrivalMessage() {
 		waitUntilFloorArrivalMessageExists();
