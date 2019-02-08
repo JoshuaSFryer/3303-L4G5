@@ -108,6 +108,8 @@ public class ElevatorRequestHandler implements Runnable {
 	 * @para targetDirection
 	 */
 	private void removeTargetFloor(int targetFloor, Direction targetDirection) {
+		System.out.println("Removing target Floor!!!");
+		
 		ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray();
 		ArrayList<FloorButtonMessage>    floorRequestList    = request.getFloorButtonMessageArray();
 		
