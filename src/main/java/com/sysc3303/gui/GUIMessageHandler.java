@@ -1,12 +1,11 @@
 package com.sysc3303.gui;
 
-import com.sysc3303.communication.GUIElevatorMoveMessage;
-import com.sysc3303.communication.GUIFloorMessage;
-import com.sysc3303.communication.Message;
-import com.sysc3303.communication.MessageHandler;
+import com.sysc3303.communication.*;
 
 public class GUIMessageHandler extends MessageHandler {
     private static GUIMessageHandler instance;
+
+    //TODO: Configure static port numbers.
 
     public static GUIMessageHandler getInstance(int receivePort) {
         if (instance == null) {
@@ -26,10 +25,12 @@ public class GUIMessageHandler extends MessageHandler {
             case 7: // elevator update
                 GUIElevatorMoveMessage moveMSG = (GUIElevatorMoveMessage) message;
                 // Have the GUI do a thing here.
+                System.out.println(moveMSG.toString());
                 break;
             case 8: // floor update
                 GUIFloorMessage floorMSG = (GUIFloorMessage) message;
                 // Have the GUI do a thing here.
+                System.out.println(floorMSG.toString());
                 break;
             default:
                 System.out.println("This message type is not handled by this module!");

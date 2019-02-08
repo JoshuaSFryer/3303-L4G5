@@ -2,9 +2,9 @@ package com.sysc3303.communication;
 
 import java.io.Serializable;
 
-class ButtonPair {
-    private boolean down;
-    private boolean up;
+class ButtonPair implements Serializable {
+    public boolean down;
+    public boolean up;
 
     public ButtonPair(boolean downState, boolean upState) {
         this.down = downState;
@@ -13,12 +13,18 @@ class ButtonPair {
 }
 
 public class GUIFloorMessage extends Message implements Serializable {
-    private ButtonPair buttons;
-    private int passengerFloor;
-    public GUIFloorMessage(byte opcode, boolean downState, boolean upState, int passengerFloor) {
-        super(opcode);
+    public final ButtonPair buttons;
+    public final int passengerFloor;
+
+    public GUIFloorMessage(boolean downState, boolean upState, int passengerFloor) {
+        super(OpCodes.FLOOR_UPDATE_GUI.getOpCode());
         this.buttons = new ButtonPair(downState, upState);
         this.passengerFloor = passengerFloor;
     }
-    //TODO: toString()
+
+    @Override
+    public String toString() {
+        return "Down button: " + this.buttons.down + " Up button: " + this.buttons.up + "\nFrom floor: " +
+                this.passengerFloor;
+    }
 }

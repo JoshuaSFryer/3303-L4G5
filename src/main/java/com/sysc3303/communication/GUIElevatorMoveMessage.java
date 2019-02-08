@@ -4,9 +4,9 @@ import com.sysc3303.commons.Direction;
 
 public class GUIElevatorMoveMessage extends Message {
 
-    private int currentFloor;
-    private Direction currentDirection;
-    private boolean doorOpen;
+    public final int currentFloor;
+    public final Direction currentDirection;
+    public final boolean doorOpen;
 
     public GUIElevatorMoveMessage(byte opcode, int floor, Direction dir, boolean door) {
         super(opcode);
@@ -14,5 +14,11 @@ public class GUIElevatorMoveMessage extends Message {
         this.currentFloor = floor;
         this.currentDirection = dir;
         this.doorOpen = door;
+    }
+
+    @Override
+    public String toString() {
+        return "Current floor: " + this.currentFloor + " Going: " + this.currentDirection.name() + "\nDoor is: " +
+                this.doorOpen;
     }
 }
