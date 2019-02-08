@@ -31,7 +31,7 @@ public class ElevatorMessageHandler extends MessageHandler {
         return instance;
     }
 
-    public ElevatorMessageHandler(int receivePort, Elevator context){
+    private ElevatorMessageHandler(int receivePort, Elevator context){
         super(receivePort);
         this.context = context;
         try{
