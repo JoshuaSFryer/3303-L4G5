@@ -5,25 +5,18 @@ import com.sysc3303.communication.ElevatorClickSimulationMessage;
 import com.sysc3303.communication.FloorClickSimulationMessage;
 import com.sysc3303.communication.Message;
 import com.sysc3303.communication.MessageHandler;
-import com.sysc3303.constants.Constants;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Properties;
 
 public class SimulatorMessageHandler extends MessageHandler {
     //TODO you need to add the port numbers that will be associated with scheduler
     private InetAddress elevatorAddress;
     private InetAddress floorAddress;
 
-    static int schedulerPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("schedulerPort"));
-    static int floorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("floorPort"));
-    static int simulatorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("simulatorPort"));
-    static int elevatorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("elevatorPort"));
+    static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
+    static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
+    static int simulatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("simulatorPort"));
+    static int elevatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
     static SimulatorMessageHandler instance;
 
     public static SimulatorMessageHandler getInstance(int receivePort){

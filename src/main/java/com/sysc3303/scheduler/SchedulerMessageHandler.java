@@ -1,6 +1,6 @@
 package com.sysc3303.scheduler;
 
-import com.sysc3303.commons.ConfigProperty;
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -21,8 +21,8 @@ public class SchedulerMessageHandler extends MessageHandler{
      * @para receivePort
      * @para scheduler
      */
-    static int elevatorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("elevatorPort"));
-    static int floorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("floorPort"));
+    static int elevatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
+    static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
 
     public SchedulerMessageHandler(int receivePort, Scheduler scheduler){
         super(receivePort);

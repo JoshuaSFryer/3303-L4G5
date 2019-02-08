@@ -1,18 +1,14 @@
 package com.sysc3303.floor;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
-import com.sysc3303.constants.Constants;
 import com.sysc3303.scheduler.SchedulerMessageHandlerMock;
 import com.sysc3303.simulator.SimulatorMessageHandlerMock;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 
 import static java.lang.Thread.sleep;
 
@@ -27,15 +23,12 @@ public class FloorSystemIntegrationTest {
     private static FloorSystem floorSystem;
 
     @BeforeClass
-    public static void classSetUp() throws FileNotFoundException,IOException{
-        Properties properties = new Properties();
-        InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
-        properties.loadFromXML(inputStream);
+    public static void classSetUp() throws IOException{
 
-        schedulerPort = Integer.parseInt(properties.getProperty("schedulerPort"));
-        elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
-        floorPort = Integer.parseInt(properties.getProperty("floorPort"));
-        simulatorPort = Integer.parseInt(properties.getProperty("simulatorPort"));
+        schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
+        elevatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
+        floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
+        simulatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("simulatorPort"));
         floorSystem = new FloorSystem();
     }
 

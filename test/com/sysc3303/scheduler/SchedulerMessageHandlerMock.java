@@ -2,40 +2,18 @@ package com.sysc3303.scheduler;
 
 import com.sysc3303.commons.*;
 import com.sysc3303.communication.*;
-import com.sysc3303.constants.Constants;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Properties;
 
 public class SchedulerMessageHandlerMock extends MessageHandler {
     //TODO you need to add the port numbers that will be associated with floor and elevator
     private InetAddress elevatorAddress;
     private InetAddress floorAddress;
 
-    static int schedulerPort;
-    static int elevatorPort;
-    static int floorPort;
-    static int simulatorPort;
-
-    static {
-        Properties properties = new Properties();
-        try{
-            InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
-            properties.loadFromXML(inputStream);
-
-            schedulerPort = Integer.parseInt(properties.getProperty("schedulerPort"));
-            elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
-            floorPort = Integer.parseInt(properties.getProperty("floorPort"));
-            simulatorPort = Integer.parseInt(properties.getProperty("simulatorPort"));
-        }catch(FileNotFoundException e){
-        }catch(IOException e){
-        }
-    }
+    static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
+    static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
+    static int simulatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("simulatorPort"));
+    static int elevatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
 
     private static SchedulerMessageHandlerMock instance;
 

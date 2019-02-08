@@ -1,14 +1,11 @@
 package com.sysc3303.elevator;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.InvalidPropertiesFormatException;
-import java.util.Properties;
+;
 import java.util.ArrayList;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
-import com.sysc3303.constants.Constants;
 
 /**
  * @author Joshua Fryer, Yu Yamanaka
@@ -255,17 +252,13 @@ public class Elevator {
 		mover.start();
 	}
 	
-	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
-		Properties                 properties        = new Properties();
-		InputStream                inputStream       = new FileInputStream(Constants.CONFIG_PATH);
+	public static void main(String[] args) throws IOException {
 		boolean                    running           = true;
 		
-		properties.loadFromXML(inputStream);
-		
 		// Create a new Elevator instance.
-		int      port     = Integer.parseInt(properties.getProperty("elevatorPort"));
+		int      port     = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
 		Elevator elevator = new Elevator(port, 
-							Integer.parseInt(properties.getProperty("numberOfElevators")),
+							Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators")),
 							0); //TODO: De-magicify this number.
 		
 		while(running) {

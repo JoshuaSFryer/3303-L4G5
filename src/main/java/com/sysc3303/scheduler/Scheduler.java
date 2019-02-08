@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.*;
 
-import com.sysc3303.commons.ConfigProperty;
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.FloorArrivalMessage;
 import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.communication.GoToFloorMessage;
@@ -68,8 +68,8 @@ public class Scheduler {
 
 
 
-		int       port         = Integer.parseInt(ConfigProperty.getInstance().getProperty("schedulerPort"));
-		int       elevatorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("elevatorPort"));
+		int       port         = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
+		int       elevatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
 		Scheduler scheduler    = new Scheduler();
 		
 		System.out.println("Starting Scheduler Message Handler...");

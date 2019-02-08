@@ -1,11 +1,11 @@
 package com.sysc3303.simulator;
 
-import com.sysc3303.commons.ConfigProperty;
+import com.sysc3303.commons.ConfigProperties;
 
 public class ElevatorSender {
     private static ElevatorSender instance;
 
-    static int simulatorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("simulatorPort"));
+    static int simulatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("simulatorPort"));
 
     private ElevatorSender(){
     }
