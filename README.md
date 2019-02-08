@@ -1,8 +1,8 @@
 # Elevator Simulation
 
 ## How to Use Branch
-Nanme the branch "iteration#-the feature you are working on"  
-After code review, it can be pushed to the branch "iteration#"
+Name the branch "iteration<iteration number>/<feature name>"  
+After code review, it can be pushed to the branch "iteration-<iteration number>"
 
 ## Authors
 - Joshua Fryer
