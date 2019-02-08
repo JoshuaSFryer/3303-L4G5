@@ -97,6 +97,10 @@ public class TriggeredEventMap {
      */
     public void send(int floor, Direction direction, int elevatorId){
         List<Event> eventList = map.get(floor).remove(direction);
+        if (eventList == null){
+            System.out.println("No passengers were found to pick up at this floor");
+            return;
+        }
         for (Event event: eventList){
             ElevatorSender.getInstance().sendElevatorClick(elevatorId, event.getElevatorButton());
         }
