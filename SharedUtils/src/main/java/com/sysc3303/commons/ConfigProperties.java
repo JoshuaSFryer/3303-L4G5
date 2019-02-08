@@ -5,6 +5,7 @@ import com.sysc3303.constants.Constants;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
@@ -30,7 +31,7 @@ public class ConfigProperties {
     public static ConfigProperties getInstance(){
         if (instance == null){
             try {
-                InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
+                InputStream inputStream = ConfigProperties.class.getClassLoader().getResourceAsStream(Constants.CONFIG_PATH);
                 Properties properties = new Properties();
                 properties.load(inputStream);
                 instance = new ConfigProperties();

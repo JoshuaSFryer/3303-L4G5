@@ -63,10 +63,7 @@ public class Scheduler {
 	}
 		
 	public static void main(String[] args) throws InvalidPropertiesFormatException, IOException {
-		InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
 		InetAddress elevatorIp  = InetAddress.getLocalHost();
-
-
 
 		int       port         = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
 		int       elevatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));

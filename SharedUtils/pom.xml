@@ -11,5 +11,16 @@
 
     <artifactId>Shared-Utils</artifactId>
 
+    <build>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>config.properties</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
 
 </project>
