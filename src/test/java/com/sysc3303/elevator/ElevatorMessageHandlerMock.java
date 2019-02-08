@@ -76,6 +76,7 @@ public class ElevatorMessageHandlerMock extends MessageHandler {
         send(elevatorStateMessage, schedulerAddress, schedulerPort);
     }
     public void sendElevatorButton(int destinationFloor, int elevatorId){
+        System.out.println("\nElevator Button Clicked for floor " + destinationFloor);
         ElevatorButtonMessage elevatorButtonMessage = new ElevatorButtonMessage(destinationFloor, elevatorId, new Date());
         send(elevatorButtonMessage, schedulerAddress, schedulerPort);
     }

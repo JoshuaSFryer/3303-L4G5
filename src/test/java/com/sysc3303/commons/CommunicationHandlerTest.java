@@ -2,11 +2,8 @@ package com.sysc3303.commons;
 
 import com.sysc3303.elevator.ElevatorVector;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Date;
 
 import static java.lang.Thread.sleep;
