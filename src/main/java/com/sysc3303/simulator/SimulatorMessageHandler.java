@@ -20,26 +20,11 @@ public class SimulatorMessageHandler extends MessageHandler {
     private InetAddress elevatorAddress;
     private InetAddress floorAddress;
 
-    static int schedulerPort;
-    static int elevatorPort;
-    static int floorPort;
-    static int simulatorPort;
+    static int schedulerPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("schedulerPort"));
+    static int floorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("floorPort"));
+    static int simulatorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("simulatorPort"));
+    static int elevatorPort = Integer.parseInt(ConfigProperty.getInstance().getProperty("elevatorPort"));
     static SimulatorMessageHandler instance;
-
-    static {
-        Properties properties = new Properties();
-        try{
-            InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
-            properties.loadFromXML(inputStream);
-
-            schedulerPort = Integer.parseInt(properties.getProperty("schedulerPort"));
-            elevatorPort = Integer.parseInt(properties.getProperty("elevatorPort"));
-            floorPort = Integer.parseInt(properties.getProperty("floorPort"));
-            simulatorPort = Integer.parseInt(properties.getProperty("simulatorPort"));
-        }catch(FileNotFoundException e){
-        }catch(IOException e){
-        }
-    }
 
     public static SimulatorMessageHandler getInstance(int receivePort){
         if (instance == null){
@@ -56,7 +41,6 @@ public class SimulatorMessageHandler extends MessageHandler {
         }catch(UnknownHostException e){
         }
     }
-
 
     @Override
     public void received(Message message){
