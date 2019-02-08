@@ -1,7 +1,6 @@
 package com.sysc3303.elevator;
 
 import java.io.IOException;
-;
 import java.util.ArrayList;
 
 import com.sysc3303.commons.ConfigProperties;
