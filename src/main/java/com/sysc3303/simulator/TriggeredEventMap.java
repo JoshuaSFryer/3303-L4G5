@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
+ * @author Mattias Lightstone
  * Once a floor event has been sent from the simulator the event is moved to the TriggeredEventMap
  * It is a nested HashMap that indexes the event first by the floor, then by direction
  *

@@ -5,6 +5,8 @@ import com.sysc3303.commons.Direction;
 /**
  * Sends a message from the simulator to the floor
  * Singleton: Only one instance can exist
+ *
+ * @author Mattias Lightstone
  */
 public class FloorSender {
     private static FloorSender instance;

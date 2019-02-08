@@ -6,11 +6,26 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Reads the file
+ * Parses each file into an array of strings
+ * Packages the lines into a List
+ *
+ * @author Mattias Lightstone
+ */
 public class FileParser {
 
     private static FileParser instance;
-    private static DateFormat df;
 
+    /**
+     * Gets an instance of FileParser
+     *
+     * If there is an instance return it
+     * If there isn't one construct it and return it
+     *
+     * @return an instance of FileParser
+     *
+     */
     public static synchronized FileParser getInstance(){
         if(instance == null){
             instance = new FileParser();
@@ -24,6 +39,14 @@ public class FileParser {
 
     private List<String[]> parsed;
 
+    /**
+     * Reads the file
+     * Parses each file into an array of strings
+     * Packages the lines into a List
+     *
+     * @param filePath the path to the input file
+     * @throws IOException thrown by the filereader and buffered reader
+     */
     public void parse(String filePath) throws IOException, ParseException{
         parsed.clear();
         BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -36,7 +59,13 @@ public class FileParser {
         }
     }
 
-    private String[] parseLine(String line) throws ParseException{
+    /**
+     *
+     * Splits a line into an array of strings split by spaces
+     * @param line The line to be parsed
+     * @return the array of strings
+     */
+    private String[] parseLine(String line){
         String[] elements = line.split(" ");
         return elements;
     }

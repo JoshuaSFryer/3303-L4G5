@@ -6,6 +6,7 @@ import com.sysc3303.commons.Direction;
  * Defines the action to perform when the Simulator receives an event from the floor
  *
  * FloorReceiver is a Singleton
+ * @author Mattias Lightstone
  */
 public class FloorReceiver {
     private static FloorReceiver instance;

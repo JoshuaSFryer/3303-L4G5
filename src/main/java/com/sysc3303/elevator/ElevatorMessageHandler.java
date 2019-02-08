@@ -17,7 +17,6 @@ class BadMessageTypeException extends Exception {
 */
 
 public class ElevatorMessageHandler extends MessageHandler {
-    //TODO you need to add the port numbers that will be associated with scheduler
     private static ElevatorMessageHandler instance;
 
     private InetAddress schedulerAddress;
@@ -35,7 +34,6 @@ public class ElevatorMessageHandler extends MessageHandler {
     public ElevatorMessageHandler(int receivePort, Elevator context){
         super(receivePort);
         this.context = context;
-        //TODO currently for localhost this is how it looks
         try{
             schedulerAddress = InetAddress.getLocalHost();
         }catch(UnknownHostException e){
@@ -44,12 +42,15 @@ public class ElevatorMessageHandler extends MessageHandler {
 
     @Override
     public void received(Message message){
-        // TODO Whatever functionality you want when your receive a message
         switch (message.getOpcode()){
             case 2:
             	GoToFloorMessage castMessage = (GoToFloorMessage) message;
             	context.goToFloor(castMessage.getDestinationFloor());
                 break;
+            case 6:
+                ElevatorClickSimulationMessage elevatorClickSimulationMessage = (ElevatorClickSimulationMessage) message;
+                // TODO this ony has one elevator and always sends the message to it
+                context.pressButton(((ElevatorClickSimulationMessage) message).getFloor());
             default:
             	// throw new BadMessageTypeException("This message cannot be handled by this module!");
             	System.out.println("This message type is not handled by this module!");

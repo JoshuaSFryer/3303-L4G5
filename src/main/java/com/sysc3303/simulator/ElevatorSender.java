@@ -3,6 +3,7 @@ package com.sysc3303.simulator;
 import com.sysc3303.commons.ConfigProperties;
 
 /**
+ * @author Mattias Lightstone
  *
  */
 public class ElevatorSender {
