@@ -27,7 +27,7 @@ public class CommunicationHandlerTest{
         elevatorMessageHandler.sendElevatorStateMessage(new ElevatorVector(1, Direction.DOWN, 5), 1);
         elevatorMessageHandler.sendElevatorButtonMessage(5, 1, new Date());
         schedulerMessageHandler.sendGoToFloorMessage(5);
-        schedulerMessageHandler.sendFloorArrivalMessage(5, Direction.DOWN);
+        schedulerMessageHandler.sendFloorArrivalMessage(5, Direction.DOWN, 1);
         floorMessageHandler.sendFloorButtonMessage(5, Direction.DOWN, new Date());
 
         sleep(4000);

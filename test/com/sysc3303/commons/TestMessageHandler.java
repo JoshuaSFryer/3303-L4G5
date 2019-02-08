@@ -31,8 +31,8 @@ public class TestMessageHandler extends MessageHandler{
         callCount++;
     }
 
-    public void sendFloorArrivalMessage(int floor, Direction direction){
-        FloorArrivalMessage message = new FloorArrivalMessage(floor, direction);
+    public void sendFloorArrivalMessage(int floor, Direction direction, int elevatorId){
+        FloorArrivalMessage message = new FloorArrivalMessage(floor, direction, elevatorId);
         send(message, this.address, floorPort);
     }
 
