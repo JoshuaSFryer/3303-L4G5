@@ -79,8 +79,8 @@ public class SchedulerMessageHandlerMock extends MessageHandler {
     }
 
     // TODO Rename this if you would like to
-    public void sendGoToFloor(int floor){
-        GoToFloorMessage goToFloorMessage = new GoToFloorMessage(floor);
+    public void sendGoToFloor(int floor, int elevatorId){
+        GoToFloorMessage goToFloorMessage = new GoToFloorMessage(floor, elevatorId);
         send(goToFloorMessage, elevatorAddress, elevatorPort);
     }
 

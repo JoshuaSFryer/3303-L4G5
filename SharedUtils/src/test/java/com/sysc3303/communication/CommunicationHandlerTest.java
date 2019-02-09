@@ -1,4 +1,4 @@
-package commons;
+package com.sysc3303.communication;
 
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
@@ -23,7 +23,7 @@ public class CommunicationHandlerTest{
 
         elevatorMessageHandler.sendElevatorStateMessage(new ElevatorVector(1, Direction.DOWN, 5), 1);
         elevatorMessageHandler.sendElevatorButtonMessage(5, 1, new Date());
-        schedulerMessageHandler.sendGoToFloorMessage(5);
+        schedulerMessageHandler.sendGoToFloorMessage(5, 1);
         schedulerMessageHandler.sendFloorArrivalMessage(5, Direction.DOWN, 1);
         floorMessageHandler.sendFloorButtonMessage(5, Direction.DOWN, new Date());
 

@@ -11,9 +11,14 @@ import static org.junit.Assert.fail;
 
 class ElevatorMessageHandlerTest {
 	static Elevator e;
+	//FIXME This is just going to be fully broken
+    //FIXME now with elevator system this test doesn't make much sense and currently won't work
 	@BeforeClass
 	static void makeElevator() {
-		e = new Elevator(25534, 10, 0);
+	    ElevatorSystem elevatorSystem = new ElevatorSystem(5,
+                3,
+                Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort")));
+		e = new Elevator( 10, 0, elevatorSystem.getMessageHandler());
 	}
 	
 	@Test

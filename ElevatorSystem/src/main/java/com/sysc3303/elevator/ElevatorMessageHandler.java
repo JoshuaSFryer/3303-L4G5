@@ -21,18 +21,18 @@ public class ElevatorMessageHandler extends MessageHandler {
     private static ElevatorMessageHandler instance;
 
     private InetAddress schedulerAddress;
-    private Elevator context;
+    private ElevatorSystem context;
 
     static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
 
-    public static ElevatorMessageHandler getInstance(int receivePort, Elevator context){
+    public static ElevatorMessageHandler getInstance(int receivePort, ElevatorSystem context){
         if (instance == null){
             instance = new ElevatorMessageHandler(receivePort, context);
         }
         return instance;
     }
 
-    public ElevatorMessageHandler(int receivePort, Elevator context){
+    public ElevatorMessageHandler(int receivePort, ElevatorSystem context){
         super(receivePort);
         this.context = context;
         try{
@@ -45,13 +45,19 @@ public class ElevatorMessageHandler extends MessageHandler {
     public void received(Message message){
         switch (message.getOpcode()){
             case 2:
-            	GoToFloorMessage castMessage = (GoToFloorMessage) message;
-            	context.goToFloor(castMessage.getDestinationFloor());
+            	GoToFloorMessage goToFloorMessage = (GoToFloorMessage) message;
+            	// get elevator based on the id in the message
+            	Elevator elevator = context.getElevators().get(goToFloorMessage.getElevatorId());
+            	// send it to the floor in the message
+            	elevator.goToFloor(goToFloorMessage.getDestinationFloor());
                 break;
             case 6:
                 ElevatorClickSimulationMessage elevatorClickSimulationMessage = (ElevatorClickSimulationMessage) message;
-                // TODO this ony has one elevator and always sends the message to it
-                context.pressButton(elevatorClickSimulationMessage.getFloor());
+                // get elevator based on the id in the message
+                Elevator elevator1 = context.getElevators().get(elevatorClickSimulationMessage.getElevatorId());
+                // send press the button in that elevator
+                elevator1.pressButton(elevatorClickSimulationMessage.getFloor());
+                break;
             default:
             	// throw new BadMessageTypeException("This message cannot be handled by this module!");
             	System.out.println("This message type is not handled by this module!");
