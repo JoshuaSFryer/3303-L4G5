@@ -1,0 +1,59 @@
+package commons;
+
+import com.sysc3303.commons.Direction;
+import com.sysc3303.commons.ElevatorVector;
+import com.sysc3303.communication.*;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.Date;
+
+public class TestMessageHandler extends MessageHandler{
+    public int callCount = 0;
+
+    // in practice this would have many ports for elevator
+    private int elevatorPorts = 7000;
+    private int schedulerPort = 7001;
+    private int floorPort = 7002;
+    private InetAddress address;
+
+    public TestMessageHandler(int receivePort){
+        super(receivePort);
+        try {
+            this.address = InetAddress.getLocalHost();
+        } catch (UnknownHostException e){
+            System.out.println("Could not get local host");
+        }
+    }
+
+    @Override
+    public void received(Message message) {
+        System.out.println("Received message\n" + message);
+        callCount++;
+    }
+
+    public void sendFloorArrivalMessage(int floor, Direction direction, int elevatorId){
+        FloorArrivalMessage message = new FloorArrivalMessage(floor, direction, elevatorId);
+        send(message, this.address, floorPort);
+    }
+
+    public void sendFloorButtonMessage(int floor, Direction direction, Date time){
+        FloorButtonMessage message = new FloorButtonMessage(floor, direction, time);
+        send(message, this.address, schedulerPort);
+    }
+
+    public void sendGoToFloorMessage(int destinationFloor){
+        GoToFloorMessage message = new GoToFloorMessage(destinationFloor);
+        send(message, this.address, elevatorPorts);
+    }
+
+    public void sendElevatorStateMessage(ElevatorVector elevatorVector, int elevatorId){
+        ElevatorStateMessage message = new ElevatorStateMessage(elevatorVector, elevatorId);
+        send(message, this.address, schedulerPort);
+    }
+
+    public void sendElevatorButtonMessage(int destinationFloor, int elevatorId, Date time){
+        ElevatorButtonMessage message = new ElevatorButtonMessage(destinationFloor, elevatorId, time);
+        send(message, this.address, schedulerPort);
+    }
+}
