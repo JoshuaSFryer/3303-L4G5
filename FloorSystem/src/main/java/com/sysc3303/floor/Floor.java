@@ -5,7 +5,7 @@
 
 package com.sysc3303.floor;
 
-public class FloorGeneral {
+public class Floor {
 	
 	private int floorNum;
 	private FloorButton buttons;
@@ -13,7 +13,7 @@ public class FloorGeneral {
 	int passengerIsOnFloor = 1;
 	
 	//Constructor
-	public FloorGeneral(int floorNum) {
+	public Floor(int floorNum) {
 		this.floorNum = floorNum;
 		this.buttons = new FloorButton();
 		this.lamps = new FloorLamp();

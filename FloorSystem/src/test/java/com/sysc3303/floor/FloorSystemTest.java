@@ -11,7 +11,7 @@ class FloorSystemTest {
 	@Test
 	void test() {
 		FloorSystem floorSystem = new FloorSystem();
-		FloorGeneral floor = floorSystem.getFloorList().get(2);
+		Floor floor = floorSystem.getFloorList().get(2);
 		//floor.getLamps().turnBothLampOFF();
 		//System.out.print("Passenger is on Floor 1\n");
 		//System.out.println("Expected: Down light = true");

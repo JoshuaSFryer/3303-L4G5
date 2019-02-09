@@ -1,9 +1,5 @@
 package com.sysc3303.elevator;
-
-import java.io.IOException;
 import java.util.ArrayList;
-
-import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
@@ -38,11 +34,11 @@ public class Elevator {
 			*/
 	/**
 	 * Class constructor.
-	 * @param port			The port for the elevator to bind to.
 	 * @param numFloors		The number of floors in the system.
 	 * @param ID			The unique ID of this elevator.
+     * @param messageHandler The messagehandler for sending and receiving
 	 */
-	public Elevator(int port, int numFloors, int ID) {
+	public Elevator(int numFloors, int ID, ElevatorMessageHandler messageHandler) {
 		elevatorID 		= ID;
 		lamp          	= new ElevatorLamp();
 		buttons       	= generateButtons(numFloors);
@@ -53,8 +49,8 @@ public class Elevator {
 		currentState	= new Idle();
 		currentHeight 	= 0; //TODO: de-magicify this number
 		currentDirection = Direction.IDLE;
+		this.messageHandler = messageHandler;
 		
-		messageHandler = ElevatorMessageHandler.getInstance(port, this);
 	}
 	
 	/**
@@ -250,19 +246,5 @@ public class Elevator {
 		// and launch a new one by invoking goToFloor() again.
 		
 		mover.start();
-	}
-	
-	public static void main(String[] args) throws IOException {
-		boolean                    running           = true;
-		
-		// Create a new Elevator instance.
-		int      port     = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
-		Elevator elevator = new Elevator(port, 
-							Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors")),
-							0); //TODO: De-magicify this number.
-		
-		while(running) {
-
-		}
 	}
 }

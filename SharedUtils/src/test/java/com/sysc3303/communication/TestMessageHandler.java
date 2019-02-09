@@ -1,4 +1,4 @@
-package commons;
+package com.sysc3303.communication;
 
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
@@ -42,8 +42,8 @@ public class TestMessageHandler extends MessageHandler{
         send(message, this.address, schedulerPort);
     }
 
-    public void sendGoToFloorMessage(int destinationFloor){
-        GoToFloorMessage message = new GoToFloorMessage(destinationFloor);
+    public void sendGoToFloorMessage(int destinationFloor, int elevatorId){
+        GoToFloorMessage message = new GoToFloorMessage(destinationFloor, elevatorId);
         send(message, this.address, elevatorPorts);
     }
 

@@ -11,11 +11,13 @@ package com.sysc3303.communication;
 @SuppressWarnings("serial")
 public class GoToFloorMessage extends Message{
     private final int destinationFloor;
+    private final int elevatorId;
 
-    public GoToFloorMessage(int destinationFloor) {
+    public GoToFloorMessage(int destinationFloor, int elevatorId) {
         // Opcode for this message is 2
         super(OpCodes.GO_TO_FLOOR.getOpCode());
         this.destinationFloor = destinationFloor;
+        this.elevatorId = elevatorId;
     }
 
     public String toString(){
@@ -26,4 +28,6 @@ public class GoToFloorMessage extends Message{
     public int getDestinationFloor() {
         return destinationFloor;
     }
+
+    public int getElevatorId() { return elevatorId; }
 }

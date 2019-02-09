@@ -42,8 +42,9 @@ public class FloorRequestHandler implements Runnable {
 		else {
 			targetFloor = decideTargetFloor();
 		}
-		
-		setGoToFloorMessage(targetFloor);	
+
+		// FIXME Hardcoded elevatorId for testing purposes
+		setGoToFloorMessage(targetFloor, 0);
 		
 		try {
 			Thread.sleep(1000);
@@ -53,8 +54,8 @@ public class FloorRequestHandler implements Runnable {
 		}
 	}
 	
-	private synchronized void setGoToFloorMessage(int targetFloor) {
-		goToFloorMessage = new GoToFloorMessage(targetFloor);
+	private synchronized void setGoToFloorMessage(int targetFloor, int elevatorId) {
+		goToFloorMessage = new GoToFloorMessage(targetFloor, elevatorId);
 		notifyAll();
 	}
 	
