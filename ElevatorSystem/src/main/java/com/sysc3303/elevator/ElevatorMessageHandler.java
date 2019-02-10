@@ -61,6 +61,7 @@ public class ElevatorMessageHandler extends MessageHandler {
             default:
             	// throw new BadMessageTypeException("This message cannot be handled by this module!");
             	System.out.println("This message type is not handled by this module!");
+            	break;
                 
         }
     }
