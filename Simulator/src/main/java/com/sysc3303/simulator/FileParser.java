@@ -49,8 +49,8 @@ public class FileParser {
      */
     public void parse(String filePath) throws IOException, ParseException{
         parsed.clear();
-        InputStreamReader isr = new InputStreamReader((getClass().getResourceAsStream(filePath)));
-        BufferedReader br = new BufferedReader(isr);
+        //InputStreamReader isr = new InputStreamReader((getClass().getResourceAsStream(filePath)));
+        BufferedReader br = new BufferedReader(new FileReader(filePath));
 
         String line = br.readLine();
         while(line != null){
