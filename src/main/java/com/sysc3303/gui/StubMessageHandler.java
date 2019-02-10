@@ -1,5 +1,6 @@
 package com.sysc3303.gui;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.GUIFloorMessage;
 import com.sysc3303.communication.MessageHandler;
 
@@ -8,6 +9,7 @@ import java.net.UnknownHostException;
 
 public class StubMessageHandler extends MessageHandler {
     private static StubMessageHandler instance;
+    static int guiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
 
     public static StubMessageHandler getInstance(int receivePort) {
         if (instance == null) {
@@ -25,7 +27,7 @@ public class StubMessageHandler extends MessageHandler {
     public void sendFloorUpdate(boolean down, boolean up, int floor) {
         GUIFloorMessage msg = new GUIFloorMessage(down, up, floor);
         try {
-            send(msg, InetAddress.getLocalHost(), 6665); //TODO: Stop hard-coding things, dammit
+            send(msg, InetAddress.getLocalHost(), guiPort);
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -33,7 +35,6 @@ public class StubMessageHandler extends MessageHandler {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

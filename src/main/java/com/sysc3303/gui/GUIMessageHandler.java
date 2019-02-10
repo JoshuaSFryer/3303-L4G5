@@ -1,22 +1,27 @@
 package com.sysc3303.gui;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.*;
 
+
+/**
+ * GUIMessageHandler handles messages sent to and from the GUI.
+ * It follows the singleton pattern, so only one should ever exist at any time.
+ *
+ */
 public class GUIMessageHandler extends MessageHandler {
     private static GUIMessageHandler instance;
+    static int guiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
 
-    //TODO: Configure static port numbers.
-
-    public static GUIMessageHandler getInstance(int receivePort) {
+    public static GUIMessageHandler getInstance() {
         if (instance == null) {
-            instance = new GUIMessageHandler(receivePort);
+            instance = new GUIMessageHandler();
         }
         return instance;
     }
 
-    private GUIMessageHandler(int receivePort) {
-        super(receivePort);
-
+    private GUIMessageHandler() {
+        super(guiPort);
     }
 
     @Override
