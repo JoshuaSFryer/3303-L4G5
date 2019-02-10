@@ -143,7 +143,6 @@ public class Elevator {
 	 */
 	public void notifyArrival(int targetFloor) {
 		ElevatorVector v = new ElevatorVector(this.currentFloor, this.currentDirection, targetFloor);
-		System.out.println("Notifying arrival...Elevator Vector:\n" + v.toString());
 		this.messageHandler.sendElevatorState(v, this.elevatorID);
 	}
 	
