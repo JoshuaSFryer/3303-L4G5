@@ -59,13 +59,14 @@ public class Elevator {
 	
 	/**
 	 * Generate a given number of buttons.
+	 * Note that the button numbering begins at 0.
 	 * @param numButtons	The number of buttons to create.
 	 * @return				An ArrayList containing all of the buttons.
 	 */
 	private ArrayList<ElevatorButton> generateButtons(int numButtons) {
 		ArrayList<ElevatorButton> buttonList = new ArrayList<ElevatorButton>();
 		for(int i=0; i<numButtons; i++) {
-			buttonList.add(new ElevatorButton(this, i+1));
+			buttonList.add(new ElevatorButton(this, i));
 		}
 		return buttonList;
 	}
