@@ -29,6 +29,7 @@ public class ElevatorMessageHandler extends MessageHandler {
 
     public static ElevatorMessageHandler getInstance(int receivePort, Elevator context){
         if (instance == null){
+            System.out.println("ElevatorHandler: Binding port" + receivePort);
             instance = new ElevatorMessageHandler(receivePort, context);
         }
         return instance;

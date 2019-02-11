@@ -20,6 +20,7 @@ public class GUIMessageHandler extends MessageHandler {
 
     public static GUIMessageHandler getInstance(UserInterface context) {
         if (instance == null) {
+            System.out.println("GUIHandler: Binding port" + guiPort);
             instance = new GUIMessageHandler(context);
         }
         return instance;
