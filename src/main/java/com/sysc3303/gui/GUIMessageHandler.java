@@ -15,17 +15,19 @@ import com.sysc3303.communication.*;
  */
 public class GUIMessageHandler extends MessageHandler {
     private static GUIMessageHandler instance;
+    private UserInterface context;
     static int guiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
 
-    public static GUIMessageHandler getInstance() {
+    public static GUIMessageHandler getInstance(UserInterface context) {
         if (instance == null) {
-            instance = new GUIMessageHandler();
+            instance = new GUIMessageHandler(context);
         }
         return instance;
     }
 
-    private GUIMessageHandler() {
+    private GUIMessageHandler(UserInterface context) {
         super(guiPort);
+        this.context = context;
     }
 
     @Override
@@ -34,7 +36,7 @@ public class GUIMessageHandler extends MessageHandler {
             case 7: // elevator update
                 GUIElevatorMoveMessage moveMSG = (GUIElevatorMoveMessage) message;
                 // Have the GUI do a thing here.
-                System.out.println(moveMSG.toString());
+                context.moveElevator(moveMSG);
                 break;
             case 8: // floor update
                 GUIFloorMessage floorMSG = (GUIFloorMessage) message;
@@ -44,5 +46,9 @@ public class GUIMessageHandler extends MessageHandler {
             default:
                 System.out.println("This message type is not handled by this module!");
         }
+    }
+
+    public void sendElevatorCarPress(GUIElevatorCarMessage message) {
+
     }
 }
