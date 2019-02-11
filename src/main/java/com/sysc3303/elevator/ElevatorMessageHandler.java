@@ -51,10 +51,11 @@ public class ElevatorMessageHandler extends MessageHandler {
                 ElevatorClickSimulationMessage elevatorClickSimulationMessage = (ElevatorClickSimulationMessage) message;
                 // TODO this ony has one elevator and always sends the message to it
                 context.pressButton(elevatorClickSimulationMessage.getFloor());
+                break;
             default:
             	// throw new BadMessageTypeException("This message cannot be handled by this module!");
             	System.out.println("This message type is not handled by this module!");
-                
+            	break;
         }
     }
 
