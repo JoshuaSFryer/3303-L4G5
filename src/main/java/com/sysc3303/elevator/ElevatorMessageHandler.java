@@ -34,9 +34,10 @@ public class ElevatorMessageHandler extends MessageHandler {
     private ElevatorMessageHandler(int receivePort, Elevator context){
         super(receivePort);
         this.context = context;
-        try{
+        try {
             schedulerAddress = InetAddress.getLocalHost();
-        }catch(UnknownHostException e){
+        } catch(UnknownHostException e){
+            e.printStackTrace();
         }
     }
 
