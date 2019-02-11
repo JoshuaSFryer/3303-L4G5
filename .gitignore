@@ -9,10 +9,13 @@
 
 # Intellij files
 **.idea**
+**.iml
 
-# Classpath and project
+# Classpath project and target
 .classpath
 .project
+**/target
+
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
