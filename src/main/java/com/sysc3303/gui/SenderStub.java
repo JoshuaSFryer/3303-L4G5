@@ -1,10 +1,10 @@
 package com.sysc3303.gui;
 
 import java.util.Random;
+import com.sysc3303.communication.*;
 
 /**
  * Class to send test messages to the GUI message handler.
- *
  */
 public class SenderStub {
     //private GUIMessageHandler handler = GUIMessageHandler.getInstance(6666);

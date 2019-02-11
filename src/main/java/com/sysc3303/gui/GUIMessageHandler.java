@@ -6,8 +6,12 @@ import com.sysc3303.communication.*;
 
 /**
  * GUIMessageHandler handles messages sent to and from the GUI.
- * It follows the singleton pattern, so only one should ever exist at any time.
+ * It follows the singleton pattern, so only one should ever exist at any time,
+ * created by the GUI thread.
  *
+ * When an event occurs that should be reflected in the GUI, the responsible
+ * subsystem (Elevator or Floor) should send a message to this handler, which
+ * will call the update methods on its parent GUI.
  */
 public class GUIMessageHandler extends MessageHandler {
     private static GUIMessageHandler instance;

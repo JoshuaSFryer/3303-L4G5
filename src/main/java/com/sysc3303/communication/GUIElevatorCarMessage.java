@@ -1,5 +1,8 @@
 package com.sysc3303.communication;
-// Message for buttons pressed within the elevator car.
+
+/**
+ * Message sent when a button pressed within the elevator car.
+ */
 public class GUIElevatorCarMessage extends Message {
 
     public final int buttonNum;
