@@ -20,4 +20,8 @@ public class Door {
 		this.doorState = false;
 	}
 
+	public boolean isOpen() {
+		return this.doorState;
+	}
+
 }

@@ -8,6 +8,11 @@ import com.sysc3303.communication.GUIFloorMessage;
 public interface UserInterface {
 
     /**
+     * Return a copy of this. Interfaces should follow the Singleton pattern.
+     */
+    //public UserInterface getInstance();
+
+    /**
      * Respond to an ElevatorMoveMessage, which indicates that one of the
      * elevators have moved or opened/closed doors.
      * The UI should reflect this by updating the elevator's location, indicate

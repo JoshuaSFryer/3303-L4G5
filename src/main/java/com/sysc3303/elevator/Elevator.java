@@ -6,6 +6,9 @@ import java.util.ArrayList;
 
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
+import com.sysc3303.communication.GUIElevatorMoveMessage;
+import com.sysc3303.gui.TestCLI;
+import com.sysc3303.gui.UserInterface;
 
 /**
  * @author Joshua Fryer, Yu Yamanaka
@@ -31,6 +34,7 @@ public class Elevator {
 	private Thread 			mover;
 	
 	private ElevatorMessageHandler messageHandler;
+	private UserInterface UI;
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -55,6 +59,7 @@ public class Elevator {
 		currentDirection = Direction.IDLE;
 		
 		messageHandler = ElevatorMessageHandler.getInstance(port, this);
+		this.UI = TestCLI.getInstance();
 	}
 	
 	/**
@@ -152,6 +157,8 @@ public class Elevator {
 	 */
 	public void openDoors() {
 		door.openDoors();
+		// Notify the UI that the doors are opening.
+		updateUI();
 	}
 	
 	/**
@@ -159,6 +166,8 @@ public class Elevator {
 	 */
 	public void closeDoors() {
 		door.closeDoors();
+		// Notify the UI that the doors are closing.
+		updateUI();
 	}
 	
 	/**
@@ -204,6 +213,19 @@ public class Elevator {
 	 */
 	public ElevatorMessageHandler getMessageHandler() {
 		return this.messageHandler;
+	}
+
+	/**
+	 * Access the user interface.
+	 * @return	A reference to the user interface.
+	 */
+	public UserInterface getUI() {
+		return this.UI;
+	}
+
+	public void updateUI() {
+		GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, currentDirection, door.isOpen());
+		UI.moveElevator(msg);
 	}
 	
 	/**

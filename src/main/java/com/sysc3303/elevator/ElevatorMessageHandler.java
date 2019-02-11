@@ -1,6 +1,7 @@
 package com.sysc3303.elevator;
 
 import com.sysc3303.commons.ConfigProperties;
+import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -20,9 +21,11 @@ public class ElevatorMessageHandler extends MessageHandler {
     private static ElevatorMessageHandler instance;
 
     private InetAddress schedulerAddress;
+    private InetAddress uiAddress;
     private Elevator context;
 
     static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
+    static int uiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
 
     public static ElevatorMessageHandler getInstance(int receivePort, Elevator context){
         if (instance == null){
@@ -35,7 +38,9 @@ public class ElevatorMessageHandler extends MessageHandler {
         super(receivePort);
         this.context = context;
         try {
+            // Everything on localhost for now.
             schedulerAddress = InetAddress.getLocalHost();
+            uiAddress = InetAddress.getLocalHost();
         } catch(UnknownHostException e){
             e.printStackTrace();
         }
@@ -69,6 +74,10 @@ public class ElevatorMessageHandler extends MessageHandler {
     	System.out.println("Elevator button pressed, notifying scheduler");
         ElevatorButtonMessage elevatorButtonMessage = new ElevatorButtonMessage(destinationFloor, elevatorId, new Date());
         send(elevatorButtonMessage, schedulerAddress, schedulerPort);
+    }
+    public void updateUI(int elevatorID, int currentFloor, Direction dir, boolean open) {
+        GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, dir, open);
+        send(msg, uiAddress, uiPort);
     }
 }
 

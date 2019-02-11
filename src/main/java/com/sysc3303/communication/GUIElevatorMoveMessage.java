@@ -1,6 +1,9 @@
 package com.sysc3303.communication;
 
 import com.sysc3303.commons.Direction;
+import com.sysc3303.communication.OpCodes;
+
+import static com.sysc3303.communication.OpCodes.ELEVATOR_UPDATE_GUI;
 
 /**
  * Message sent when an elevator is moving.
@@ -12,9 +15,9 @@ public class GUIElevatorMoveMessage extends Message {
     public final boolean doorOpen;
     public final int ID;
 
-    public GUIElevatorMoveMessage(byte opcode, int elevatorID, int floor,
+    public GUIElevatorMoveMessage(int elevatorID, int floor,
                                   Direction dir, boolean door) {
-        super(opcode);
+        super(ELEVATOR_UPDATE_GUI.getOpCode());
         this.currentFloor = floor;
         this.currentDirection = dir;
         this.doorOpen = door;

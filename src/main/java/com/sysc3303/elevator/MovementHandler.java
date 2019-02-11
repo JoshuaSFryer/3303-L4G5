@@ -1,5 +1,7 @@
 package com.sysc3303.elevator;
 
+import com.sysc3303.communication.GUIElevatorMoveMessage;
+
 public class MovementHandler implements Runnable {
 	public static final int MOVEMENTDELAY = 250;
 	
@@ -31,10 +33,14 @@ public class MovementHandler implements Runnable {
 				// Check whether the elevator has arrived at a floor.
 				if(sensor.isAtFloor()) {
 					floor = sensor.getFloor();
+					// Update the elevator's current floor.
 					context.setCurrentFloor(floor);
 					System.out.println("Arrived at floor: " + floor);
+					// Have the elevator notify the scheduler that it arrived.
 					context.notifyArrival(targetFloor);
-					context.setCurrentFloor(floor);
+					// Update the UI.
+					context.updateUI();
+					//context.setCurrentFloor(floor);
 				}
 				
 				// If not at a floor yet, move towards the target.

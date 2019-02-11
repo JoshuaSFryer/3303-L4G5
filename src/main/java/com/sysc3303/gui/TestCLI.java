@@ -1,7 +1,8 @@
 package com.sysc3303.gui;
 
-import com.sysc3303.commons.Direction;
+
 import com.sysc3303.communication.*;
+import org.junit.Test;
 
 import java.util.ArrayList;
 
@@ -13,9 +14,17 @@ import java.util.ArrayList;
 public class TestCLI implements UserInterface {
 
     private GUIMessageHandler handler;
+    private static TestCLI instance;
 
-    public TestCLI() {
+    private TestCLI() {
         this.handler = GUIMessageHandler.getInstance(this);
+    }
+
+    public static TestCLI getInstance() {
+        if(instance == null) {
+            instance = new TestCLI();
+        }
+        return instance;
     }
 
     /**
