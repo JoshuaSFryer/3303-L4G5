@@ -22,7 +22,9 @@ public class GoToFloorMessage extends Message{
 
     public String toString(){
         return "Go To Floor Message\n\tDestination Floor: " +
-        destinationFloor;
+        destinationFloor + 
+        "\n\t Elevator Id: " +
+        elevatorId;
     }
 
     public int getDestinationFloor() {

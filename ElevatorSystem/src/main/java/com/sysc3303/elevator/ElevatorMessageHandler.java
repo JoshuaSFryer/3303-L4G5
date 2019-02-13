@@ -47,15 +47,18 @@ public class ElevatorMessageHandler extends MessageHandler {
             case 2:
             	GoToFloorMessage goToFloorMessage = (GoToFloorMessage) message;
             	// get elevator based on the id in the message
+            	System.out.println("Recieved Go To Floor Message");
+            	System.out.println(goToFloorMessage.toString());
             	Elevator elevator = context.getElevators().get(goToFloorMessage.getElevatorId());
             	// send it to the floor in the message
             	elevator.goToFloor(goToFloorMessage.getDestinationFloor());
                 break;
             case 6:
+            	System.out.println("recieved click simulation message, sending to scheduler");
                 ElevatorClickSimulationMessage elevatorClickSimulationMessage = (ElevatorClickSimulationMessage) message;
                 // get elevator based on the id in the message
                 Elevator elevator1 = context.getElevators().get(elevatorClickSimulationMessage.getElevatorId());
-                System.out.println("recieved click simulation message, sending to scheduler");
+                
                 // send press the button in that elevator
                 elevator1.pressButton(elevatorClickSimulationMessage.getFloor());
                 break;
@@ -68,8 +71,8 @@ public class ElevatorMessageHandler extends MessageHandler {
     }
 
     public void sendElevatorState(ElevatorVector elevatorVector, int elevatorId){
-    	System.out.println("Arrived at a floor, notifying scheduler");
         ElevatorStateMessage elevatorStateMessage = new ElevatorStateMessage(elevatorVector, elevatorId);
+        System.out.println(elevatorStateMessage.toString());
         send(elevatorStateMessage, schedulerAddress, schedulerPort);
     }
     public void sendElevatorButton(int destinationFloor, int elevatorId){

@@ -1,9 +1,7 @@
 package com.sysc3303.scheduler;
 
 import java.util.ArrayList;
-import java.util.Date;
 
-import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.ElevatorButtonMessage;
 import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.commons.ElevatorVector;
@@ -11,30 +9,159 @@ import com.sysc3303.commons.ElevatorVector;
 public class TargetFloorDecider {
 	TargetFloorValidator targetFloorValidator = new TargetFloorValidator();
 	
-	public int selectTargetFloorFromFloorButtonMessages(Request request) {
-		ArrayList<FloorButtonMessage> floorButtonMessages   = request.getFloorButtonMessageArray();
-		ArrayList<Integer>            targetFloorCandidates = new ArrayList<Integer>();
-		int targetFloor = -1;
+	private ArrayList<ArrayList<Integer>> selectTargetFloorCandidates(int numberOfElevator, Request request) {
+		ArrayList<ArrayList<Integer>> targetFloorCandidates = new ArrayList<ArrayList<Integer>>();
+		ArrayList<FloorButtonMessage> floorButtonMessages   = (ArrayList<FloorButtonMessage>)request.getFloorButtonMessageArray();
 		
-		if(floorButtonMessages.size() == 1) {
-			return floorButtonMessages.get(0).getFloor();
+		for(int i = 0; i < numberOfElevator; i++) {
+			targetFloorCandidates.add(null);
 		}
 		
 		for(int i = 0; i < floorButtonMessages.size(); i++) {
 			int curTargetFloor = floorButtonMessages.get(i).getFloor();
 			
-			if(targetFloorValidator.validTargetFloor(curTargetFloor, request.getElevatorVector())) {
-				targetFloorCandidates.add(curTargetFloor);
+			for(int j = 0; j < numberOfElevator; j++) {
+				if(targetFloorValidator.validTargetFloor(curTargetFloor, request.getElevatorVector(j))) {
+					if(targetFloorCandidates.get(j) == null) {
+						targetFloorCandidates.set(j, new ArrayList<Integer>());
+					}
+					targetFloorCandidates.get(j).add(curTargetFloor);
+				}
 			}
 		}
 		
-		if(targetFloorCandidates.isEmpty()) {
-			return -1;
+		return targetFloorCandidates;
+	}
+	
+	public int[] selectFloorFromAllElevatorsElevatorButtonMessage(Request request) {
+		int numberOfElevator = request.getNumberOfElevator();
+		int[] targetFloors   = new int[numberOfElevator];
+		
+		for(int i = 0; i < numberOfElevator; i++) {
+			targetFloors[i] = selectTargetFloorFromElevatorButtonMessages(request.getElevatorButtonMessageArray(i), request.getElevatorVector(i));
 		}
 		
-		targetFloor = getNearestFloor(targetFloorCandidates, request.getElevatorVector().currentFloor);
+		return targetFloors;
+	}
+	
+	public int[] selectTargetFloorFromCandidates(int numberOfElevator, ArrayList<ArrayList<Integer>> targetFloorCandidates, Request request) {
+		int[] targetFloors = new int[numberOfElevator];
+	
+		if(targetFloorCandidates.isEmpty()) {
+			return null;
+		}
+		
+		for(int i = 0; i < targetFloorCandidates.size(); i++) {
+			targetFloors[i] = -1;
+			
+			if(targetFloorCandidates.get(i) == null) {
+				continue;
+			}
+			
+			int nearestFloor = getNearestFloor(targetFloorCandidates.get(i), request.getElevatorVector(i).currentFloor);
+			
+			if(nearestFloor == -1 || elevatorIsOnItsWay(nearestFloor, request)) {
+				continue;
+			}
+			
+			if(containsInt(targetFloors, nearestFloor)) {
+				int duplicateElevatorId = getDuplicateIndex(targetFloors, nearestFloor);
+ 				int closestElevatorId   = getClosestElevatorIdFromNearestFloor(i, duplicateElevatorId, nearestFloor, request);
+ 				
+ 				if(closestElevatorId != i) {
+ 					continue;
+ 				}
+ 				targetFloors[duplicateElevatorId] = -1;
+			}
+			
+			targetFloors[i] = nearestFloor;
+		}
+		
+		return targetFloors;
+	}
+	
+	public int selectTargetFloorFromFloorButtonMessages(Request request, int elevatorId) {
+		int[] targetFloors = selectTargetFloorFromFloorButtonMessages(request);
+		
+		return targetFloors[elevatorId];
+	}
+	
+	public int[] selectTargetFloorFromFloorButtonMessages(Request request) {
+		int                           numberOfElevator      = request.getNumberOfElevator();
+		ArrayList<ArrayList<Integer>> targetFloorCandidates = selectTargetFloorCandidates(numberOfElevator, request);
+		int[]                         targetFloors          = selectTargetFloorFromCandidates(numberOfElevator, targetFloorCandidates, request);
+				
+		return targetFloors;
+	}
+	
+	public int selectTargetFloorFromElevatorButtonMessages(ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr, ElevatorVector elevatorVector) {
+		ArrayList<Integer> targetFloorCandidates = new ArrayList<Integer>();
+		
+		for(int i = 0; i < elevatorButtonMessageArr.size(); i++) {
+			int destinationFloor = elevatorButtonMessageArr.get(i).getDestinationFloor();
+			
+			if(targetFloorValidator.validTargetFloor(destinationFloor, elevatorVector)) {
+				targetFloorCandidates.add(destinationFloor);
+			}
+		}
+		System.out.println("targetFloorCandidates size: " + targetFloorCandidates.size());
+		System.out.println("printing out candidates!");
+		
+		for(int i = 0; i < targetFloorCandidates.size(); i++) {
+			System.out.println(targetFloorCandidates.get(i));
+		}
+		
+		int targetFloor = getNearestFloor(targetFloorCandidates, elevatorVector.currentFloor);
 		
 		return targetFloor;
+	}
+	
+	private boolean elevatorIsOnItsWay(int targetFloor, Request request) {
+		int numberOfElevator = request.getNumberOfElevator();
+		
+		for(int i = 0; i < numberOfElevator; i++) {
+			ElevatorVector elevatorVector = request.getElevatorVector(i);
+			
+			if(elevatorVector.targetFloor == targetFloor) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private int getClosestElevatorIdFromNearestFloor(int firstElevatorId, int secondElevatorId, int nearestFloor, Request request) {
+		ElevatorVector firstElevatorVector     = request.getElevatorVector(firstElevatorId);
+		ElevatorVector secondElevatorVector    = request.getElevatorVector(secondElevatorId);
+		int            firstElevatorFloorDiff  = Math.abs(firstElevatorVector.currentFloor - nearestFloor);
+		int            secondElevatorFloorDiff = Math.abs(secondElevatorVector.currentFloor - nearestFloor);
+		
+		if(firstElevatorFloorDiff < secondElevatorFloorDiff) {
+			return firstElevatorId;
+		}
+		
+		return secondElevatorId;
+	}
+	
+	private int getDuplicateIndex(int[] targetFloors, int nearestFloor) {
+		int duplicatedIndex = -1;
+		
+		for(int i = 0; i < targetFloors.length; i++) {
+			if(targetFloors[i] == nearestFloor) {
+				duplicatedIndex = i;
+				break;
+			}
+		}
+		return duplicatedIndex;
+	}
+	
+	private boolean containsInt(int[] array, int number) {
+		for(int i = 0; i < array.length; i++) {
+			if(array[i] == number) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private int getNearestFloor(ArrayList<Integer> targetFloorCandidates, int currentFloor) {
@@ -54,248 +181,23 @@ public class TargetFloorDecider {
 		return nearestFloor;
 	}
 	
-	/**
-	 * Decides target floor and returns it
-	 * @return int
-	 */
-	public int decideTargetFloor(Request request) {
-		ElevatorVector elevatorVector = request.getElevatorVector();
-		Direction      elevatorStatus = elevatorVector.currentDirection;
-		int            target;
-		
-		System.out.println("Deciding target floor, printing request");
-		System.out.println(request.toString());
-		
-		if(request.hasSingleFloorButtonMessage() && request.elevatorButtonMessagesIsEmpty()) {
-			System.out.println("Setting target to first floor button message");
-			target = request.getFloorButtonMessage(0).getFloor();
-			return target;
+	public int getNearestFloor(int firstFloor, int secondFloor, int currentFloor) {
+		if(firstFloor == -1 && secondFloor == -1) {
+			return -1;
+		}
+		if(firstFloor == -1) {
+			return secondFloor;
+		}
+		else if(secondFloor == -1) {
+			return firstFloor;
 		}
 		
-		if(elevatorStatus == Direction.IDLE) {
-			// want to set to null, this may need to be changed
-			FloorButtonMessage    floorRequest    = getEariestFloorRequest(request);
-			ElevatorButtonMessage elevatorRequest = getEariestElevatorRequest(request);
-			
-			if(floorRequest == null || floorRequest.getTime().compareTo(elevatorRequest.getTime()) > 0) {
-				target = elevatorRequest.getDestinationFloor();
-			}
-			else {
-				target = floorRequest.getFloor();
-			}
+		int firstFloorDiff  = Math.abs(firstFloor - currentFloor);
+		int secondFloorDiff = Math.abs(secondFloor - currentFloor);
+		
+		if(firstFloorDiff < secondFloorDiff) {
+			return firstFloorDiff;
 		}
-		else if(elevatorStatus == Direction.UP) {
-			ArrayList<FloorButtonMessage>    selectFloorListup    = getFloorUpRequestArray(request);
-			ArrayList<ElevatorButtonMessage> selectElevatorListup = getElevatorUpRequestArray(request);
-			
-			target = getNearestUpRequest(selectFloorListup, selectElevatorListup);
-		}
-		else {
-			ArrayList<FloorButtonMessage>    selectFloorListDown    = getFloorDownRequestArray(request);
-			ArrayList<ElevatorButtonMessage> selectElevatorListDown = getElevatorDownRequestArray(request);
-
-			target = getNearestDownRequest(selectFloorListDown, selectElevatorListDown);
-		}
-		return target;
-	}
-	
-	/**
-	 * gets earliest FloorButtonMessage in time, from request 
-	 * floorButtonMessage array 
-	 * 
-	 * @return
-	 */
-	private FloorButtonMessage getEariestFloorRequest(Request request) {
-		FloorButtonMessage floorRequest = null;
-		ArrayList<FloorButtonMessage> floorRequestList = request.getFloorButtonMessageArray();
-		
-		for(int i = 0; i < floorRequestList.size(); i++) {
-			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
-			Date               curRequestTime  = curFloorRequest.getTime();
-			
-			if(floorRequest == null || floorRequest.getTime().compareTo(curRequestTime) > 0){
-				floorRequest = curFloorRequest;
-			}
-		}
-		
-		return floorRequest;
-	}
-	
-	/**
-	 * gets earliest ElevatorButtonMessage in time, from 
-	 * request elevatorButtonMessage array
-	 * 
-	 * @return ElevatorButtonMessage
-	 */
-	private ElevatorButtonMessage getEariestElevatorRequest(Request request) {
-		ElevatorButtonMessage            elevatorRequest     = null;
-		ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray();
-		
-		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			ElevatorButtonMessage curElevatorRequest = elevatorRequestList.get(i);
-			Date                  curRequestTime     = curElevatorRequest.getTime();
-			
-			if(elevatorRequest == null || elevatorRequest.getTime().compareTo(curRequestTime) > 0) {
-				elevatorRequest = curElevatorRequest;
-			}
-		}
-		return elevatorRequest;
-	}
-	
-	/**
-	 * gets list of up direction request from FloorButtonMessage
-	 * array in request class
-	 * 
-	 * @return ArrayList<FloorButtonMessage>
-	 */
-	private ArrayList<FloorButtonMessage> getFloorUpRequestArray(Request request) {
-		ArrayList<FloorButtonMessage> selectFloorListup = new ArrayList<FloorButtonMessage>();
-		ArrayList<FloorButtonMessage> floorRequestList  = request.getFloorButtonMessageArray();
-		
-		for(int i = 0; i < floorRequestList.size(); i++) {
-			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
-			
-			if(curFloorRequest.getDirection() == Direction.UP && 
-			   curFloorRequest.getFloor() > request.getElevatorVector().currentFloor) {//???
-				selectFloorListup.add(curFloorRequest);
-			}
-		}
-		
-		return selectFloorListup;
-	}
-	
-	/**
-	 * gets list of elevatorButtonMessage that has up direction
-	 * from from request class
-	 * 
-	 * @return ArrayList<ElevatorButtonMessage>
-	 */
-	private ArrayList<ElevatorButtonMessage> getElevatorUpRequestArray(Request request) {
-		ArrayList<ElevatorButtonMessage> selectElevatorListup = new ArrayList<ElevatorButtonMessage>();
-		ArrayList<ElevatorButtonMessage> elevatorRequestList  = request.getElevatorButtonMessageArray();
-		
-		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			ElevatorButtonMessage curElevatorRequest = elevatorRequestList.get(i);
-			
-			if(curElevatorRequest.getDestinationFloor() > request.getElevatorVector().currentFloor){//???
-					selectElevatorListup.add(curElevatorRequest);
-			}
-		}
-		
-		return selectElevatorListup;
-	}
-	
-	/**
-	 * 
-	 * gets list of FloorButtonMessage that has down direction
-	 * from request class
-	 * 
-	 * @return ArrayList<FloorButtonMessage>
-	 */
-	private ArrayList<FloorButtonMessage> getFloorDownRequestArray(Request request) {
-		ArrayList<FloorButtonMessage> selectFloorListDown = new ArrayList<FloorButtonMessage>();
-		ArrayList<FloorButtonMessage> floorRequestList    = request.getFloorButtonMessageArray();
-		
-		for(int i = 0; i < floorRequestList.size(); i++) {
-			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
-			if(curFloorRequest.getDirection() == Direction.DOWN && 
-			   curFloorRequest.getFloor() < request.getElevatorVector().currentFloor){//???
-				selectFloorListDown.add(curFloorRequest);
-			}
-		}
-		
-		return selectFloorListDown;
-	}
-	
-	/**
-	 * gets list of ElevatorButtonMessage that has down direction
-	 * from request class
-	 * 
-	 * @return
-	 */
-	private ArrayList<ElevatorButtonMessage> getElevatorDownRequestArray(Request request) {
-		ArrayList<ElevatorButtonMessage> selectElevatorListDown = new ArrayList<ElevatorButtonMessage>();
-		ArrayList<ElevatorButtonMessage> elevatorButtonMessageList = request.getElevatorButtonMessageArray();
-		
-		for(int i = 0; i < elevatorButtonMessageList.size(); i++) {
-			ElevatorButtonMessage curElevatorButtonMessage = elevatorButtonMessageList.get(i);
-			
-			if(curElevatorButtonMessage.getDestinationFloor() < request.getElevatorVector().currentFloor){//???
-				selectElevatorListDown.add(curElevatorButtonMessage);
-			}
-		}
-		
-		return selectElevatorListDown;
-	}
-	
-	/**
-	 * gets nearest targetDistination from FloorButtonMessage array
-	 * and ElevatorButtonMessage array in parameter, that has up direction
-	 * 
-	 * @param selectFloorListup
-	 * @param selectElevatorListup
-	 * @return int
-	 */
-	private int getNearestUpRequest(ArrayList<FloorButtonMessage> selectFloorListup, ArrayList<ElevatorButtonMessage> selectElevatorListup) {
-		int targetDistinationFromFloor    = 0;
-		int targetDistinationFromElevator = 0;
-		
-		for(int i = 0 ; i < selectFloorListup.size();i++) {
-			//not sure what time is being named in floor????????????????????????
-			int curRequestFloor = selectFloorListup.get(i).getFloor();
-			
-			if(targetDistinationFromFloor == 0 || targetDistinationFromFloor > curRequestFloor){
-				targetDistinationFromFloor = curRequestFloor;//???
-			}
-		}
-
-		for(int i = 0; i < selectElevatorListup.size(); i++) {
-			int curRequestFloor = selectElevatorListup.get(i).getDestinationFloor();
-			if(targetDistinationFromElevator == 0 || targetDistinationFromElevator > curRequestFloor) {
-				targetDistinationFromElevator = curRequestFloor;//???
-			}
-		}
-		
-		if(targetDistinationFromFloor < targetDistinationFromElevator) {
-			return targetDistinationFromFloor;
-		}
-		
-		return targetDistinationFromElevator;
-	}
-	
-	/**
-	 * gets nearest targetDistination from FloorButtonMessage array
-	 * and ElevatorButtonMessage array in parameter, that has down direction
-	 * 
-	 * @param selectFloorListDown
-	 * @param selectElevatorListDown
-	 * @return int
-	 */
-	private int getNearestDownRequest(ArrayList<FloorButtonMessage> selectFloorListDown, ArrayList<ElevatorButtonMessage> selectElevatorListDown) {
-		int targetDistinationFromFloor    = 0;
-		int targetDistinationFromElevator = 0;
-		
-		for(int i = 0 ;i < selectFloorListDown.size();i++) {
-			//not sure what time is being named in floor????????????????????????
-			int requestFloor = selectFloorListDown.get(i).getFloor();
-			
-			if(targetDistinationFromFloor == 0 || targetDistinationFromFloor < requestFloor){
-				targetDistinationFromFloor = requestFloor;//???
-			}
-		}
-
-		for(int i = 0 ; i < selectElevatorListDown.size(); i++) {
-			int requestFloor = selectElevatorListDown.get(i).getDestinationFloor();
-			
-			if(targetDistinationFromElevator == 0 || targetDistinationFromElevator < requestFloor){
-				targetDistinationFromElevator = requestFloor;//???
-			}
-		}
-		
-		if(targetDistinationFromFloor < targetDistinationFromElevator) {
-			return targetDistinationFromFloor;
-		}
-		
-		return targetDistinationFromElevator;
+		return secondFloorDiff;
 	}
 }

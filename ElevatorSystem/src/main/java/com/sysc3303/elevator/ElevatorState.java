@@ -121,7 +121,7 @@ class DoorsOpen implements ElevatorState {
 	
 	public void doAction(Elevator context) {
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(20000);
 		} catch(InterruptedException e) {
 			// TODO: interrupt handling? or just let this pass through and break
 			// early?

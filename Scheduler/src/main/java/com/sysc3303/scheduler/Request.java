@@ -1,9 +1,8 @@
 package com.sysc3303.scheduler;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
-import com.sysc3303.commons.Direction;
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.ElevatorButtonMessage;
 import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.commons.ElevatorVector;
@@ -13,28 +12,40 @@ import com.sysc3303.commons.ElevatorVector;
  *
  */
 public class Request {
-		private ArrayList<FloorButtonMessage>        floorButtonMessages;
-		private ArrayList<ElevatorButtonMessage>     elevatorButtonMessages;
-		private ElevatorVector                       elevatorVector;
-		private LinkedHashMap<ElevatorVector, ArrayList<ElevatorButtonMessage>> elevatorContext;
+		private ArrayList<FloorButtonMessage> floorButtonMessages;
+		private ArrayList<ElevatorStatus>     elevatorStatusArray;
+		private final int                     NUMBER_OF_ELEVATOR;
 		
 		public Request() {
-			floorButtonMessages    = new ArrayList<FloorButtonMessage>();
-			elevatorButtonMessages = new ArrayList<ElevatorButtonMessage>();
-			elevatorVector         = new ElevatorVector(0, Direction.IDLE, 0);
+			NUMBER_OF_ELEVATOR  = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators"));
+			System.out.println("This is number of elevator: " + NUMBER_OF_ELEVATOR);
+			floorButtonMessages = new ArrayList<FloorButtonMessage>();
+			initElevatorStatusArray();
 		}
 		
-		public synchronized void waitUntilElevatorArrives() {
-			while(elevatorVector.currentFloor != elevatorVector.targetFloor) {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+		public boolean containsTargetFloorInElevatorButtonMessages(int elevatorId, int targetFloor) {
+			ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr = elevatorStatusArray.get(elevatorId).getElevatorButtonMessageArr();
+			
+			for(int i = 0; i < elevatorButtonMessageArr.size(); i++) {
+				if(elevatorButtonMessageArr.get(i).getDestinationFloor() == targetFloor) {
+					return true;
 				}
+			}
+			return false;
+		}
+		
+		private void initElevatorStatusArray() {
+			elevatorStatusArray = new ArrayList<ElevatorStatus>();
+			
+			for(int i = 0; i < NUMBER_OF_ELEVATOR; i++) {
+				elevatorStatusArray.add(new ElevatorStatus());
 			}
 		}
 		
+		public int getNumberOfElevator() {
+			return NUMBER_OF_ELEVATOR;
+		}
+
 		public boolean hasSingleFloorButtonMessage() {
 			//waitUntilFloorButtonMessageExists();
 			
@@ -47,33 +58,22 @@ public class Request {
 			//notifyAll();
 			
 			return hasSingleFloorButtonMessage;
-			
 		}
 		
-		public boolean elevatorButtonMessagesIsEmpty() {
-			if(elevatorButtonMessages.isEmpty()) {
+		public boolean elevatorButtonMessagesIsEmpty(int elevatorId) {
+			if(elevatorStatusArray.get(elevatorId).getElevatorButtonMessageArr().isEmpty()) {
 				return true;
 			}
 			return false;
 		}
 		
-		private void waitUntilFloorButtonMessageExists() {
-			while(floorButtonMessages.isEmpty()) {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
 		
 		/**
 		 * 
 		 * @return ElevatorVector
 		 */
-		public synchronized ElevatorVector getElevatorVector() {
-			while(elevatorVector == null) {
+		public synchronized ElevatorVector getElevatorVector(int elevatorId) {
+			/*while(elevatorVector == null) {
 				try {
 					wait();
 				} catch (InterruptedException e) {
@@ -81,16 +81,17 @@ public class Request {
 					e.printStackTrace();
 				}
 			}
-			notifyAll();
+			notifyAll();*/
 			
-			return elevatorVector;
+			
+			return elevatorStatusArray.get(elevatorId).getElevatorVector();
 		}
 
 		/**
 		 * @param elevatorVector
 		 */
-		public synchronized void setElevatorVector(ElevatorVector elevatorVector) {
-			this.elevatorVector = elevatorVector;
+		public synchronized void setElevatorVector(ElevatorVector elevatorVector, int elevatorId) {
+			elevatorStatusArray.get(elevatorId).setElevatorVector(elevatorVector);
 		}
 
 		/**
@@ -111,16 +112,16 @@ public class Request {
 		/**
 		 * @return ArrayList<ElevatorButtonMessage>
 		 */
-		public synchronized ArrayList<ElevatorButtonMessage> getElevatorButtonMessageArray() {
-			return elevatorButtonMessages;
+		public synchronized ArrayList<ElevatorButtonMessage> getElevatorButtonMessageArray(int elevatorId) {
+			return elevatorStatusArray.get(elevatorId).getElevatorButtonMessageArr();
 		}
 		
 		/**
 		 * @param index
 		 * @return ElevatorButtonMessage
 		 */
-		public synchronized ElevatorButtonMessage getElevatorButtonMessage(int index) {
-			return elevatorButtonMessages.get(index);
+		public synchronized ElevatorButtonMessage getElevatorButtonMessage(int elevatorId, int index) {
+			return elevatorStatusArray.get(elevatorId).getElevatorButtonMessageArr().get(index);
 		}
 		
 		/**
@@ -134,8 +135,12 @@ public class Request {
 		/**
 		 * @param elevatorButtonMessage
 		 */
-		public synchronized void addElevatorButtonMessage(ElevatorButtonMessage elevatorButtonMessage) {
-			elevatorButtonMessages.add(elevatorButtonMessage);
+		public synchronized void addElevatorButtonMessage(ElevatorButtonMessage elevatorButtonMessage, int elevatorId) {
+			elevatorStatusArray.get(elevatorId).addElevatorButtonMessage(elevatorButtonMessage);
+		}
+		
+		public synchronized void setElevatorButtonMessageArray(ArrayList<ElevatorButtonMessage> elevatorButtonMessageArray, int elevatorId) {
+			elevatorStatusArray.get(elevatorId).setElevatorButtonMessageArr(elevatorButtonMessageArray);
 		}
 		
 		/**
@@ -145,13 +150,6 @@ public class Request {
 			floorButtonMessages = floorButtonMessageArr;
 		}
 		
-		/**
-		 * @param elevatorButtonMessageArr
-		 */
-		public synchronized void setElevatorButtonMessageArray(ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr) {
-			elevatorButtonMessages = elevatorButtonMessageArr;
-		}	
-		
 		public String toString() {
 			String output = "=================\nfloorButtonMessages: \n";
 			
@@ -159,13 +157,11 @@ public class Request {
 				output += floorButtonMessages.get(i).toString();
 			}
 			
-			output += "\nelevatorButtonMessages: \n";
+			output += "\nelevatorStatusArray: \n\t";
 			
-			for(int i = 0; i < elevatorButtonMessages.size(); i++) {
-				output += elevatorButtonMessages.get(i).toString();
+			for(int i = 0; i < elevatorStatusArray.size(); i++) {
+				output += elevatorStatusArray.get(i).toString();
 			}
-			
-			output += elevatorVector.toString();
 			
 			output += "\n=================";
 			
@@ -176,6 +172,17 @@ public class Request {
 			if(floorButtonMessages.isEmpty()) {
 				return true;
 			}
+			return false;
+		}
+		
+		public boolean floorButtonMessagesContains(int floor) {
+			for(int i = 0; i < floorButtonMessages.size(); i++) {
+				int curFloor = floorButtonMessages.get(i).getFloor();
+				if(floor == curFloor) {
+					return true;
+				}
+			}
+			
 			return false;
 		}
 }
