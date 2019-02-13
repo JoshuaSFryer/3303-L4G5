@@ -27,7 +27,7 @@ public class FloorSystem {
 		floorMessageHandler = FloorMessageHandler.getInstance(floorPort, this);
 		
 		for (int i=0; i< FloorSystem.totalNumberofFloors; i++) {
-			floorList.add(new FloorGeneral(i+1));
+			floorList.add(new FloorGeneral(i));
 		}
 	}
 	
