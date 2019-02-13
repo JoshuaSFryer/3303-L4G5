@@ -8,6 +8,8 @@ import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 
 /**
+ * Elevator represents a physical elevator within the system.
+ *
  * @author Joshua Fryer, Yu Yamanaka
  *
  */
@@ -16,21 +18,21 @@ public class Elevator {
 	
 	public final int elevatorID;
 
-	private ElevatorLamp   		lamp;
-	private Motor          		motor;
-	private Door           		door;
+	private ElevatorLamp   				lamp;
+	private Motor          				motor;
+	private Door           				door;
 	private ArrayList<ElevatorButton> 	buttons;
-	private FloorSensor 		sensor;
+	private FloorSensor 				sensor;
 	
-	private int 			currentFloor;
+	private int 						currentFloor;
+
+	private int							currentHeight; // Current height in CM
+	private ElevatorState 				currentState;
+	private Direction					currentDirection;
 	
-	private int				currentHeight; // Current height in CM
-	private ElevatorState 	currentState;
-	private Direction		currentDirection;
-	
-	private Thread 			mover;
-	
-	private ElevatorMessageHandler messageHandler;
+	private Thread 						mover;
+
+	private ElevatorMessageHandler 		messageHandler;
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -71,7 +73,8 @@ public class Elevator {
 	}
 	
 	/**
-	 * Get the current state.
+	 * Get the current state. Currently unused until State pattern is
+	 * implemented.
 	 * @return	The current ElevatorState
 	 */
 	public ElevatorState getState() {
