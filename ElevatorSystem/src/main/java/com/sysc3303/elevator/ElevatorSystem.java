@@ -1,8 +1,6 @@
 package com.sysc3303.elevator;
 
 import com.sysc3303.commons.ConfigProperties;
-import com.sysc3303.communication.MessageHandler;
-import com.sysc3303.scheduler.SchedulerMessageHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
