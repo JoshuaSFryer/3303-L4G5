@@ -26,8 +26,15 @@ public class GUIElevatorMoveMessage extends Message {
 
     @Override
     public String toString() {
-        return "Elevator " + this.ID + "\nCurrent floor: " + this.currentFloor +
-                " Going: " + this.currentDirection.name() + "Door is: " +
-                this.doorOpen;
+        String openClosed;
+        if(this.doorOpen) {
+            openClosed = "Open";
+        } else {
+            openClosed = "Closed";
+        }
+
+        return "Elevator " + this.ID + ":\nCurrent floor: " + this.currentFloor
+                + " Going: " + this.currentDirection.name() + " Door is: "
+                + openClosed;
     }
 }

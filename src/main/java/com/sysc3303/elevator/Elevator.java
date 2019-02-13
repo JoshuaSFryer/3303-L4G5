@@ -59,7 +59,6 @@ public class Elevator {
 		currentDirection = Direction.IDLE;
 		
 		messageHandler = ElevatorMessageHandler.getInstance(port, this);
-		this.UI = TestCLI.getInstance();
 	}
 	
 	/**
@@ -216,16 +215,12 @@ public class Elevator {
 	}
 
 	/**
-	 * Access the user interface.
-	 * @return	A reference to the user interface.
+	 * Instruct the MessageHandler to send a floor update message to the UI.
+	 * @see GUIElevatorMoveMessage
 	 */
-	public UserInterface getUI() {
-		return this.UI;
-	}
-
 	public void updateUI() {
-		GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, currentDirection, door.isOpen());
-		UI.moveElevator(msg);
+		messageHandler.updateUI(elevatorID, currentFloor, currentDirection,
+								door.isOpen());
 	}
 	
 	/**
