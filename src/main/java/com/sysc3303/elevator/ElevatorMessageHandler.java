@@ -45,7 +45,8 @@ public class ElevatorMessageHandler extends MessageHandler {
         switch (message.getOpcode()){
             case 2:
             	GoToFloorMessage castMessage = (GoToFloorMessage) message;
-            	context.goToFloor(castMessage.getDestinationFloor());
+            	//context.goToFloor(castMessage.getDestinationFloor());
+                context.receiveMessageFromScheduler(castMessage.getDestinationFloor());
                 break;
             case 6:
                 ElevatorClickSimulationMessage elevatorClickSimulationMessage = (ElevatorClickSimulationMessage) message;
