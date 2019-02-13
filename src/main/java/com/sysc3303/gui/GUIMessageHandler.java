@@ -34,16 +34,19 @@ public class GUIMessageHandler extends MessageHandler {
     @Override
     public void received(Message message) {
         switch(message.getOpcode()) {
+
             case 7: // elevator update
                 GUIElevatorMoveMessage moveMSG = (GUIElevatorMoveMessage) message;
                 // Have the GUI do a thing here.
                 context.moveElevator(moveMSG);
                 break;
+
             case 8: // floor update
                 GUIFloorMessage floorMSG = (GUIFloorMessage) message;
                 // Have the GUI do a thing here.
-                System.out.println(floorMSG.toString());
+                context.pressFloorButton(floorMSG);
                 break;
+
             default:
                 System.out.println("This message type is not handled by this module!");
         }
