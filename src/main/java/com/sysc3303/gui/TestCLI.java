@@ -55,7 +55,7 @@ public class TestCLI implements UserInterface {
 
 
     public static void main(String[] args) {
-        TestCLI t = new TestCLI();
+        TestCLI t = TestCLI.getInstance();
     }
 
 }
