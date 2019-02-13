@@ -4,8 +4,9 @@ import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.communication.Message;
 
 /**
+ * Stores request from floor and elevators
+ * and starts thread for handling them
  * @author Yu Yamanaka Xinrui Zhang
- * Scheduler subsystem
  */
 public class Scheduler {
 	private Runnable                floorMessageHandler;

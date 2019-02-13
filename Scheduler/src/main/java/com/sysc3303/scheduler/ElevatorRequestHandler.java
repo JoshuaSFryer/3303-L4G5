@@ -59,6 +59,11 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		}
 	}
 	
+	/**
+	 * Generates and Sends GoToFloorMessage considering
+	 * elevator button message and floor button message arrays 
+	 * of particular elevator
+	 */
 	private void sendGoToFloorMessageFromElevatorButtonMessage() {
 		ElevatorButtonMessage message        = (ElevatorButtonMessage)this.message;
 		int                   elevatorId     = message.getElevatorId();
@@ -67,7 +72,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		
 		int targetFloor = selectTargetFloor(elevatorId);
 		
-		if(targetFloor != -1) {
+		if(targetFloor != INVALID_FLOOR) {
 			ElevatorVector curElevatorVector = request.getElevatorVector(elevatorId);
 			ElevatorVector elevatorVector    = new ElevatorVector(curElevatorVector.currentFloor, curElevatorVector.currentDirection, targetFloor);
 			
@@ -76,13 +81,21 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		}
 	}
 	
+	/**
+	 * selects target floor considering
+	 * elevator button message and floor button message
+	 * of particular elevator
+	 * 
+	 * @param elevatorId
+	 * @return
+	 */
 	private int selectTargetFloor(int elevatorId) {
 		ElevatorVector elevatorVector   = request.getElevatorVector(elevatorId);
 		int   targetFloor               = targetFloorDecider.selectTargetFloorFromFloorButtonMessages(request, elevatorId);
 		int   elevatorButtonTargetFloor = targetFloorDecider.selectTargetFloorFromElevatorButtonMessages(request.getElevatorButtonMessageArray(elevatorId), elevatorVector);
 		int   closestTargetFloor        = 0;
 	
-		if(targetFloor != -1) {
+		if(targetFloor != INVALID_FLOOR) {
 			closestTargetFloor = targetFloorDecider.getNearestFloor(targetFloor, elevatorButtonTargetFloor, elevatorVector.currentFloor);
 		}
 		else {

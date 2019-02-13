@@ -3,8 +3,23 @@ package com.sysc3303.scheduler;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
+/**
+ * Validates if target floor is
+ * valid floor for elevator
+ * @author Yu Yamanaka
+ *
+ */
 public class TargetFloorValidator {
 
+	/**
+	 * Checks if targetFloor is valid floor
+	 * for elevator considering direction. Should
+	 * be used for Floor Button messages
+	 * @param targetFloor
+	 * @param targetDirection
+	 * @param elevatorVector
+	 * @return
+	 */
 	public boolean validTargetFloor(int targetFloor, Direction targetDirection, ElevatorVector elevatorVector) {
 		Direction      currentDirection   = elevatorVector.currentDirection;
 		int            currentTargetFloor = elevatorVector.targetFloor;
@@ -27,6 +42,14 @@ public class TargetFloorValidator {
 		return false;
 	}
 	
+	/**
+	 * checks if targetFloor is valid floor
+	 * for elevator. Should be used for
+	 * elevator button messages
+	 * @param targetFloor
+	 * @param elevatorVector
+	 * @return
+	 */
 	public boolean validTargetFloor(int targetFloor, ElevatorVector elevatorVector) {
 		Direction      currentDirection   = elevatorVector.currentDirection;
 		int            currentTargetFloor = elevatorVector.targetFloor;

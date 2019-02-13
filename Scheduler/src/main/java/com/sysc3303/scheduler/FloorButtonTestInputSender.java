@@ -17,25 +17,46 @@ import com.sysc3303.commons.SerializationUtil;
 import com.sysc3303.communication.SocketHandler;
 
 /**
- * @author 
+ * Used for testing purpose.
+ * Sends FloorButtonMessage from inputFile
+ * @author Yu Yamanaka
  *
  */
 public class FloorButtonTestInputSender {
 	private SocketHandler socketHandler;
-	
+
 	public FloorButtonTestInputSender() {
 		socketHandler = new SocketHandler();
 	}
 	
+	/**
+	 * sends message to scheduler
+	 * @param data
+	 * @param address
+	 * @param port
+	 */
 	public void sendMessageToScheduler(byte[] data, InetAddress address, int port) {
 		socketHandler.sendSocket(data, address, port);
 	}
 	
+	/**
+	 * waits message from scheduler
+	 * @param data
+	 * @return
+	 */
 	public byte[] waitMessageFromScheduler(byte[] data) {
 		byte[] recievedData = socketHandler.waitForPacket(data, true);
 		return recievedData;
 	}
 	
+	/**
+	 * creates floorbuttonmessage from input
+	 * @param filePath
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
 	public ArrayList<FloorButtonMessage> createMessageArr(String filePath) throws FileNotFoundException, IOException, ParseException {
 		ArrayList<FloorButtonMessage> messageArr = new ArrayList<FloorButtonMessage>();
 		SimpleDateFormat   formatter  = new SimpleDateFormat("hh:mm:ss.S");

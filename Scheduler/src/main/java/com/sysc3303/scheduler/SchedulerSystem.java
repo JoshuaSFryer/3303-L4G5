@@ -7,6 +7,11 @@ import org.apache.log4j.xml.DOMConfigurator;
 
 import com.sysc3303.commons.ConfigProperties;
 
+/**
+ * Starts scheduler and communication handler
+ * @author Yu Yamanaka
+ *
+ */
 public class SchedulerSystem {
 	private Scheduler               scheduler;
 	private SchedulerMessageHandler schedulerMessageHandler;
@@ -17,10 +22,18 @@ public class SchedulerSystem {
 		scheduler               = new Scheduler(schedulerMessageHandler);
 	}
 	
+	/**
+	 * gets scheduler
+	 * @return
+	 */
 	public Scheduler getScheduler() {
 		return scheduler;
 	}
 	
+	/**
+	 * prints that scheduler is running
+	 * @param port
+	 */
 	public void printRunning(int port) {
 		String running = "Starting Scheduler, listening at port " + port;
 		

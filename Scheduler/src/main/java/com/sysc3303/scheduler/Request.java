@@ -8,6 +8,8 @@ import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.commons.ElevatorVector;
 
 /**
+ * Stores array of floor button messages 
+ * and each elevators status
  * @author Yu Yamanaka Xinrui Zhang
  *
  */

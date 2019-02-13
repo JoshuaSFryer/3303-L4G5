@@ -6,13 +6,24 @@ import com.sysc3303.commons.ElevatorVector;
 import com.sysc3303.communication.GoToFloorMessage;
 import com.sysc3303.communication.Message;
 
+/**
+ * Abstract class for request handlers
+ * @author Yu Yamanaka
+ *
+ */
 public abstract class RequestHandler {
+	protected final int               INVALID_FLOOR = -1;
 	protected Request                 request;
 	protected SchedulerMessageHandler schedulerMessageHandler;
 	protected Message                 message;
 	protected TargetFloorDecider      targetFloorDecider = new TargetFloorDecider();
 	protected Logger                  log                = Logger.getLogger(SchedulerMessageHandler.class);
 
+	/**
+	 * generates and sends goToFloorMessage
+	 * to all valid elevators considering all
+	 * elevator button press and floor requests
+	 */
 	protected void generateAndSendGoToFloorMessage() {
 		int[] targetFloorsFromFloorButtonMessages    = targetFloorDecider.selectTargetFloorFromFloorButtonMessages(request);
 		int[] targetFloorsFromElevatorButtonMessages = targetFloorDecider.selectFloorFromAllElevatorsElevatorButtonMessage(request);

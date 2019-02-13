@@ -7,9 +7,22 @@ import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
+/**
+ * Selects target floors for
+ * elevator
+ * @author Yu Yamanaka
+ *
+ */
 public class TargetFloorDecider {
 	TargetFloorValidator targetFloorValidator = new TargetFloorValidator();
 	
+	/**
+	 * Selects target floor candidates
+	 * for each elevator
+	 * @param numberOfElevator
+	 * @param request
+	 * @return
+	 */
 	private ArrayList<ArrayList<Integer>> selectTargetFloorCandidates(int numberOfElevator, Request request) {
 		ArrayList<ArrayList<Integer>> targetFloorCandidates = new ArrayList<ArrayList<Integer>>();
 		ArrayList<FloorButtonMessage> floorButtonMessages   = (ArrayList<FloorButtonMessage>)request.getFloorButtonMessageArray();
@@ -35,6 +48,12 @@ public class TargetFloorDecider {
 		return targetFloorCandidates;
 	}
 	
+	/**
+	 * selects target floor for
+	 * all elevators elevator button message
+	 * @param request
+	 * @return
+	 */
 	public int[] selectFloorFromAllElevatorsElevatorButtonMessage(Request request) {
 		int numberOfElevator = request.getNumberOfElevator();
 		int[] targetFloors   = new int[numberOfElevator];
@@ -46,6 +65,14 @@ public class TargetFloorDecider {
 		return targetFloors;
 	}
 	
+	/**
+	 * Selects target floor from target
+	 * floor candidates
+	 * @param numberOfElevator
+	 * @param targetFloorCandidates
+	 * @param request
+	 * @return
+	 */
 	public int[] selectTargetFloorFromCandidates(int numberOfElevator, ArrayList<ArrayList<Integer>> targetFloorCandidates, Request request) {
 		int[] targetFloors = new int[numberOfElevator];
 	
@@ -82,12 +109,27 @@ public class TargetFloorDecider {
 		return targetFloors;
 	}
 	
+	/**
+	 * Selects target considering
+	 * floor button messages for particular
+	 * elevator
+	 * @param request
+	 * @param elevatorId
+	 * @return
+	 */
 	public int selectTargetFloorFromFloorButtonMessages(Request request, int elevatorId) {
 		int[] targetFloors = selectTargetFloorFromFloorButtonMessages(request);
 		
 		return targetFloors[elevatorId];
 	}
 	
+	/**
+	 * selects target floor considering
+	 * floor button messages for all
+	 * elevators
+	 * @param request
+	 * @return
+	 */
 	public int[] selectTargetFloorFromFloorButtonMessages(Request request) {
 		int                           numberOfElevator      = request.getNumberOfElevator();
 		ArrayList<ArrayList<Integer>> targetFloorCandidates = selectTargetFloorCandidates(numberOfElevator, request);
@@ -96,6 +138,13 @@ public class TargetFloorDecider {
 		return targetFloors;
 	}
 	
+	/**
+	 * Selects target floor from elevator button
+	 * messages of single elevator
+	 * @param elevatorButtonMessageArr
+	 * @param elevatorVector
+	 * @return
+	 */
 	public int selectTargetFloorFromElevatorButtonMessages(ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr, ElevatorVector elevatorVector) {
 		ArrayList<Integer> targetFloorCandidates = new ArrayList<Integer>();
 		
@@ -113,6 +162,13 @@ public class TargetFloorDecider {
 		return targetFloor;
 	}
 	
+	/**
+	 * checks if any other elevator
+	 * is on its way to targetFloor
+	 * @param targetFloor
+	 * @param request
+	 * @return
+	 */
 	private boolean elevatorIsOnItsWay(int targetFloor, Request request) {
 		int numberOfElevator = request.getNumberOfElevator();
 		
@@ -127,6 +183,15 @@ public class TargetFloorDecider {
 		return false;
 	}
 	
+	/**
+	 * Returns closest elevatorId from
+	 * nearestFloor
+	 * @param firstElevatorId
+	 * @param secondElevatorId
+	 * @param nearestFloor
+	 * @param request
+	 * @return
+	 */
 	private int getClosestElevatorIdFromNearestFloor(int firstElevatorId, int secondElevatorId, int nearestFloor, Request request) {
 		ElevatorVector firstElevatorVector     = request.getElevatorVector(firstElevatorId);
 		ElevatorVector secondElevatorVector    = request.getElevatorVector(secondElevatorId);
@@ -140,6 +205,13 @@ public class TargetFloorDecider {
 		return secondElevatorId;
 	}
 	
+	/**
+	 * checks if nearest floor contained
+	 * in targetFloor, returns that index
+	 * @param targetFloors
+	 * @param nearestFloor
+	 * @return
+	 */
 	private int getDuplicateIndex(int[] targetFloors, int nearestFloor) {
 		int duplicatedIndex = -1;
 		
@@ -152,6 +224,13 @@ public class TargetFloorDecider {
 		return duplicatedIndex;
 	}
 	
+	/**
+	 * checks if number is contained in array,
+	 * returns true if it does
+	 * @param array
+	 * @param number
+	 * @return
+	 */
 	private boolean containsInt(int[] array, int number) {
 		for(int i = 0; i < array.length; i++) {
 			if(array[i] == number) {
@@ -161,6 +240,12 @@ public class TargetFloorDecider {
 		return false;
 	}
 	
+	/**
+	 * gets nearest floor from currentFloor to targetFloorCandidates
+	 * @param targetFloorCandidates
+	 * @param currentFloor
+	 * @return
+	 */
 	private int getNearestFloor(ArrayList<Integer> targetFloorCandidates, int currentFloor) {
 		int difference   = 0;
 		int nearestFloor = -1;
@@ -178,6 +263,15 @@ public class TargetFloorDecider {
 		return nearestFloor;
 	}
 	
+	/**
+	 * checks if first or second floor
+	 * is nearest to current floor, 
+	 * returns any one of closest floor
+	 * @param firstFloor
+	 * @param secondFloor
+	 * @param currentFloor
+	 * @return
+	 */
 	public int getNearestFloor(int firstFloor, int secondFloor, int currentFloor) {
 		if(firstFloor == -1 && secondFloor == -1) {
 			return -1;
