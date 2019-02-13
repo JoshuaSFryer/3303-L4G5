@@ -1,4 +1,9 @@
 package com.sysc3303.elevator;
+
+
+import java.io.IOException;
+
+
 import java.util.ArrayList;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
@@ -20,7 +25,7 @@ public class Elevator {
 	
 	private int 			currentFloor;
 	
-	private int			currentHeight; // Current height in CM
+	private int				currentHeight; // Current height in CM
 	private ElevatorState 	currentState;
 	private Direction		currentDirection;
 	
@@ -155,6 +160,8 @@ public class Elevator {
 	public void closeDoors() {
 		door.closeDoors();
 	}
+
+	public void setCurrentDirection(Direction dir) { this.currentDirection = dir;}
 	
 	/**
 	 * Get this elevator's current floor.
@@ -238,7 +245,7 @@ public class Elevator {
 		
 		this.mover = new Thread(
 						new MovementHandler(targetFloor, this, this.sensor, 
-											this.motor));
+											this.motor, this.elevatorID));
 		 
 		// Launch the mover thread. It will continue until the target floor is
 		// reached, or this elevator receives a new goToFloor request. Upon

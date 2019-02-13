@@ -1,19 +1,23 @@
 package com.sysc3303.elevator;
 
+import com.sysc3303.commons.Direction;
+
 public class MovementHandler implements Runnable {
-	public static final int MOVEMENTDELAY = 250;
+	public static final int MOVEMENTDELAY = 1250;
 	
 	int targetFloor;
+	int elevatorId;
 	Motor motor;
 	Elevator context;
 	FloorSensor sensor;
 	
 	public MovementHandler(int targetFloor, Elevator context,
-							FloorSensor sensor, Motor motor) {
+							FloorSensor sensor, Motor motor, int elevatorId) {
 		this.targetFloor = targetFloor;
 		this.motor = motor;
 		this.sensor = sensor;
 		this.context = context;
+		this.elevatorId = elevatorId;
 	}
 	
 	/**
@@ -33,6 +37,9 @@ public class MovementHandler implements Runnable {
 					floor = sensor.getFloor();
 					context.setCurrentFloor(floor);
 					System.out.println("Arrived at floor: " + floor);
+					if(context.getCurrentFloor() == targetFloor) {
+						context.setCurrentDirection(Direction.IDLE);
+					}
 					context.notifyArrival(targetFloor);
 					context.setCurrentFloor(floor);
 				}
@@ -52,7 +59,7 @@ public class MovementHandler implements Runnable {
 						moveDown();
 					} else {
 						// Don't need to move any more, so kill this thread.
-						System.out.println("Arrived at destination!");
+						System.out.println("Elevator Id: " + elevatorId + " arrived at destination ("+targetFloor+") !");
 						context.openDoors();
 						return;
 					}

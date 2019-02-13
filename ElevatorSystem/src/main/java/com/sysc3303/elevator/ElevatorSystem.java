@@ -2,18 +2,23 @@ package com.sysc3303.elevator;
 
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.MessageHandler;
+import com.sysc3303.scheduler.SchedulerMessageHandler;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
 
 /**
  * The main class for the Elevator system.
  * Contains all the elevators and handles communication for them
  */
 public class ElevatorSystem {
-    private List<Elevator> elevators = new ArrayList<>();
+    private List<Elevator>         elevators      = new ArrayList<>();
     private ElevatorMessageHandler messageHandler;
+    private Logger                 log            = Logger.getLogger(ElevatorSystem.class);
 
 
     /**
@@ -24,6 +29,10 @@ public class ElevatorSystem {
      */
     public ElevatorSystem(int num_elevators, int num_floors, int elevatorSystemPort){
         ElevatorMessageHandler messageHandler = ElevatorMessageHandler.getInstance(elevatorSystemPort, this);
+        
+        DOMConfigurator.configure("./ElevatorSystem/log4j.xml");
+        log.info("ElevatorSystem starting at port " + elevatorSystemPort);
+        
         for (int i = 0; i<num_elevators; i++){
             elevators.add(new Elevator(num_floors, i, messageHandler));
         }
@@ -50,6 +59,7 @@ public class ElevatorSystem {
         int     num_floors = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors"));
         int num_elevators = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators"));
         ElevatorSystem elevatorSystem = new ElevatorSystem(num_elevators, num_floors, port);
+      
         System.out.println("Starting Elevator System, with " + num_elevators +
                 " elevators and " + num_floors + " floors");
         while(running) {

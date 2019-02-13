@@ -4,6 +4,7 @@ import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import org.apache.log4j.Logger;
 
 /**
  * This class handles all the message sending to scheduler
@@ -12,9 +13,10 @@ import java.net.UnknownHostException;
  */
 public class SchedulerMessageHandler extends MessageHandler{
     //TODO you need to add the port numbers that will be associated with floor and elevator
-    private InetAddress elevatorAddress;
-    private InetAddress floorAddress;
-    private Scheduler   scheduler;
+    private InetAddress     elevatorAddress;
+    private InetAddress     floorAddress;
+    private SchedulerSystem schedulerSystem;
+    private Logger          log = Logger.getLogger(SchedulerMessageHandler.class);
     
     /**
      * The schedulerMessageHandler's constructer
@@ -24,9 +26,9 @@ public class SchedulerMessageHandler extends MessageHandler{
     static int elevatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
     static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
 
-    public SchedulerMessageHandler(int receivePort, Scheduler scheduler){
+    public SchedulerMessageHandler(int receivePort, SchedulerSystem schedulerSystem){
         super(receivePort);
-        this.scheduler = scheduler;
+        this.schedulerSystem = schedulerSystem;
         //TODO currently for localhost this is how it looks
         try{
             elevatorAddress = floorAddress = InetAddress.getLocalHost();
@@ -41,68 +43,34 @@ public class SchedulerMessageHandler extends MessageHandler{
     @Override
     public synchronized void received(Message message){
         // TODO Whatever functionality you want when your receive a message
-    	System.out.println("Received Message!");
-  
         switch (message.getOpcode()){
             case 0:
                 // TODO what happens when you receive FloorButton
-            	System.out.println("Received FloorButtonMessage");
             	FloorButtonMessage floorButtonMessage = (FloorButtonMessage)message;
-            	System.out.println(floorButtonMessage.toString());
+  
+            	log.info("Received FloorButtonMessage from floor");
+            	log.info(floorButtonMessage);
             	
-            	scheduler.startFloorMessageHandler(message);
-           
-            	GoToFloorMessage goToFloorMessage = scheduler.getGoToFloorMessage();
-            	System.out.println("Sending Message to elevator");
-            	System.out.println(goToFloorMessage.toString());
-            	sendGoToFloor(goToFloorMessage);
-                break;
-            case 1:
-                // Shouldn't have this on the scheduler
-                // TODO what happens when you receive FloorArrival
-                break;
-            case 2:
-                // Shouldn't have this on the scheduler
-                // TODO what happens when you receive GoToFloor
+            	schedulerSystem.getScheduler().startFloorMessageHandler(message);
                 break;
             case 3:
                 // TODO what happens when you receive ElevatorState
-            	System.out.println("Received ElevatorStateMessage");
-            	
             	ElevatorStateMessage elevatorStateMessage = (ElevatorStateMessage)message;
-            	
-            	System.out.println(elevatorStateMessage.toString());
-            	//System.out.println(elevatorStateMessage.getElevatorVector().toString());
-           
-            	scheduler.startElevatorMessageHandler(message);
-            	
-            	if(elevatorStateMessage.getElevatorVector().currentFloor == elevatorStateMessage.getElevatorVector().targetFloor) {
-            	    System.out.println("\n\nThe elevator has arrived at floor " + elevatorStateMessage.getElevatorVector().currentFloor);
-            		FloorArrivalMessage floorArrivalMessage = scheduler.getFloorArrivalMessage();
-            		
-            		System.out.println("Sending Message to Floor");
-                	System.out.println(floorArrivalMessage.toString());
-                	
-                	sendFloorArrival(floorArrivalMessage);
-            	}
-          
+            	       
+            	log.info("Received ElevatorStateMessage from elevator");
+            	log.info(elevatorStateMessage);
+
+            	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             	break;
             case 4:
                 // TODO what happens when you receive ElevatorButton
-            	System.out.println("Received ElevatorButtonMessage");
             	ElevatorButtonMessage elevatorButtonMessage = (ElevatorButtonMessage)message;
-            	System.out.println(elevatorButtonMessage.toString());
-                   
-            	scheduler.startElevatorMessageHandler(message);
+            	
+            	log.info("Received ElevatorButtonMessage from elevator");
+            	log.info(elevatorButtonMessage);
+                
+            	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             	break;
-            case 5:
-                // Shouldn't have this on the simulator
-                // TODO what happens when you receive FloorButtonSimulationMessage
-                break;
-            case 6:
-                // Shouldn't have this on the simulator
-                // TODO what happens when you receive ElevatorButtonSimulationMessage
-                break;
             default:
                 // TODO what happens when you get an invalid upcode
         }
@@ -112,6 +80,8 @@ public class SchedulerMessageHandler extends MessageHandler{
      * @return goToFloorMessage
      */
     public void sendGoToFloor(GoToFloorMessage goToFloorMessage){
+    	log.info("Sending GoToFloorMessage to elevator");
+    	log.info(goToFloorMessage);
         send(goToFloorMessage, elevatorAddress, elevatorPort);
     }
 
@@ -119,6 +89,8 @@ public class SchedulerMessageHandler extends MessageHandler{
      * @return floorArrialMessage
      */
     public void sendFloorArrival(FloorArrivalMessage floorArrivalMessage){
+    	log.info("Sending FloorArrivalMessage to Floor");
+    	log.info(floorArrivalMessage);
         send(floorArrivalMessage, floorAddress, floorPort);
     }
 }
