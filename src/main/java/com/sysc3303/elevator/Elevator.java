@@ -8,7 +8,10 @@ import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 
 /**
- * Elevator represents a physical elevator within the system.
+ * Elevator represents a physical elevator within the system. It is directed
+ * by the Scheduler, and notifies the Scheduler whenever it arrives at a floor.
+ * The system can have several elevators, and each will run as a separate
+ * thread.
  *
  * @author Joshua Fryer, Yu Yamanaka
  *
@@ -45,18 +48,18 @@ public class Elevator {
 	 * @param ID			The unique ID of this elevator.
 	 */
 	public Elevator(int port, int numFloors, int ID) {
-		elevatorID 		= ID;
-		lamp          	= new ElevatorLamp();
-		buttons       	= generateButtons(numFloors);
-		sensor 			= new FloorSensor(this);
-		motor         	= new Motor(this);
-		door          	= new Door();
-		currentFloor   	= Elevator.GROUND_FLOOR;
-		currentState	= new Idle();
-		currentHeight 	= 0; //TODO: de-magicify this number
-		currentDirection = Direction.IDLE;
+		elevatorID 			= ID;
+		lamp          		= new ElevatorLamp();
+		buttons       		= generateButtons(numFloors);
+		sensor 				= new FloorSensor(this);
+		motor         		= new Motor(this);
+		door          		= new Door();
+		currentFloor   		= Elevator.GROUND_FLOOR;
+		currentState		= new Idle();
+		currentHeight 		= 0; //TODO: de-magicify this number
+		currentDirection 	= Direction.IDLE;
 		
-		messageHandler = ElevatorMessageHandler.getInstance(port, this);
+		messageHandler 		= ElevatorMessageHandler.getInstance(port, this);
 	}
 	
 	/**
@@ -67,7 +70,7 @@ public class Elevator {
 	private ArrayList<ElevatorButton> generateButtons(int numButtons) {
 		ArrayList<ElevatorButton> buttonList = new ArrayList<ElevatorButton>();
 		for(int i=0; i<numButtons; i++) {
-			buttonList.add(new ElevatorButton(this, i+1));
+			buttonList.add(new ElevatorButton(this, i));
 		}
 		return buttonList;
 	}
@@ -105,7 +108,6 @@ public class Elevator {
 		try {
 			this.mover.interrupt();
 		} catch (NullPointerException e) {
-			//e.printStackTrace();
 			System.out.println("No movement thread to interrupt!");
 		}
 		// Assign the new target floor and move towards it.
@@ -163,6 +165,10 @@ public class Elevator {
 		door.closeDoors();
 	}
 
+	/**
+	 * Update this elevator's direction.
+	 * @param dir	The new Direction. IDLE if the elevator is not moving.
+	 */
 	public void setCurrentDirection(Direction dir) { this.currentDirection = dir;}
 	
 	/**
@@ -267,7 +273,7 @@ public class Elevator {
 							0); //TODO: De-magicify this number.
 		
 		while(running) {
-
+			//TODO: Avoid busy-waiting?
 		}
 	}
 }
