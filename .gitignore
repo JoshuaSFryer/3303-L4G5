@@ -61,3 +61,7 @@ Temporary Items
 .apdisk
 /.metadata/
 /target/
+
+# Maven
+log/
+target/
