@@ -18,7 +18,6 @@ public class Request {
 		
 		public Request() {
 			NUMBER_OF_ELEVATOR  = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators"));
-			System.out.println("This is number of elevator: " + NUMBER_OF_ELEVATOR);
 			floorButtonMessages = new ArrayList<FloorButtonMessage>();
 			initElevatorStatusArray();
 		}
@@ -47,16 +46,11 @@ public class Request {
 		}
 
 		public boolean hasSingleFloorButtonMessage() {
-			//waitUntilFloorButtonMessageExists();
-			
 			boolean hasSingleFloorButtonMessage = false;
 			
 			if(floorButtonMessages.size() == 1) {
 				hasSingleFloorButtonMessage = true;
 			}
-			
-			//notifyAll();
-			
 			return hasSingleFloorButtonMessage;
 		}
 		
@@ -72,18 +66,7 @@ public class Request {
 		 * 
 		 * @return ElevatorVector
 		 */
-		public synchronized ElevatorVector getElevatorVector(int elevatorId) {
-			/*while(elevatorVector == null) {
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			notifyAll();*/
-			
-			
+		public synchronized ElevatorVector getElevatorVector(int elevatorId) {			
 			return elevatorStatusArray.get(elevatorId).getElevatorVector();
 		}
 
@@ -151,7 +134,7 @@ public class Request {
 		}
 		
 		public String toString() {
-			String output = "=================\nfloorButtonMessages: \n";
+			String output = "\n=================\nfloorButtonMessages: \n";
 			
 			for(int i = 0; i < floorButtonMessages.size(); i++) {
 				output += floorButtonMessages.get(i).toString();

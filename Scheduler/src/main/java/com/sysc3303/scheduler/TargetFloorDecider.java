@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.sysc3303.communication.ElevatorButtonMessage;
 import com.sysc3303.communication.FloorButtonMessage;
+import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
 public class TargetFloorDecider {
@@ -18,10 +19,11 @@ public class TargetFloorDecider {
 		}
 		
 		for(int i = 0; i < floorButtonMessages.size(); i++) {
-			int curTargetFloor = floorButtonMessages.get(i).getFloor();
+			int      curTargetFloor = floorButtonMessages.get(i).getFloor();
+			Direction curDirection  = floorButtonMessages.get(i).getDirection();
 			
 			for(int j = 0; j < numberOfElevator; j++) {
-				if(targetFloorValidator.validTargetFloor(curTargetFloor, request.getElevatorVector(j))) {
+				if(targetFloorValidator.validTargetFloor(curTargetFloor, curDirection, request.getElevatorVector(j))) {
 					if(targetFloorCandidates.get(j) == null) {
 						targetFloorCandidates.set(j, new ArrayList<Integer>());
 					}
@@ -98,17 +100,12 @@ public class TargetFloorDecider {
 		ArrayList<Integer> targetFloorCandidates = new ArrayList<Integer>();
 		
 		for(int i = 0; i < elevatorButtonMessageArr.size(); i++) {
-			int destinationFloor = elevatorButtonMessageArr.get(i).getDestinationFloor();
+			ElevatorButtonMessage elevatorButtonMessage = elevatorButtonMessageArr.get(i);
+			int                   destinationFloor      = elevatorButtonMessage.getDestinationFloor();
 			
 			if(targetFloorValidator.validTargetFloor(destinationFloor, elevatorVector)) {
 				targetFloorCandidates.add(destinationFloor);
 			}
-		}
-		System.out.println("targetFloorCandidates size: " + targetFloorCandidates.size());
-		System.out.println("printing out candidates!");
-		
-		for(int i = 0; i < targetFloorCandidates.size(); i++) {
-			System.out.println(targetFloorCandidates.get(i));
 		}
 		
 		int targetFloor = getNearestFloor(targetFloorCandidates, elevatorVector.currentFloor);

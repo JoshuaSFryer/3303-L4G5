@@ -15,8 +15,8 @@ public class ElevatorVector implements java.io.Serializable {
 	}
 
 	public String toString() {
-		return " Elevator Vector: \n\tcurrentFloor: " + currentFloor + 
-			   " \n\tcurrentDirection:" + currentDirection + 
-			   " \n\ttargetFloor: " + targetFloor;
+		return "Elevator Vector: \n\t\tcurrentFloor: " + currentFloor + 
+			   " \n\t\tcurrentDirection:" + currentDirection + 
+			   " \n\t\ttargetFloor: " + targetFloor;
 	}
 }

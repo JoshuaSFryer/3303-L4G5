@@ -21,9 +21,8 @@ public class FloorRequestHandler extends RequestHandler implements Runnable {
 	}
 	
 	public void run() {
-		System.out.println("FloorRequestHandler starting..");
-		System.out.println("Current requests: ");
-		System.out.println(request.toString());
+		log.debug("FloorRequestHandler starting..");
+		log.debug(request);
 		
 		FloorButtonMessage message = (FloorButtonMessage)this.message;
 		

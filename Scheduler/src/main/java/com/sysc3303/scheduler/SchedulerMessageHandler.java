@@ -4,6 +4,7 @@ import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import org.apache.log4j.Logger;
 
 /**
  * This class handles all the message sending to scheduler
@@ -15,6 +16,7 @@ public class SchedulerMessageHandler extends MessageHandler{
     private InetAddress     elevatorAddress;
     private InetAddress     floorAddress;
     private SchedulerSystem schedulerSystem;
+    private Logger          log = Logger.getLogger(SchedulerMessageHandler.class);
     
     /**
      * The schedulerMessageHandler's constructer
@@ -44,31 +46,28 @@ public class SchedulerMessageHandler extends MessageHandler{
         switch (message.getOpcode()){
             case 0:
                 // TODO what happens when you receive FloorButton
-            	System.out.println("Received FloorButtonMessage from floor");
-            	
             	FloorButtonMessage floorButtonMessage = (FloorButtonMessage)message;
-            	
-            	System.out.println(floorButtonMessage.toString());
+  
+            	log.info("Received FloorButtonMessage from floor");
+            	log.info(floorButtonMessage);
             	
             	schedulerSystem.getScheduler().startFloorMessageHandler(message);
                 break;
             case 3:
                 // TODO what happens when you receive ElevatorState
-            	System.out.println("Received ElevatorStateMessage from elevator");
-            	
             	ElevatorStateMessage elevatorStateMessage = (ElevatorStateMessage)message;
-            	
-            	System.out.println(elevatorStateMessage.toString());
+            	       
+            	log.info("Received ElevatorStateMessage from elevator");
+            	log.info(elevatorStateMessage);
 
             	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             	break;
             case 4:
                 // TODO what happens when you receive ElevatorButton
-            	System.out.println("Received ElevatorButtonMessage from elevator");
-            	
             	ElevatorButtonMessage elevatorButtonMessage = (ElevatorButtonMessage)message;
             	
-            	System.out.println(elevatorButtonMessage.toString());
+            	log.info("Received ElevatorButtonMessage from elevator");
+            	log.info(elevatorButtonMessage);
                 
             	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             	break;
@@ -81,6 +80,8 @@ public class SchedulerMessageHandler extends MessageHandler{
      * @return goToFloorMessage
      */
     public void sendGoToFloor(GoToFloorMessage goToFloorMessage){
+    	log.info("Sending GoToFloorMessage to elevator");
+    	log.info(goToFloorMessage);
         send(goToFloorMessage, elevatorAddress, elevatorPort);
     }
 
@@ -88,6 +89,8 @@ public class SchedulerMessageHandler extends MessageHandler{
      * @return floorArrialMessage
      */
     public void sendFloorArrival(FloorArrivalMessage floorArrivalMessage){
+    	log.info("Sending FloorArrivalMessage to Floor");
+    	log.info(floorArrivalMessage);
         send(floorArrivalMessage, floorAddress, floorPort);
     }
 }

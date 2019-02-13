@@ -29,9 +29,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 	}
 
 	public void run() {
-		System.out.println("ElevatorRequestHandler starting..");
-		System.out.println("Current requests: ");
-		System.out.println(request.toString());
+		log.debug("ElevatorRequestHandler starting");
 		
 		if(message instanceof ElevatorStateMessage) {
 			ElevatorStateMessage message          = (ElevatorStateMessage)this.message;
@@ -42,25 +40,21 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 			
 			request.setElevatorVector(elevatorVector, elevatorId);
 			
-			System.out.println("Setting elevator vector: " + elevatorVector.toString());
+			log.debug(request);
 			
-			if(request.floorButtonMessagesContains(currentFloor) || request.containsTargetFloorInElevatorButtonMessages(elevatorId, currentFloor)) {
-				System.out.println("Elevator arrived at destination!");
+			if(currentFloor == destinationFloor && 
+					(request.floorButtonMessagesContains(currentFloor) || request.containsTargetFloorInElevatorButtonMessages(elevatorId, currentFloor))) {
+				log.info("Elevator " + elevatorId + " arrived at destination");
 				
 				removeTargetFloor(currentFloor, elevatorId);
 
 				FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection, elevatorId);
-				
-				System.out.println("Sending arrival message to floor");
-				
 				schedulerMessageHandler.sendFloorArrival(floorArrivalMessage);
 			}	
 			
 			generateAndSendGoToFloorMessage();
 		}
 		else if(message instanceof ElevatorButtonMessage) {
-			System.out.println("Recieved Elevator Button Message");
-			
 			sendGoToFloorMessageFromElevatorButtonMessage();
 		}
 	}
@@ -68,20 +62,17 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 	private void sendGoToFloorMessageFromElevatorButtonMessage() {
 		ElevatorButtonMessage message        = (ElevatorButtonMessage)this.message;
 		int                   elevatorId     = message.getElevatorId();
-
-		System.out.println(message.toString());
 		
 		request.addElevatorButtonMessage(message, elevatorId);
 		
 		int targetFloor = selectTargetFloor(elevatorId);
 		
 		if(targetFloor != -1) {
-			GoToFloorMessage goToFloorMessage = new GoToFloorMessage(targetFloor, elevatorId);
+			ElevatorVector curElevatorVector = request.getElevatorVector(elevatorId);
+			ElevatorVector elevatorVector    = new ElevatorVector(curElevatorVector.currentFloor, curElevatorVector.currentDirection, targetFloor);
 			
-			System.out.println("Sending Go To Floor Message");
-			System.out.println(goToFloorMessage.toString());
-			
-			schedulerMessageHandler.sendGoToFloor(goToFloorMessage);
+			request.setElevatorVector(elevatorVector, elevatorId);
+			schedulerMessageHandler.sendGoToFloor(new GoToFloorMessage(targetFloor, elevatorId));
 		}
 	}
 	
@@ -90,9 +81,6 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		int   targetFloor               = targetFloorDecider.selectTargetFloorFromFloorButtonMessages(request, elevatorId);
 		int   elevatorButtonTargetFloor = targetFloorDecider.selectTargetFloorFromElevatorButtonMessages(request.getElevatorButtonMessageArray(elevatorId), elevatorVector);
 		int   closestTargetFloor        = 0;
-		
-		System.out.println("targetFloor in selectTargetFloor: " + targetFloor);
-		System.out.println("elevatorButtonTargetFloor in selectTargetFloor: " + elevatorButtonTargetFloor);
 	
 		if(targetFloor != -1) {
 			closestTargetFloor = targetFloorDecider.getNearestFloor(targetFloor, elevatorButtonTargetFloor, elevatorVector.currentFloor);
@@ -100,8 +88,6 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		else {
 			closestTargetFloor = elevatorButtonTargetFloor;
 		}
-		
-		System.out.println("closestTargetFloor in selectTargetFloor: " + closestTargetFloor);
 		return closestTargetFloor;
 	}
 	
@@ -113,15 +99,12 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 	 * @para targetFloor
 	 * @para targetDirection
 	 */
-	private void removeTargetFloor(int targetFloor, int elevatorId) {
-		System.out.println("Removing target Floor: " + targetFloor);
-		
+	private void removeTargetFloor(int targetFloor, int elevatorId) {	
 		ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray(elevatorId);
 		ArrayList<FloorButtonMessage>    floorRequestList    = request.getFloorButtonMessageArray();
 		
 		for(int i = 0; i < elevatorRequestList.size(); i++) {
 			if(elevatorRequestList.get(i).getDestinationFloor() == targetFloor) {
-				System.out.println("Target found, removing from elevator request list...");
 				elevatorRequestList.remove(i);
 				break;
 			}
@@ -131,13 +114,9 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
 			
 			if(curFloorRequest.getFloor() == targetFloor) {
-				System.out.println("Target found, removing from floor request list...");
 				floorRequestList.remove(i);
 				break;
 			}
 		}
-		
-		request.setElevatorButtonMessageArray(elevatorRequestList, elevatorId);
-		request.setFloorButtonMessageArray(floorRequestList);
 	}
 }

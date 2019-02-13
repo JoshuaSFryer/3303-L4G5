@@ -36,7 +36,7 @@ public class ElevatorStatus {
 	}
 	
 	public String toString() {
-		String output = "Elevator Button Message Array: \n\t";
+		String output = "\nElevator Button Message Array: \n\t";
 		for(int i = 0; i < elevatorButtonMessageArr.size(); i++) {
 			output += elevatorButtonMessageArr.get(i).toString();
 		}
