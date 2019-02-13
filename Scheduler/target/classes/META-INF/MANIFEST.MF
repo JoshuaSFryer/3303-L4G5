@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Built-By: xion
+Class-Path: dependency-jars/Shared-Utils-1.0-SNAPSHOT.jar dependency-j
+ ars/junit-4.12.jar dependency-jars/hamcrest-core-1.3.jar
+Build-Jdk: 1.8.0_65
+Created-By: Maven Integration for Eclipse
+Main-Class: com.sysc3303.scheduler.Scheduler
+
