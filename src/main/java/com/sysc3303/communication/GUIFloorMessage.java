@@ -24,7 +24,7 @@ public class GUIFloorMessage extends Message implements Serializable {
 
     @Override
     public String toString() {
-        return "Down button: " + this.buttons.down + " Up button: " + this.buttons.up + "\nFrom floor: " +
-                this.passengerFloor;
+        return "Floor: " + this.passengerFloor + " Down button: " + this.buttons.down
+                + " Up button: " + this.buttons.up;
     }
 }

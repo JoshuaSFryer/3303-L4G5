@@ -33,7 +33,7 @@ public class GUIElevatorMoveMessage extends Message {
             openClosed = "Closed";
         }
 
-        return "Elevator " + this.ID + ":\nCurrent floor: " + this.currentFloor
+        return "Elevator " + this.ID + ": Current floor: " + this.currentFloor
                 + " Going: " + this.currentDirection.name() + " Door is: "
                 + openClosed;
     }

@@ -75,6 +75,11 @@ public class FloorSystem {
 			arriveFloor.getLamps().turnUpLampOFF();
 		}
 		floorMessageHandler.sendFloorArrival(arrivalFloor, direction, elevatorId);
+
+		// Update the UI with the updated states of the buttons on this floor.
+		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
+				arriveFloor.getButtons().isUpButtonLight(),
+				arriveFloor.getFloorNum());
 	}
 
 	/**
@@ -90,12 +95,18 @@ public class FloorSystem {
 		FloorGeneral arriveFloor = floorList.get(requestFloor);
 		if(buttonDirection == Direction.UP) {
 			arriveFloor.getButtons().setUpButtonLight(true);
+			//floorMessageHandler.updateUI();
 		}
 		else if(buttonDirection == Direction.DOWN) {
 			arriveFloor.getButtons().setDownButtonLight(true);
 		}
 		//send floor button request
 		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection);
+
+		// Update the UI with the updated states of the buttons on this floor.
+		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
+									arriveFloor.getButtons().isUpButtonLight(),
+									arriveFloor.getFloorNum());
 	}
 
 
