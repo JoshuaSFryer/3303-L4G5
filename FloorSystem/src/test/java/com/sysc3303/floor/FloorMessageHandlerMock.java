@@ -27,9 +27,16 @@ public class FloorMessageHandlerMock extends MessageHandler {
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{
-            schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));
-            simulatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("simulatorAddress"));
+            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("Docker"))){
+                schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerDockerAddress"));
+                simulatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("simulatorDockerAddress"));
+            }
+            else{
+                schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));
+                simulatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("simulatorAddress"));
+            }
         }catch(UnknownHostException e){
+            e.printStackTrace();
         }
     }
 

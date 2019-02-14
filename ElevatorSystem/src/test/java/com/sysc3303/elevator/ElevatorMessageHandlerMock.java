@@ -27,7 +27,7 @@ public class ElevatorMessageHandlerMock extends MessageHandler {
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{
-            schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));
+            schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerDockerAddress"));
         }catch(UnknownHostException e){
         }
     }

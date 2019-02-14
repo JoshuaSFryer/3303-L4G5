@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  elevator-system:
+    build: ./ElevatorSystem
+    hostname: elevator-system
+    volumes:
+      - ./ElevatorSystem:/tmp
+    ports:
+      - 8001:8001
+    networks:
+      app_net:
+        ipv4_address: 172.16.200.5
+
+  scheduler:
+    build: ./Scheduler
+    hostname: scheduler
+    volumes:
+      - ./Scheduler:/tmp
+    ports:
+      - 8000:8000
+    networks:
+      app_net:
+        ipv4_address: 172.16.200.4
+
+  floor-system:
+    build: ./FloorSystem
+    hostname: floor-system
+    volumes:
+      - ./FloorSystem:/tmp
+    ports:
+      - 8003:8003
+    networks:
+      app_net:
+        ipv4_address: 172.16.200.3
+
+  simulator:
+    build: ./Simulator
+    hostname: simulator
+    volumes:
+      - ./Simulator:/tmp
+    ports:
+      - 8002:8002
+    networks:
+      app_net:
+        ipv4_address: 172.16.200.2
+
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.200.0/16

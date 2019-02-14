@@ -40,7 +40,12 @@ public class ElevatorMessageHandler extends MessageHandler {
         super(receivePort);
         this.context = context;
         try{
-            schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));
+            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("Docker"))){
+                schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerDockerAddress"));
+            }
+            else{
+                schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));
+            }
         }catch(UnknownHostException e){
             e.printStackTrace();
         }
