@@ -2,6 +2,7 @@ package com.sysc3303.elevator;
 
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.ElevatorVector;
+import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.*;
 
 import java.net.InetAddress;
@@ -24,10 +25,14 @@ public class ElevatorMessageHandler extends MessageHandler {
     private static ElevatorMessageHandler instance;
 
     private InetAddress schedulerAddress;
+    private InetAddress uiAddress;
     private ElevatorSystem context;
     private Logger         log = Logger.getLogger(ElevatorMessageHandler.class);
     
     static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
+    static int uiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
+
+
 
     public static ElevatorMessageHandler getInstance(int receivePort, ElevatorSystem context){
         if (instance == null){
@@ -100,6 +105,11 @@ public class ElevatorMessageHandler extends MessageHandler {
         
         log.info(elevatorButtonMessage);
         send(elevatorButtonMessage, schedulerAddress, schedulerPort);
+    }
+
+    public void updateUI(int elevatorID, int currentFloor, Direction dir, boolean open) {
+        GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, dir, open);
+        send(msg, uiAddress, uiPort);
     }
 }
 
