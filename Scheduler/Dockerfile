@@ -3,6 +3,9 @@ FROM ubuntu:latest
 RUN apt-get update && apt-get install -y \
     openjdk-8-jre \
     iputils-ping
+RUN apt-get install -y \
+    maven
 COPY ./ /tmp
 WORKDIR /tmp
+CMD ["mvn", "clean", "package", "-DskipTests"]
 CMD ["java", "-jar", "target/Scheduler-1.0.jar"]
