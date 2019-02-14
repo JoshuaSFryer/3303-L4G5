@@ -3,7 +3,6 @@ package com.sysc3303.elevator;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.ElevatorVector;
 import com.sysc3303.communication.*;
-import com.sysc3303.scheduler.SchedulerMessageHandler;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
