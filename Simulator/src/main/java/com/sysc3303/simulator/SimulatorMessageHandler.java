@@ -28,9 +28,8 @@ public class SimulatorMessageHandler extends MessageHandler {
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{
-            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("Docker"))){
-                elevatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("elevatorDockerAddress"));
-                floorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("floorDockerAddress"));
+            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
+                elevatorAddress = floorAddress = InetAddress.getLocalHost();
             }
             else{
                 elevatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("elevatorAddress"));

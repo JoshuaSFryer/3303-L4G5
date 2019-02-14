@@ -30,12 +30,12 @@ public class SchedulerMessageHandlerMock extends MessageHandler {
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{
-            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("Docker"))){
-                elevatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("elevatorDockerAddress"));
-                floorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("floorDockerAddress"));
+            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
+                elevatorAddress = floorAddress = InetAddress.getLocalHost();
             }
             else{
-                elevatorAddress = floorAddress = InetAddress.getByName("localhost");
+                elevatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("elevatorAddress"));
+                floorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("floorAddress"));
             }
         }catch(UnknownHostException e){
             e.printStackTrace();

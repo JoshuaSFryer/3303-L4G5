@@ -29,9 +29,8 @@ public class FloorMessageHandler extends MessageHandler {
         this.floorSystem = floorSystem;
         //TODO currently for localhost this is how it looks
         try{
-            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("Docker"))){
-                schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerDockerAddress"));
-                simulatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("simulatorDockerAddress"));
+            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
+                schedulerAddress = simulatorAddress = InetAddress.getLocalHost();
             }
             else{
                 schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));

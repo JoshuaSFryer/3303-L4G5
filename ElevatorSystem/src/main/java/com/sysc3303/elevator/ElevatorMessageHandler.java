@@ -40,8 +40,8 @@ public class ElevatorMessageHandler extends MessageHandler {
         super(receivePort);
         this.context = context;
         try{
-            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("Docker"))){
-                schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerDockerAddress"));
+            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
+                schedulerAddress = InetAddress.getLocalHost();
             }
             else{
                 schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));

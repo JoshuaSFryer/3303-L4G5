@@ -18,7 +18,7 @@ services:
     volumes:
       - ./Scheduler:/tmp
     ports:
-      - 8000:8000
+      - 8080:8080
     networks:
       app_net:
         ipv4_address: 172.16.200.4
