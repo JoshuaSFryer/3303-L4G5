@@ -88,10 +88,11 @@ public class TargetFloorDecider {
 			}
 			
 			int nearestFloor = getNearestFloor(targetFloorCandidates.get(i), request.getElevatorVector(i).currentFloor);
-			
+		
 			if(nearestFloor == -1 || elevatorIsOnItsWay(nearestFloor, request)) {
 				continue;
 			}
+			
 			
 			if(containsInt(targetFloors, nearestFloor)) {
 				int duplicateElevatorId = getDuplicateIndex(targetFloors, nearestFloor);
@@ -134,7 +135,7 @@ public class TargetFloorDecider {
 		int                           numberOfElevator      = request.getNumberOfElevator();
 		ArrayList<ArrayList<Integer>> targetFloorCandidates = selectTargetFloorCandidates(numberOfElevator, request);
 		int[]                         targetFloors          = selectTargetFloorFromCandidates(numberOfElevator, targetFloorCandidates, request);
-				
+		
 		return targetFloors;
 	}
 	

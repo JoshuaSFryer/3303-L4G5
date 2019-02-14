@@ -154,7 +154,7 @@ public class Request {
 		}
 		
 		public boolean floorButtonMessagesIsEmpty() {
-			if(floorButtonMessages.isEmpty()) {
+			if(floorButtonMessages.size() == 0) {
 				return true;
 			}
 			return false;

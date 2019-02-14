@@ -42,13 +42,15 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 			
 			log.debug(request);
 			
-			if(currentFloor == destinationFloor && 
-					(request.floorButtonMessagesContains(currentFloor) || request.containsTargetFloorInElevatorButtonMessages(elevatorId, currentFloor))) {
+			if(currentFloor == destinationFloor) {
 				log.info("Elevator " + elevatorId + " arrived at destination");
 				
 				removeTargetFloor(currentFloor, elevatorId);
-
-				FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection, elevatorId);
+				
+				ElevatorVector      elevatorVectorResetTargetFloor = new ElevatorVector(currentFloor, elevatorVector.currentDirection, 0);
+				FloorArrivalMessage floorArrivalMessage            = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection, elevatorId);
+				
+				request.setElevatorVector(elevatorVectorResetTargetFloor, elevatorId);
 				schedulerMessageHandler.sendFloorArrival(floorArrivalMessage);
 			}	
 			

@@ -23,21 +23,30 @@ public abstract class RequestHandler {
 	 * generates and sends goToFloorMessage
 	 * to all valid elevators considering all
 	 * elevator button press and floor requests
+	 * @throws InterruptedException 
 	 */
 	protected void generateAndSendGoToFloorMessage() {
-		int[] targetFloorsFromFloorButtonMessages    = targetFloorDecider.selectTargetFloorFromFloorButtonMessages(request);
-		int[] targetFloorsFromElevatorButtonMessages = targetFloorDecider.selectFloorFromAllElevatorsElevatorButtonMessage(request);
-		int   numberOfElevator                       = request.getNumberOfElevator();
-		
-		for(int i = 0; i < numberOfElevator; i++) {
-			int currentFloor = request.getElevatorVector(i).currentFloor;
-			int targetFloor  = targetFloorDecider.getNearestFloor(targetFloorsFromFloorButtonMessages[i], targetFloorsFromElevatorButtonMessages[i], currentFloor);
+		while(!request.floorButtonMessagesIsEmpty()) {
+			int[] targetFloorsFromFloorButtonMessages    = targetFloorDecider.selectTargetFloorFromFloorButtonMessages(request);
+			int[] targetFloorsFromElevatorButtonMessages = targetFloorDecider.selectFloorFromAllElevatorsElevatorButtonMessage(request);
+			int   numberOfElevator                       = request.getNumberOfElevator();
 			
-			if(targetFloor != -1) {
-				ElevatorVector curElevatorVector = request.getElevatorVector(i);
-				ElevatorVector elevatorVector    = new ElevatorVector(curElevatorVector.currentFloor, curElevatorVector.currentDirection, targetFloor);
-				request.setElevatorVector(elevatorVector, i);
-				schedulerMessageHandler.sendGoToFloor(new GoToFloorMessage(targetFloor, i));
+			for(int i = 0; i < numberOfElevator; i++) {
+				int currentFloor = request.getElevatorVector(i).currentFloor;
+				int targetFloor  = targetFloorDecider.getNearestFloor(targetFloorsFromFloorButtonMessages[i], targetFloorsFromElevatorButtonMessages[i], currentFloor);
+				
+				if(targetFloor != -1) {
+					ElevatorVector curElevatorVector = request.getElevatorVector(i);
+					ElevatorVector elevatorVector    = new ElevatorVector(curElevatorVector.currentFloor, curElevatorVector.currentDirection, targetFloor);
+					request.setElevatorVector(elevatorVector, i);
+					schedulerMessageHandler.sendGoToFloor(new GoToFloorMessage(targetFloor, i));
+				}
+			}
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
