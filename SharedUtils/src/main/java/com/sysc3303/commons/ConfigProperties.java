@@ -31,7 +31,7 @@ public class ConfigProperties {
     public static ConfigProperties getInstance(){
         if (instance == null){
             try {
-                InputStream inputStream = new FileInputStream(Constants.CONFIG_PATH);
+                InputStream inputStream = ConfigProperties.class.getResourceAsStream(Constants.CONFIG_PATH);
                 Properties properties = new Properties();
                 properties.load(inputStream);
                 instance = new ConfigProperties();

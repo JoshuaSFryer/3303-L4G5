@@ -38,6 +38,15 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <includes>
+                    <include>testEvents.txt</include>
+                    <include>simpleTestEvents.txt</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
 </project>

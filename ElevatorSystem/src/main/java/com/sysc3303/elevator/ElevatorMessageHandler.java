@@ -45,9 +45,14 @@ public class ElevatorMessageHandler extends MessageHandler {
         super(receivePort);
         this.context = context;
         try{
-            // Everything on localhost for now.
-            schedulerAddress = uiAddress = InetAddress.getLocalHost();
+            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
+                schedulerAddress = InetAddress.getLocalHost();
+            }
+            else{
+                schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));
+            }
         }catch(UnknownHostException e){
+            e.printStackTrace();
         }
     }
 

@@ -45,7 +45,7 @@ public class SchedulerSystem {
 		int             port            = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
 		SchedulerSystem schedulerSystem = new SchedulerSystem(port);
 		
-		DOMConfigurator.configure("./Scheduler/log4j.xml");
+		DOMConfigurator.configure(SchedulerSystem.class.getResource("/log4j.xml"));
 		schedulerSystem.printRunning(port);
 	}
 }

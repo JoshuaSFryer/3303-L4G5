@@ -28,7 +28,7 @@ public class ElevatorSystem {
     public ElevatorSystem(int num_elevators, int num_floors, int elevatorSystemPort){
         ElevatorMessageHandler messageHandler = ElevatorMessageHandler.getInstance(elevatorSystemPort, this);
         
-        DOMConfigurator.configure("./ElevatorSystem/log4j.xml");
+        DOMConfigurator.configure(ElevatorSystem.class.getResource("/log4j.xml"));
         log.info("ElevatorSystem starting at port " + elevatorSystemPort);
         
         for (int i = 0; i<num_elevators; i++){
