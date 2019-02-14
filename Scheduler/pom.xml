@@ -31,7 +31,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>dependency-jars/</classpathPrefix>
-                            <mainClass>com.sysc3303.scheduler.Scheduler</mainClass>
+                            <mainClass>com.sysc3303.scheduler.SchedulerSystem</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

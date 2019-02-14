@@ -29,8 +29,15 @@ public class FloorMessageHandler extends MessageHandler {
         this.floorSystem = floorSystem;
         //TODO currently for localhost this is how it looks
         try{
-            schedulerAddress = simulatorAddress = InetAddress.getLocalHost();
+            if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
+                schedulerAddress = simulatorAddress = InetAddress.getLocalHost();
+            }
+            else{
+                schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));
+                simulatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("simulatorAddress"));
+            }
         }catch(UnknownHostException e){
+            e.printStackTrace();
         }
     }
 
@@ -39,44 +46,23 @@ public class FloorMessageHandler extends MessageHandler {
     	System.out.println("From Floor");
     	System.out.println("received message!");
     	System.out.println(message.toString());
-        // TODO Whatever functionality you want when your receive a message
+    	// Functionality to receive message
         switch (message.getOpcode()){
-            case 0:
-                // Shouldn't have this on the Floor
-                // TODO what happens when you receive FloorButton
-                break;
             case 1:
-                // TODO what happens when you receive FloorArrival
+                // What happens when you receive FloorArrival
             	FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
             	try {
             			floorSystem.floorArrival(floorArrivalMessage.getFloor(),
                                 floorArrivalMessage.getCurrentDirection(),
                                 floorArrivalMessage.getElevatorId());
             	} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
             		e.printStackTrace();
             	}
                 break;
-            case 2:
-                // Shouldn't have this on the Floor
-                // TODO what happens when you receive GoToFloor
-                break;
-            case 3:
-                // Shouldn't have this on the Floor
-                // TODO what happens when you receive ElevatorState
-                break;
-            case 4:
-                // Shouldn't have this on the Floor
-                // TODO what happens when you receive ElevatorButton
-                break;
             case 5:
-                // TODO what happens when you receive FloorButtonSimulationMessage
+                // What happens when you receive FloorButtonSimulationMessage
                 FloorClickSimulationMessage floorClickSimulationMessage = (FloorClickSimulationMessage) message;
                 floorSystem.buttonPress(floorClickSimulationMessage.getFloor(), floorClickSimulationMessage.getDirection());
-                break;
-            case 6:
-                // Shouldn't have this on the Floor
-                // TODO what happens when you receive ElevatorButtonSimulationMessage
                 break;
             default:
                 // TODO what happens when you get an invalid opcode
