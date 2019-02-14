@@ -9,7 +9,6 @@ package com.sysc3303.elevator;
 public class ElevatorButton {
 	
 	private int id;
-	//private Elevator parent;
 	@SuppressWarnings("unused")
 	private boolean illuminated;
 	
@@ -29,15 +28,23 @@ public class ElevatorButton {
 	 */
 	public void press() {
 		System.out.println("Button " + this.id + " pressed");
-		setLight(true);
+		turnOn();
 	}
 	
 	/**
-	 * Turns the button's light on or off
-	 * @param state	True to turn on the light, false to turn it off.
+	 * Turns the button's light on. Call this when the button has been pressed.
 	 */
-	private void setLight(boolean state) {
+	private void turnOn() {
 		System.out.println("Button " + this.id + "'s light is on.");
-		this.illuminated = state;
+		this.illuminated = true;
+	}
+
+	/**
+	 * Turn this button's light off. Call this when the elevator arrives at the
+	 * floor this button represents, to clear it.
+	 */
+	public void turnOff() {
+		System.out.println("Button " + this.id + "'s light is off.");
+		this.illuminated = false;
 	}
 }

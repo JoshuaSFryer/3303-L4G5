@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
-import com.sysc3303.communication.GUIElevatorMoveMessage;
 
 /**
  * @author Joshua Fryer, Yu Yamanaka
@@ -18,21 +17,22 @@ public class Elevator {
 	
 	public final int elevatorID;
 
-	private ElevatorLamp   		lamp;
-	private Motor          		motor;
-	private Door           		door;
+	// Elevator components.
+	private ElevatorLamp   				lamp;
+	private Motor          				motor;
+	private Door           				door;
 	private ArrayList<ElevatorButton> 	buttons;
-	private FloorSensor 		sensor;
-	
+	private FloorSensor 				sensor;
+
+	// Variables concerning the elevator's current status.
 	private int 			currentFloor;
-	
 	private int				currentHeight; // Current height in CM
 	private ElevatorState 	currentState;
 	private Direction		currentDirection;
-	
-	private Thread 			mover;
-	
-	private ElevatorMessageHandler messageHandler;
+
+	// Movement and communications handlers.
+	private Thread 					mover;
+	private ElevatorMessageHandler	messageHandler;
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -45,18 +45,17 @@ public class Elevator {
      * @param messageHandler The messagehandler for sending and receiving
 	 */
 	public Elevator(int numFloors, int ID, ElevatorMessageHandler messageHandler) {
-		elevatorID 		= ID;
-		lamp          	= new ElevatorLamp();
-		buttons       	= generateButtons(numFloors);
-		sensor 			= new FloorSensor(this);
-		motor         	= new Motor(this);
-		door          	= new Door();
-		currentFloor   	= Elevator.GROUND_FLOOR;
-		currentState	= new Idle();
-		currentHeight 	= 0; //TODO: de-magicify this number
-		currentDirection = Direction.IDLE;
+		elevatorID 			= ID;
+		lamp          		= new ElevatorLamp();
+		buttons       		= generateButtons(numFloors);
+		sensor 				= new FloorSensor(this);
+		motor         		= new Motor(this);
+		door          		= new Door();
+		currentFloor   		= Elevator.GROUND_FLOOR;
+		currentState		= new Idle();
+		currentHeight 		= 0; //TODO: de-magicify this number
+		currentDirection 	= Direction.IDLE;
 		this.messageHandler = messageHandler;
-		
 	}
 	
 	/**
@@ -73,7 +72,7 @@ public class Elevator {
 	}
 	
 	/**
-	 * Get the current state.
+	 * Get the current State.
 	 * @return	The current ElevatorState
 	 */
 	public ElevatorState getState() {
@@ -81,7 +80,7 @@ public class Elevator {
 	}
 	
 	/**
-	 * Change the current state.
+	 * Change the current State.
 	 * Perform the exit action of the state being left, change the current
 	 * state to the new one, and perform the new state's entry action.
 	 * @param state	The ElevatorState to switch to.
@@ -147,7 +146,15 @@ public class Elevator {
 		ElevatorVector v = new ElevatorVector(this.currentFloor, this.currentDirection, targetFloor);
 		this.messageHandler.sendElevatorState(v, this.elevatorID);
 	}
-	
+
+	/**
+	 * Turn off a button's light.
+	 * @param floorNum	The number of the button to turn off.
+	 */
+	public void clearButton(int floorNum) {
+		buttons.get(floorNum).turnOff();
+	}
+
 	/**
 	 * Open this elevator's doors.
 	 */
@@ -162,8 +169,12 @@ public class Elevator {
 		door.closeDoors();
 	}
 
+	/**
+	 * Set this elevator's current direction.
+	 * @param dir	The new Direction.
+	 */
 	public void setCurrentDirection(Direction dir) { this.currentDirection = dir;}
-	
+
 	/**
 	 * Get this elevator's current floor.
 	 * Note that if the elevator is partway between floors, this will return
@@ -252,11 +263,15 @@ public class Elevator {
 		// reached, or this elevator receives a new goToFloor request. Upon
 		// receiving this request, the elevator will interrupt the thread
 		// and launch a new one by invoking goToFloor() again.
-		
 		mover.start();
 	}
 
+	/**
+	 * Instruct the MessageHandler to build an ElevatorMoveMessage and send it
+	 * to the UI to update it.
+	 */
 	public void updateUI() {
-		messageHandler.updateUI(elevatorID, currentFloor, currentDirection, door.isOpen());
+		messageHandler.updateUI(elevatorID, currentFloor, currentDirection,
+								door.isOpen());
 	}
 }

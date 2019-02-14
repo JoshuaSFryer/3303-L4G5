@@ -24,16 +24,23 @@ class BadMessageTypeException extends Exception {
 public class ElevatorMessageHandler extends MessageHandler {
     private static ElevatorMessageHandler instance;
 
-    private InetAddress schedulerAddress;
-    private InetAddress uiAddress;
-    private ElevatorSystem context;
-    private Logger         log = Logger.getLogger(ElevatorMessageHandler.class);
-    
+    private InetAddress     schedulerAddress;
+    private InetAddress     uiAddress;
+    private ElevatorSystem  context;
+    private Logger          log = Logger.getLogger(ElevatorMessageHandler.class);
+
+    // Read ports from the configuration file.
     static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
     static int uiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
 
 
-
+    /**
+     * Create an instance of this handler if one does not exist. Whether a new
+     * instance is created or not, return a reference to the instance.
+     * @param receivePort   The port for this handler to listen on.
+     * @param context       The parent Elevator.
+     * @return              A reference to this handler.
+     */
     public static ElevatorMessageHandler getInstance(int receivePort, ElevatorSystem context){
         if (instance == null){
             instance = new ElevatorMessageHandler(receivePort, context);
@@ -41,7 +48,12 @@ public class ElevatorMessageHandler extends MessageHandler {
         return instance;
     }
 
-    public ElevatorMessageHandler(int receivePort, ElevatorSystem context){
+    /**
+     * Class constructor.
+     * @param receivePort   The port for this handler to listen on.
+     * @param context       The parent Elevator.
+     */
+    private ElevatorMessageHandler(int receivePort, ElevatorSystem context){
         super(receivePort);
         this.context = context;
         try{

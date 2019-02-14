@@ -29,21 +29,22 @@ public class MovementHandler implements Runnable {
 			try {
 				// Wait a short time between movement calls.
 				Thread.sleep(MOVEMENTDELAY);
-				
+
+				// Get this elevator's current floor.
 				int floor = context.getCurrentFloor();
 				
 				// Check whether the elevator has arrived at a floor.
-				if(sensor.isAtFloor()) {
+				if(sensor.isAtFloor()) { //TODO: Have the sensor interrupt, instead of polling it.
 					floor = sensor.getFloor();
-					// Update the elevator's current floor.
-					context.setCurrentFloor(floor);
 					System.out.println("Arrived at floor: " + floor);
-
+					// If the current floor is the target floor, set the
+					// direction to Idle, as we want to stop.
 					if(context.getCurrentFloor() == targetFloor) {
 						context.setCurrentDirection(Direction.IDLE);
 					}
 					// Have the elevator notify the scheduler that it arrived.
 					context.notifyArrival(targetFloor);
+					// Update the elevator's current floor.
 					context.setCurrentFloor(floor);
 					// Update the UI.
 					context.updateUI();
@@ -66,6 +67,7 @@ public class MovementHandler implements Runnable {
 						// Don't need to move any more, so kill this thread.
 						System.out.println("Elevator Id: " + elevatorId + " arrived at destination ("+targetFloor+") !");
 						context.openDoors();
+						context.clearButton(targetFloor);
 						return;
 					}
 				}
@@ -75,12 +77,18 @@ public class MovementHandler implements Runnable {
 			}
 		}
 	}
-	
+
+	/**
+	 * Move the elevator up by an atomic distance.
+	 */
 	public void moveUp() {
 		motor.moveUp();
 		System.out.println("Height: " + context.getCurrentHeight() + " cm");
 	}
-	
+
+	/**
+	 * Move the elevator down by an atomic distance.
+	 */
 	public void moveDown() {
 		motor.moveDown();
 		System.out.println("Height: " + context.getCurrentHeight() + " cm");
