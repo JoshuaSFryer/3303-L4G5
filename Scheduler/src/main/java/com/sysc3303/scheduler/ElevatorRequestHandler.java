@@ -8,6 +8,7 @@ import com.sysc3303.communication.FloorArrivalMessage;
 import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.communication.GoToFloorMessage;
 import com.sysc3303.communication.Message;
+import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
 /**
@@ -45,7 +46,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 			if(currentFloor == destinationFloor) {
 				log.info("Elevator " + elevatorId + " arrived at destination");
 				
-				removeTargetFloor(currentFloor, elevatorId);
+				removeTargetFloor(currentFloor, elevatorId, elevatorVector.currentDirection);
 				
 				ElevatorVector      elevatorVectorResetTargetFloor = new ElevatorVector(currentFloor, elevatorVector.currentDirection, 0);
 				FloorArrivalMessage floorArrivalMessage            = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection, elevatorId);
@@ -114,7 +115,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 	 * @para targetFloor
 	 * @para targetDirection
 	 */
-	private void removeTargetFloor(int targetFloor, int elevatorId) {	
+	private void removeTargetFloor(int targetFloor, int elevatorId, Direction direction) {	
 		ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray(elevatorId);
 		ArrayList<FloorButtonMessage>    floorRequestList    = request.getFloorButtonMessageArray();
 		
@@ -128,7 +129,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		for(int i = 0; i < floorRequestList.size(); i++) {
 			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
 			
-			if(curFloorRequest.getFloor() == targetFloor) {
+			if(curFloorRequest.getFloor() == targetFloor && (curFloorRequest.getDirection() == direction || direction == Direction.IDLE)) {
 				floorRequestList.remove(i);
 				break;
 			}
