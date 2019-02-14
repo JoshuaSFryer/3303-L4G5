@@ -1,7 +1,7 @@
 #FROM openjdk:8
 FROM ubuntu:latest
 RUN apt-get update && apt-get install -y \
-    openjdk-8-jre \
+    openjdk-8-jdk \
     iputils-ping
 RUN apt-get install -y \
     maven
