@@ -31,8 +31,10 @@ public class SchedulerMessageHandler extends MessageHandler{
         this.schedulerSystem = schedulerSystem;
         //TODO currently for localhost this is how it looks
         try{
-            elevatorAddress = floorAddress = InetAddress.getLocalHost();
+            elevatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("elevatorAddress"));
+            floorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("floorAddress"));
         }catch(UnknownHostException e){
+            e.printStackTrace();
         }
     }
     /**

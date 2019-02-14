@@ -29,8 +29,10 @@ public class FloorMessageHandler extends MessageHandler {
         this.floorSystem = floorSystem;
         //TODO currently for localhost this is how it looks
         try{
-            schedulerAddress = simulatorAddress = InetAddress.getLocalHost();
+            schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));
+            simulatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("simulatorAddress"));
         }catch(UnknownHostException e){
+            e.printStackTrace();
         }
     }
 

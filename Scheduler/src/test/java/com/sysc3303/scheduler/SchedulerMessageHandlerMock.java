@@ -30,7 +30,8 @@ public class SchedulerMessageHandlerMock extends MessageHandler {
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{
-            elevatorAddress = floorAddress = InetAddress.getLocalHost();
+            elevatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("elevatorAddress"));
+            floorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("floorAddress"));
         }catch(UnknownHostException e){
         }
     }

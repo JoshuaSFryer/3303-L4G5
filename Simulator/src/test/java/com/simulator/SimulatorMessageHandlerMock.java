@@ -31,7 +31,8 @@ public class SimulatorMessageHandlerMock extends MessageHandler {
         super(receivePort);
         //TODO currently for localhost this is how it looks
         try{
-            floorAddress = elevatorAddress = InetAddress.getLocalHost();
+            elevatorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("elevatorAddress"));
+            floorAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("floorAddress"));
         }catch(UnknownHostException e){
         }
     }
