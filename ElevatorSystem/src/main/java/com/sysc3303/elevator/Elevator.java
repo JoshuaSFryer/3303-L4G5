@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
+import com.sysc3303.communication.GUIElevatorMoveMessage;
 
 /**
  * @author Joshua Fryer, Yu Yamanaka
@@ -253,5 +254,9 @@ public class Elevator {
 		// and launch a new one by invoking goToFloor() again.
 		
 		mover.start();
+	}
+
+	public void updateUI() {
+		messageHandler.updateUI(elevatorID, currentFloor, currentDirection, door.isOpen());
 	}
 }

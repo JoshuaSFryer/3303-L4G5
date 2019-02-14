@@ -10,11 +10,14 @@ public class FloorMessageHandler extends MessageHandler {
     //TODO you need to add the port numbers that will be associated with scheduler
     private InetAddress schedulerAddress;
     private InetAddress simulatorAddress;
+    private InetAddress guiAddress;
     private FloorSystem floorSystem;
 
     static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
     static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
     static int simulatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("simulatorPort"));
+    static int guiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
+
     private static FloorMessageHandler instance;
 
     public static FloorMessageHandler getInstance(int receivePort, FloorSystem floorSystem){
@@ -29,7 +32,7 @@ public class FloorMessageHandler extends MessageHandler {
         this.floorSystem = floorSystem;
         //TODO currently for localhost this is how it looks
         try{
-            schedulerAddress = simulatorAddress = InetAddress.getLocalHost();
+            schedulerAddress = simulatorAddress = guiAddress = InetAddress.getLocalHost();
         }catch(UnknownHostException e){
         }
     }
@@ -107,5 +110,10 @@ public class FloorMessageHandler extends MessageHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+    }
+
+    public void updateUI(boolean downState, boolean upState, int floor) {
+        GUIFloorMessage msg = new GUIFloorMessage(downState, upState, floor);
+        send(msg, guiAddress, guiPort);
     }
 }
