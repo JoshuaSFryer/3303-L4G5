@@ -33,4 +33,8 @@ public class Floor {
 	public FloorLamp getLamps() {
 		return this.lamps;
 	}
+
+	public int getFloorNum() {
+		return this.floorNum;
+	}
 }

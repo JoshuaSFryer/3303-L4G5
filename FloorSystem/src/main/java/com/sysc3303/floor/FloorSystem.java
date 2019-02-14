@@ -27,7 +27,7 @@ public class FloorSystem {
 		floorMessageHandler = FloorMessageHandler.getInstance(floorPort, this);
 		
 		for (int i=0; i< FloorSystem.totalNumberofFloors; i++) {
-			floorList.add(new Floor(i+1));
+			floorList.add(new Floor(i));
 		}
 	}
 	
@@ -74,6 +74,12 @@ public class FloorSystem {
 			arriveFloor.getButtons().setDownButtonLight(false);
 			arriveFloor.getLamps().turnUpLampOFF();
 		}
+
+		// Update the UI with the updated states of the buttons on this floor.
+		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
+				arriveFloor.getButtons().isUpButtonLight(),
+				arriveFloor.getFloorNum());
+
 		floorMessageHandler.sendFloorArrival(arrivalFloor, direction, elevatorId);
 	}
 
@@ -96,6 +102,11 @@ public class FloorSystem {
 		}
 		//send floor button request
 		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection);
+
+		// Update the UI with the updated states of the buttons on this floor.
+		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
+				arriveFloor.getButtons().isUpButtonLight(),
+				arriveFloor.getFloorNum());
 	}
 
 
