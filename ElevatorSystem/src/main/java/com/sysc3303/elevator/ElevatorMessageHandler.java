@@ -79,7 +79,8 @@ public class ElevatorMessageHandler extends MessageHandler {
             	
             	Elevator elevator = context.getElevators().get(goToFloorMessage.getElevatorId());
             	// send it to the floor in the message
-            	elevator.goToFloor(goToFloorMessage.getDestinationFloor());
+            	//elevator.goToFloor(goToFloorMessage.getDestinationFloor());
+                elevator.receiveMessageFromScheduler(goToFloorMessage.getDestinationFloor());
                 break;
             case 6:
             	System.out.println("recieved click simulation message, sending to scheduler");
