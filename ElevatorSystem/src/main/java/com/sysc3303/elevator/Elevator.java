@@ -261,8 +261,8 @@ public class Elevator {
 		
 		this.mover = new Thread(
 						new MovementHandler(targetFloor, this, this.sensor, 
-											this.motor, this.elevatorID));
-		 
+											this.motor, this.elevatorID), "Movement Handler Elevator " + elevatorID );
+		
 		// Launch the mover thread. It will continue until the target floor is
 		// reached, or this elevator receives a new goToFloor request. Upon
 		// receiving this request, the elevator will interrupt the thread
