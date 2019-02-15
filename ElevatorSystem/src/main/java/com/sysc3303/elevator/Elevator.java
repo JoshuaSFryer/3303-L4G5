@@ -47,9 +47,9 @@ public class Elevator {
 	 * Class constructor.
 	 * @param numFloors		The number of floors in the system.
 	 * @param ID			The unique ID of this elevator.
-     * @param messageHandler The messagehandler for sending and receiving
+	 * @param handler		The ElevatorMessageHandler for this elevator to use.
 	 */
-	public Elevator(int port, int numFloors, int ID) {
+	public Elevator(int numFloors, int ID, ElevatorMessageHandler handler) {
 		elevatorID 			= ID;
 		lamp          		= new ElevatorLamp();
 		buttons       		= generateButtons(numFloors);
@@ -60,7 +60,7 @@ public class Elevator {
 		currentState		= new Idle();
 		currentHeight 		= 0; //TODO: de-magicify this number
 		currentDirection 	= Direction.IDLE;
-		messageHandler 		= ElevatorMessageHandler.getInstance(port, this);
+		messageHandler 		= handler;
 	}
 	
 	/**
@@ -278,19 +278,6 @@ public class Elevator {
 		messageHandler.updateUI(elevatorID, currentFloor, currentDirection,
 				door.isOpen());
 	}
-
-	public static void main(String[] args) throws IOException {
-		boolean                    running           = true;
-		
-		// Create a new Elevator instance.
-		int      port     = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
-		Elevator elevator = new Elevator(port, 
-							Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors")),
-							0); //TODO: De-magicify this number.
-		
-		while(running) {
-			//TODO: Avoid busy-waiting?
-		}
 
 
 }
