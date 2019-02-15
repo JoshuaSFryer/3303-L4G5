@@ -37,6 +37,7 @@ public class ReceiveHandler extends Thread{
      * @param socketHandler existing sockethandler to create receiveSocket
      */
     public ReceiveHandler(int port, MessageHandler messageHandler, SocketHandler socketHandler){
+    	super("Receive Handler");
         serializationUtil = new SerializationUtil<>();
         this.socketHandler = socketHandler;
         this.messageHandler = messageHandler;
