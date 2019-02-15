@@ -10,7 +10,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="2" language="java" name="com.sysc3303.floor.FloorGeneral" project="3303-L4G5" 
+  <class id="2" language="java" name="com.sysc3303.floor.Floor" project="3303-L4G5"
     file="/3303-L4G5/src/com/sysc3303/floor/FloorGeneral.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="155" width="157" x="740" y="389"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

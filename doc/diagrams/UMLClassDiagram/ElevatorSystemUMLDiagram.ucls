@@ -136,7 +136,7 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="16" language="java" name="com.sysc3303.elevator.ElevatorVector" project="3303-L4G5" 
+  <class id="16" language="java" name="com.sysc3303.commons.ElevatorVector" project="3303-L4G5"
     file="/3303-L4G5/src/com/sysc3303/elevator/ElevatorVector.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="-1" width="-1" x="628" y="512"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
