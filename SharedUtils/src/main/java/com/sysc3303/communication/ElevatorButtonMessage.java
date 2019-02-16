@@ -20,10 +20,16 @@ public class ElevatorButtonMessage extends Message{
         this.time = time;
     }
 
+    @Override
     public String toString(){
         return "Elevator Button Request\n\tDesination Floor: " +
                 destinationFloor +"\n\tElevator Id: " + elevatorId +
                 "\n\tTime: " + time;
+    }
+
+    @Override
+    public String getSummary(){
+        return "ElevatorButton: floor-"  + destinationFloor  + " elevatorId-" + elevatorId;
     }
 
     public int getDestinationFloor() {

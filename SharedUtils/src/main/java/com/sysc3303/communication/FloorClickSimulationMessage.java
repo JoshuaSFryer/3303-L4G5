@@ -20,9 +20,15 @@ public class FloorClickSimulationMessage extends Message{
         this.direction = direction;
     }
 
+    @Override
     public String toString(){
         return "Floor Click Simulation Message\n\tfloor: " +
                 floor +"\n\tdirection: " + direction;
+    }
+
+    @Override
+    public String getSummary(){
+        return "FloorClickSim: floor-"  + floor  + " direction-" + direction;
     }
 
     public int getFloor() {

@@ -19,10 +19,16 @@ public class ElevatorStateMessage extends Message{
         this.elevatorId = elevatorId;
     }
 
+    @Override
     public String toString(){
         return "Elevator State Message\n\tElevator Vector: " +
                 elevatorVector +"\n\tElevator Id: " + elevatorId;
 
+    }
+
+    @Override
+    public String getSummary(){
+        return "ElevatorState: currentFloor-"  + elevatorVector.currentFloor  + " direction-" + elevatorVector.currentDirection + " elevator-" + elevatorId;
     }
 
     public ElevatorVector getElevatorVector() {
