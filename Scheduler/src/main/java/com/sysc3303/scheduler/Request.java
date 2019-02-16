@@ -179,4 +179,13 @@ public class Request {
 			
 			return false;
 		}
+		
+		public boolean elevatorButtonMessagesIsEmpty() {
+			for(int i = 0; i < NUMBER_OF_ELEVATOR; i++) {
+				if(!elevatorStatusArray.get(i).elevatorButtonMessageIsEmpty()) {
+					return false;
+				}
+			}
+			return true;
+		}
 }

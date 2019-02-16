@@ -22,6 +22,13 @@ public class ElevatorStatus {
 		targetDirection          = Direction.IDLE;
 	}
 	
+	public boolean elevatorButtonMessageIsEmpty() {
+		if(elevatorButtonMessageArr.size() == 0) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void setTargetDirection(Direction direction) {
 		targetDirection = direction;
 	}
@@ -79,7 +86,8 @@ public class ElevatorStatus {
 			output += elevatorButtonMessageArr.get(i).toString();
 		}
 		
-		output += elevatorVector.toString();
+		output += elevatorVector.toString() + 
+				  "\nTargetDirection: " + targetDirection;
 		
 		return output;
 	}

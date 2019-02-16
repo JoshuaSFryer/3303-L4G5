@@ -1,5 +1,6 @@
 package com.sysc3303.scheduler;
 
+
 import java.util.ArrayList;
 
 import com.sysc3303.communication.ElevatorButtonMessage;
@@ -49,6 +50,9 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 				
 				removeTargetFloor(currentFloor, elevatorId, targetDirection);
 				
+				log.info("Removed target floor");
+				log.debug("cur request" + request);
+				
 				ElevatorVector      elevatorVectorResetTargetFloor = new ElevatorVector(currentFloor, elevatorVector.currentDirection, 0);
 				FloorArrivalMessage floorArrivalMessage            = new FloorArrivalMessage(destinationFloor, targetDirection, elevatorId);
 				
@@ -59,7 +63,14 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 			generateAndSendGoToFloorMessage();
 		}
 		else if(message instanceof ElevatorButtonMessage) {
-			sendGoToFloorMessageFromElevatorButtonMessage();
+			ElevatorButtonMessage message     = (ElevatorButtonMessage)this.message;
+			int                   elevatorId  = message.getElevatorId();
+			int                   targetFloor = message.getDestinationFloor();
+			ElevatorVector        curVector   = request.getElevatorVector(elevatorId);
+			
+			if(curVector.currentFloor != targetFloor) {
+				sendGoToFloorMessageFromElevatorButtonMessage();
+			}
 		}
 	}
 	
@@ -76,7 +87,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		
 		int targetFloor = selectTargetFloor(elevatorId);
 		
-		if(targetFloor != INVALID_FLOOR) {
+		if(targetFloor != INVALID_FLOOR_1) {
 			ElevatorVector curElevatorVector = request.getElevatorVector(elevatorId);
 			ElevatorVector elevatorVector    = new ElevatorVector(curElevatorVector.currentFloor, curElevatorVector.currentDirection, targetFloor);
 			
@@ -100,7 +111,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		int                 elevatorButtonTargetFloor = targetFloorDecider.selectTargetFloorFromElevatorButtonMessages(request.getElevatorButtonMessageArray(elevatorId), elevatorVector);
 		int                 closestTargetFloor        = 0;
 	
-		if(floorButtonTargetFloor != INVALID_FLOOR) {
+		if(floorButtonTargetFloor != INVALID_FLOOR_1) {
 			closestTargetFloor = targetFloorDecider.getNearestFloor(floorButtonTargetFloor, elevatorButtonTargetFloor, elevatorVector.currentFloor);
 			
 			if(closestTargetFloor == floorButtonTargetFloor) {
@@ -129,16 +140,15 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		for(int i = 0; i < elevatorRequestList.size(); i++) {
 			if(elevatorRequestList.get(i).getDestinationFloor() == targetFloor) {
 				elevatorRequestList.remove(i);
-				break;
 			}
 		}
 		
 		for(int i = 0; i < floorRequestList.size(); i++) {
 			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
-			
-			if(curFloorRequest.getFloor() == targetFloor && (curFloorRequest.getDirection() == targetDirection)) {
+			log.debug(curFloorRequest);
+			if(curFloorRequest.getFloor() == targetFloor && curFloorRequest.getDirection() == targetDirection) {
+				log.debug("removing... " + curFloorRequest);
 				floorRequestList.remove(i);
-				break;
 			}
 		}
 	}

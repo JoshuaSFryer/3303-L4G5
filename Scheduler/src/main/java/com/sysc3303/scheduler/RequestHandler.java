@@ -13,7 +13,7 @@ import com.sysc3303.communication.Message;
  *
  */
 public abstract class RequestHandler {
-	protected final int               INVALID_FLOOR = -1;
+	protected final int               INVALID_FLOOR_1 = -1;
 	protected Request                 request;
 	protected SchedulerMessageHandler schedulerMessageHandler;
 	protected Message                 message;
@@ -27,7 +27,7 @@ public abstract class RequestHandler {
 	 * @throws InterruptedException 
 	 */
 	protected void generateAndSendGoToFloorMessage() {
-		while(!request.floorButtonMessagesIsEmpty()) {
+		while(!request.floorButtonMessagesIsEmpty() || !request.elevatorButtonMessagesIsEmpty()) {
 			TargetWithDirection[] targetFloorsFromFloorButtonMessages    = targetFloorDecider.selectTargetFloorFromFloorButtonMessages(request);
 			int[]                 targetFloorsFromElevatorButtonMessages = targetFloorDecider.selectFloorFromAllElevatorsElevatorButtonMessage(request);
 			int                   numberOfElevator                       = request.getNumberOfElevator();
