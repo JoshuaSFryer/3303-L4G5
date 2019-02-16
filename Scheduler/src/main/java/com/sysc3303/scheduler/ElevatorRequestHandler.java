@@ -50,7 +50,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 				removeTargetFloor(currentFloor, elevatorId, targetDirection);
 				
 				ElevatorVector      elevatorVectorResetTargetFloor = new ElevatorVector(currentFloor, elevatorVector.currentDirection, 0);
-				FloorArrivalMessage floorArrivalMessage            = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection, elevatorId);
+				FloorArrivalMessage floorArrivalMessage            = new FloorArrivalMessage(destinationFloor, targetDirection, elevatorId);
 				
 				request.setElevatorVector(elevatorVectorResetTargetFloor, elevatorId);
 				schedulerMessageHandler.sendFloorArrival(floorArrivalMessage);
