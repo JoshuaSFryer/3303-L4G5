@@ -70,6 +70,7 @@ public class ElevatorMessageHandler extends MessageHandler {
 
     @Override
     public void received(Message message){
+        super.received(message);
         switch (message.getOpcode()){
             case 2:
             	GoToFloorMessage goToFloorMessage = (GoToFloorMessage) message;

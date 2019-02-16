@@ -49,10 +49,10 @@ public class SchedulerMessageHandler extends MessageHandler{
      */
     @Override
     public synchronized void received(Message message){
-        // TODO Whatever functionality you want when your receive a message
+        super.received(message);
         switch (message.getOpcode()){
             case 0:
-                // TODO what happens when you receive FloorButton
+                // What happens when you receive FloorButton
             	FloorButtonMessage floorButtonMessage = (FloorButtonMessage)message;
   
             	log.info("Received FloorButtonMessage from floor");
@@ -61,7 +61,7 @@ public class SchedulerMessageHandler extends MessageHandler{
             	schedulerSystem.getScheduler().startFloorMessageHandler(message);
                 break;
             case 3:
-                // TODO what happens when you receive ElevatorState
+                // What happens when you receive ElevatorState
             	ElevatorStateMessage elevatorStateMessage = (ElevatorStateMessage)message;
             	       
             	log.info("Received ElevatorStateMessage from elevator");
@@ -70,7 +70,7 @@ public class SchedulerMessageHandler extends MessageHandler{
             	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             	break;
             case 4:
-                // TODO what happens when you receive ElevatorButton
+                // What happens when you receive ElevatorButton
             	ElevatorButtonMessage elevatorButtonMessage = (ElevatorButtonMessage)message;
             	
             	log.info("Received ElevatorButtonMessage from elevator");
