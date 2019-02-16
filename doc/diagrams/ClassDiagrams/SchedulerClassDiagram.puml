@@ -124,6 +124,10 @@ RequestHandler o-- Message
 RequestHandler *-- TargetFloorDecider
 RequestHandler *-- Logger
 
+MessageHandler <|-- SchedulerMessageHandler
+MessageHandler <|-- ElevatorMessageHandler
+MessageHandler <|-- FloorMessageHandler
+
 RequestHandler <|-- FloorRequestHandler
 RequestHandler <|-- ElevatorRequestHandler
 

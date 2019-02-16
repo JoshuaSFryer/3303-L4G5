@@ -89,6 +89,7 @@ TimedEvent ..> FloorSender: sends event using
 TriggeredEventMap ..> ElevatorSender: sends events using
 TriggeredEventMap <.. FloorReceiver: triggers
 
- FileParser <. EventMaker : gets event data from file using
+FileParser <. EventMaker : gets event data from file using
+
 
 @enduml
