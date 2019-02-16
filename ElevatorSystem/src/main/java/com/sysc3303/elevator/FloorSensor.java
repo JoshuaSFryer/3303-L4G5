@@ -7,9 +7,11 @@ package com.sysc3303.elevator;
  * @author Joshua Fryer
  *
  */
-public class FloorSensor {
+public class FloorSensor implements Runnable {
 	// Height of each floor, in meters
 	public static final int FLOORHEIGHT = 5;
+	// How long to sleep, in milliseconds.
+	public static final int SLEEPTIME = 500;
 	
 	private Elevator parent;
 	
@@ -58,5 +60,20 @@ public class FloorSensor {
 	 */
 	public boolean hasArrived(int target) {
 		return (getFloor() == target);
+	}
+
+	public void run() {
+		while(true) {
+			try {
+				Thread.sleep(SLEEPTIME);
+			} catch (InterruptedException e) {
+				System.out.println("Floor sensor was interrupted while sleeping");
+			}
+
+			if(isAtFloor()) {
+				// Interrupt the movement handler.
+				parent.getMovementHandler().interrupt();
+			}
+		}
 	}
 }

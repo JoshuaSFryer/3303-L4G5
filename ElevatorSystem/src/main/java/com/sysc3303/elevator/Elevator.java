@@ -38,6 +38,7 @@ public class Elevator {
 	private Thread 						mover;
 
 	private ElevatorMessageHandler 		messageHandler;
+	private ElevatorSystem				parentSystem;
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -47,9 +48,9 @@ public class Elevator {
 	 * Class constructor.
 	 * @param numFloors		The number of floors in the system.
 	 * @param ID			The unique ID of this elevator.
-	 * @param handler		The ElevatorMessageHandler for this elevator to use.
+	 * @param system		The ElevatorSystem this elevator is part of.
 	 */
-	public Elevator(int numFloors, int ID, ElevatorMessageHandler handler) {
+	public Elevator(int numFloors, int ID, ElevatorSystem system) {
 		elevatorID 			= ID;
 		lamp          		= new ElevatorLamp();
 		buttons       		= generateButtons(numFloors);
@@ -60,7 +61,8 @@ public class Elevator {
 		currentState		= new Idle();
 		currentHeight 		= 0; //TODO: de-magicify this number
 		currentDirection 	= Direction.IDLE;
-		messageHandler 		= handler;
+		parentSystem 		= system;
+		messageHandler		= parentSystem.getMessageHandler();
 	}
 	
 	/**
@@ -148,7 +150,7 @@ public class Elevator {
 	 */
 	public void notifyArrival(int targetFloor) {
 		ElevatorVector v = new ElevatorVector(this.currentFloor, this.currentDirection, targetFloor);
-		this.messageHandler.sendElevatorState(v, this.elevatorID);
+		messageHandler.sendElevatorState(v, this.elevatorID);
 	}
 
 	/**
@@ -221,7 +223,11 @@ public class Elevator {
 	 * @return	The MessageHandler instance used by this elevator.
 	 */
 	public ElevatorMessageHandler getMessageHandler() {
-		return this.messageHandler;
+		return messageHandler;
+	}
+
+	public Thread getMovementHandler() {
+		return this.mover;
 	}
 	
 	/**
