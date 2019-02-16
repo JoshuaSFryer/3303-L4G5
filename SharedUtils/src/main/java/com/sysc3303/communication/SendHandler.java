@@ -24,7 +24,8 @@ public class SendHandler extends Thread{
      * @param address the destination address for the message
      */
     public SendHandler(Message message, InetAddress address, int port){
-        serializationUtil = new SerializationUtil<Message>();
+        super("Send Handler");
+    	serializationUtil = new SerializationUtil<Message>();
         socketHandler = new SocketHandler();
         this.message = message;
         this.address = address;

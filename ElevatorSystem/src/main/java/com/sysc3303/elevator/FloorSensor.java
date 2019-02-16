@@ -32,10 +32,8 @@ public class FloorSensor {
 			// If the elevator's height is a whole multiple of FLOORHEIGHT, it has
 			// arrived at a floor.
 			
-			// Use floorDiv() to get a rounded value. This shouldn't be
-			// necessary if the modulus is zero, but is being used out of 
-			// paranoia.
-			//return Math.floorDiv(height, FLOORHEIGHT);
+			// Using bare integer division should be perfectly acceptable; since
+			// the modulus is 0, they must by definition be divisible.
 			return height/FLOORHEIGHT;
 		} else { 
 			// The elevator is somewhere between two floors.
