@@ -47,6 +47,11 @@ class SocketHandler {
     -closeSocket()
 }
 
+class SerializationUtil<Message> {
+    +serialize(<Generic> object): byte[]
+    +deserialize(byte[] stream, int length): <Generic>
+}
+
 MessageHandler o-left- CommunicationHandler
 
 CommunicationHandler -- SendHandler : creates/destroys with each send
