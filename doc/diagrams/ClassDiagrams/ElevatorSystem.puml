@@ -1,0 +1,99 @@
+@startuml
+
+note "All private fields are implied to have getter and setter methods, as appropriate." as N1
+
+class ElevatorSystem {
+    -elevators: ArrayList<Elevator>
+    -messageHandler: ElevatorMessageHandler
+    -log: Logger
+}
+
+class Elevator {
+    -currentFloor: int
+    -currentHeight: int
+    -currentDirection: Direction
+    -mover: Thread
+    -messageHandler: ElevatorMessageHandler
+
+    -generateButtons()
+    +receiveMessageFromScheduler(int targetFloor)
+    +notifyArrival(int targetFloor)
+    +clearButton(int floorNum)
+    +openDoors()
+    +closeDoors()
+    +pressButton(int num)
+    +goToFloor()
+    +updateUI()
+}
+
+class ElevatorButton {
+    -id: int
+    -illuminated: boolean
+
+    +press()
+    -turnOn()
+    +turnOff()
+}
+
+class ElevatorLamp {
+    -currentFloor: int
+    -currentDirection: Directon
+
+    +setCurrentFloor(int currentFloor, Direction dir)
+}
+
+class ElevatorMessageHandler {
+    -{static} instance: ElevatorMessageHandler
+    -schedulerAddress: InetAddress
+    -uiAddress: InetAddress
+    -{static} uiPort: int
+    -{static} schedulerPort: int
+    -log: Logger
+
+    +getInstance(): ElevatorMessageHandler
+    +received(Message message)
+    +sendElevatorState(ElevatorVector elevatorVector, int elevatorID)
+    +sendElevatorButton(int destinationFloor, int elevatorID)
+    +updateUI(int elevatorID, int currentFloor, Direction dir, boolean open)
+}
+
+abstract class MessageHandler {
+    +received(Message message)
+    +send(Message message, InetAddress address, int port)
+}
+
+class FloorSensor <<Runnable>> {
+    +getFloor(): int
+    +isAtFloor(): boolean
+    +hasArrived(int target): boolean
+    +run()
+}
+
+class Motor {
+    moveUp()
+    moveDown()
+}
+
+class MovementHandler <<Runnable>> {
+    -targetFloor: int
+    -elevatorID: int
+    -atFloor: boolean
+
+    +run()
+    +moveUp()
+    +moveDown()
+}
+
+Elevator *-- Motor
+Elevator *-- FloorSensor
+Elevator "1" *-- "*" ElevatorButton
+Elevator *-- ElevatorLamp
+Elevator -- ElevatorMessageHandler
+Elevator -- MovementHandler
+
+ElevatorSystem "1" o--"*" Elevator
+ElevatorSystem o-- ElevatorMessageHandler
+
+MessageHandler <|.. ElevatorMessageHandler
+
+@enduml
