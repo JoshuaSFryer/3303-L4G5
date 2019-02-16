@@ -40,7 +40,7 @@ public class MovementHandler implements Runnable {
 				// Check whether the elevator has arrived at a floor.
 				if(sensor.isAtFloor()) { //TODO: Have floor sensor interrupt this in some way instead of polling the sensor
 					floor = sensor.getFloor();
-					System.out.println("Arrived at floor: " + floor);
+					System.out.println("Elevator " + context.elevatorID + ": Arrived at floor: " + floor);
 					// If the current floor is the target floor, set the
 					// direction to Idle, as we want to stop.
 					if(context.getCurrentFloor() == targetFloor) {
@@ -69,8 +69,8 @@ public class MovementHandler implements Runnable {
 						moveDown();
 					} else {
 						// Don't need to move any more, so kill this thread.
-						System.out.println("Elevator Id: " + elevatorId +
-								" arrived at destination ("+targetFloor+") !");
+						System.out.println("Elevator " + elevatorId +
+								": arrived at destination ("+targetFloor+") !");
 						context.openDoors();
 						context.clearButton(targetFloor);
 						return;
@@ -88,7 +88,7 @@ public class MovementHandler implements Runnable {
 	 */
 	public void moveUp() {
 		motor.moveUp();
-		System.out.println("Height: " + context.getCurrentHeight() + " cm");
+		System.out.println("Elevator " +context.elevatorID+ ": Height: " + context.getCurrentHeight() + " cm");
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class MovementHandler implements Runnable {
 	 */
 	public void moveDown() {
 		motor.moveDown();
-		System.out.println("Height: " + context.getCurrentHeight() + " cm");
+		System.out.println("Elevator " +context.elevatorID+ ": Height: " + context.getCurrentHeight() + " cm");
 	}
 
 	/**

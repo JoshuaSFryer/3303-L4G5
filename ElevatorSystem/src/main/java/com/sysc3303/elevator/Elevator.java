@@ -18,7 +18,7 @@ import com.sysc3303.commons.ElevatorVector;
  *
  */
 public class Elevator {
-	private static final int GROUND_FLOOR = 1;
+	public static final int GROUND_FLOOR = 0;
 	
 	public final int elevatorID;
 
@@ -52,14 +52,14 @@ public class Elevator {
 	 */
 	public Elevator(int numFloors, int ID, ElevatorSystem system) {
 		elevatorID 			= ID;
-		lamp          		= new ElevatorLamp();
+		lamp          		= new ElevatorLamp(this);
 		buttons       		= generateButtons(numFloors);
 		sensor 				= new FloorSensor(this);
 		motor         		= new Motor(this);
-		door          		= new Door();
+		door          		= new Door(this);
 		currentFloor   		= Elevator.GROUND_FLOOR;
 		currentState		= new Idle();
-		currentHeight 		= 0; //TODO: de-magicify this number
+		currentHeight 		= GROUND_FLOOR;
 		currentDirection 	= Direction.IDLE;
 		parentSystem 		= system;
 		messageHandler		= parentSystem.getMessageHandler();
@@ -105,7 +105,7 @@ public class Elevator {
 	 * @param targetFloor	The number of the new target floor
 	 */
 	public void receiveMessageFromScheduler(int targetFloor) {
-		System.out.println("Received new message from scheduler");
+		System.out.println("Received new message from scheduler: Go to floor " + targetFloor);
 		// Interrupt the movement handler
 		try {
 			this.mover.interrupt();

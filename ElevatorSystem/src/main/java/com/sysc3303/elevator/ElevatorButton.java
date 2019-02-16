@@ -11,6 +11,7 @@ public class ElevatorButton {
 	private int id;
 	@SuppressWarnings("unused")
 	private boolean illuminated;
+	private Elevator parent;
 	
 	/**
 	 * Class constructor.
@@ -21,6 +22,7 @@ public class ElevatorButton {
 	public ElevatorButton(Elevator parent, int id) {
 		this.id = id;
 		this.illuminated = false;
+		this.parent = parent;
 	}
 	
 	/**
@@ -44,7 +46,7 @@ public class ElevatorButton {
 	 * floor this button represents, to clear it.
 	 */
 	public void turnOff() {
-		System.out.println("Button " + this.id + "'s light is off.");
+		System.out.println("Elevator "+parent.elevatorID+": Button " + this.id + "'s light is off.");
 		this.illuminated = false;
 	}
 }
