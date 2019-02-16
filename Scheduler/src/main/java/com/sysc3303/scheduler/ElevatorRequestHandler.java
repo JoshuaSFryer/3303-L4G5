@@ -8,6 +8,7 @@ import com.sysc3303.communication.FloorArrivalMessage;
 import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.communication.GoToFloorMessage;
 import com.sysc3303.communication.Message;
+import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
 /**
@@ -37,6 +38,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 			int                  destinationFloor = elevatorVector.targetFloor;
 			int                  elevatorId       = message.getElevatorId();
 			int                  currentFloor     = elevatorVector.currentFloor;
+			Direction            targetDirection  = request.getTargetDirection(elevatorId);
 			
 			request.setElevatorVector(elevatorVector, elevatorId);
 			
@@ -45,7 +47,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 			if(currentFloor == destinationFloor) {
 				log.info("Elevator " + elevatorId + " arrived at destination");
 				
-				removeTargetFloor(currentFloor, elevatorId);
+				removeTargetFloor(currentFloor, elevatorId, targetDirection);
 				
 				ElevatorVector      elevatorVectorResetTargetFloor = new ElevatorVector(currentFloor, elevatorVector.currentDirection, 0);
 				FloorArrivalMessage floorArrivalMessage            = new FloorArrivalMessage(destinationFloor, elevatorVector.currentDirection, elevatorId);
@@ -92,17 +94,23 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 	 * @return
 	 */
 	private int selectTargetFloor(int elevatorId) {
-		ElevatorVector elevatorVector   = request.getElevatorVector(elevatorId);
-		int   targetFloor               = targetFloorDecider.selectTargetFloorFromFloorButtonMessages(request, elevatorId);
-		int   elevatorButtonTargetFloor = targetFloorDecider.selectTargetFloorFromElevatorButtonMessages(request.getElevatorButtonMessageArray(elevatorId), elevatorVector);
-		int   closestTargetFloor        = 0;
+		ElevatorVector      elevatorVector            = request.getElevatorVector(elevatorId);
+		TargetWithDirection targetFloorWithDirection  = targetFloorDecider.selectTargetFloorFromFloorButtonMessages(request, elevatorId);
+		int                 floorButtonTargetFloor    = targetFloorWithDirection.getTargetFloor();
+		int                 elevatorButtonTargetFloor = targetFloorDecider.selectTargetFloorFromElevatorButtonMessages(request.getElevatorButtonMessageArray(elevatorId), elevatorVector);
+		int                 closestTargetFloor        = 0;
 	
-		if(targetFloor != INVALID_FLOOR) {
-			closestTargetFloor = targetFloorDecider.getNearestFloor(targetFloor, elevatorButtonTargetFloor, elevatorVector.currentFloor);
+		if(floorButtonTargetFloor != INVALID_FLOOR) {
+			closestTargetFloor = targetFloorDecider.getNearestFloor(floorButtonTargetFloor, elevatorButtonTargetFloor, elevatorVector.currentFloor);
+			
+			if(closestTargetFloor == floorButtonTargetFloor) {
+				request.setTargetDirection(targetFloorWithDirection.getTargetDirection(), elevatorId);
+			}
 		}
 		else {
 			closestTargetFloor = elevatorButtonTargetFloor;
 		}
+		
 		return closestTargetFloor;
 	}
 	
@@ -114,7 +122,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 	 * @para targetFloor
 	 * @para targetDirection
 	 */
-	private void removeTargetFloor(int targetFloor, int elevatorId) {	
+	private void removeTargetFloor(int targetFloor, int elevatorId, Direction targetDirection) {	
 		ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray(elevatorId);
 		ArrayList<FloorButtonMessage>    floorRequestList    = request.getFloorButtonMessageArray();
 		
@@ -128,7 +136,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		for(int i = 0; i < floorRequestList.size(); i++) {
 			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
 			
-			if(curFloorRequest.getFloor() == targetFloor) {
+			if(curFloorRequest.getFloor() == targetFloor && (curFloorRequest.getDirection() == targetDirection)) {
 				floorRequestList.remove(i);
 				break;
 			}

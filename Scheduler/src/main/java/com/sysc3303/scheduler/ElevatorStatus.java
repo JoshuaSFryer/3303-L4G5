@@ -12,12 +12,18 @@ import com.sysc3303.communication.ElevatorButtonMessage;
  *
  */
 public class ElevatorStatus {
-	ElevatorVector                   elevatorVector;
-	ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr;
+	private ElevatorVector                   elevatorVector;
+	private ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr;
+	private Direction                        targetDirection;
 	
 	public ElevatorStatus() {
 		elevatorVector           = new ElevatorVector(0, Direction.IDLE, 0);
 		elevatorButtonMessageArr = new ArrayList<ElevatorButtonMessage>(); 
+		targetDirection          = Direction.IDLE;
+	}
+	
+	public void setTargetDirection(Direction direction) {
+		targetDirection = direction;
 	}
 	
 	/**
@@ -26,6 +32,10 @@ public class ElevatorStatus {
 	 */
 	public ElevatorVector getElevatorVector() {
 		return elevatorVector;
+	}
+	
+	public Direction getTargetDirection() {
+		return targetDirection;
 	}
 	
 	/**
