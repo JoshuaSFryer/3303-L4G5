@@ -24,4 +24,8 @@ public abstract class Message implements Serializable {
 	public byte getOpcode(){
 		return opcode;
 	}
+
+	public String getSummary(){
+	    return "" + opcode;
+	}
 }

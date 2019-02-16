@@ -42,39 +42,14 @@ public class SimulatorMessageHandler extends MessageHandler {
 
     @Override
     public void received(Message message){
-        // TODO Whatever functionality you want when your receive a message
-
+        super.received(message);
         switch (message.getOpcode()){
-            case 0:
-                // Shouldn't have this on the simulator
-                // TODO what happens when you receive FloorButton
-                break;
             case 1:
-                // TODO what happens when you receive FloorArrival
+                // What happens when you receive FloorArrival
                 FloorArrivalMessage floorArrivalMessage = (FloorArrivalMessage) message;
                 FloorReceiver.getInstance().receiveElevatorArrival(floorArrivalMessage.getFloor(),
                         floorArrivalMessage.getCurrentDirection(),
                         floorArrivalMessage.getElevatorId());
-                break;
-            case 2:
-                // Shouldn't have this on the simulator
-                // TODO what happens when you receive GoToFloor
-                break;
-            case 3:
-                // Shouldn't have this on the simulator
-                // TODO what happens when you receive ElevatorState
-                break;
-            case 4:
-                // Shouldn't have this on the simulator
-                // TODO what happens when you receive ElevatorButton
-                break;
-            case 5:
-                // Shouldn't have this on the simulator
-                // TODO what happens when you receive FloorButtonSimulationMessage
-                break;
-            case 6:
-                // Shouldn't have this on the simulator
-                // TODO what happens when you receive ElevatorButtonSimulationMessage
                 break;
             default:
                 // TODO what happens when you get an invalid upcode

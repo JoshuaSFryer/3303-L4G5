@@ -22,9 +22,15 @@ public class FloorArrivalMessage extends Message{
         this.elevatorId = elevatorId;
     }
 
+    @Override
     public String toString(){
         return "Floor Arrival Message\n\tfloor: " +
                 floor +"\n\tcurrent direction: " + currentDirection;
+    }
+
+    @Override
+    public String getSummary(){
+        return "FloorArrival: floor-"  + floor  + " direction-" + currentDirection + " elevator-" + elevatorId;
     }
 
     public int getFloor() {
