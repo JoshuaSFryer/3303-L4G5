@@ -1,3 +1,64 @@
 @startuml
 
+abstract class Message {
+    +opcode: byte
+
+    +toString(): String
+    +getOpcode(): byte
+}
+
+abstract class MessageHandler {
+    +received(Message message)
+    +send(Message message, Inetaddress address, int port)
+}
+
+class CommunicationHandler {
+
+}
+
+together {
+    class SendHandler {
+        port: int
+        address: InetAddress
+
+        +run()
+    }
+
+    class ReceiveHandler {
+        port:int
+
+        +run()
+    }
+}
+
+class SocketHandler {
+    sendPacket: DatagramPacket
+    receivePacket: DatagramPacket
+    sendSocket: DatagramSocket
+    receiveSocket: DatragramSocket
+
+    +waitForPacket(byte[] data, boolean waitInSendSocket)
+    +getReceivePacketLength(): int
+    +sendSocketToReceivedHost(byte[] data)
+    +sendSocketToReceivedHost(byte[] data, int length)
+    +sendSocket(byte[] data, InetAddress address, int port)
+    +sendSocket(byte[] data, InetAddress address, int port, int length)
+    -send()
+    -closeSocket()
+}
+
+MessageHandler o-left- CommunicationHandler
+
+CommunicationHandler -- SendHandler : creates/destroys with each send
+CommunicationHandler -- ReceiveHandler
+
+SendHandler --|> Thread
+SendHandler *-- SocketHandler
+SendHandler *-- SerializationUtil
+SendHandler *-- Message
+
+ReceiveHandler *-- MessageHandler
+ReceiveHandler *-- SocketHandler
+ReceiveHandler *-- SerializationUtil
+
 @enduml
