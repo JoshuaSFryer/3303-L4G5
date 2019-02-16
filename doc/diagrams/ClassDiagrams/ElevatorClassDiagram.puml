@@ -3,9 +3,26 @@
 note "All private fields are implied to have getter and setter methods, as appropriate." as N1
 
 class ElevatorSystem {
-    -elevators: ArrayList<Elevator>
-    -messageHandler: ElevatorMessageHandler
     -log: Logger
+}
+
+enum Direction {
+    UP
+    DOWN
+    IDLE
+}
+
+abstract class Message {
+    +opcode: byte
+
+    +toString(): String
+    +getOpcode(): byte
+}
+
+class ElevatorVector <<Datatype>> {
+    +currentFloor: int
+    +currentDirection: Direction
+    +targetFloor: int
 }
 
 class Elevator {
@@ -13,7 +30,6 @@ class Elevator {
     -currentHeight: int
     -currentDirection: Direction
     -mover: Thread
-    -messageHandler: ElevatorMessageHandler
 
     -generateButtons()
     +receiveMessageFromScheduler(int targetFloor)

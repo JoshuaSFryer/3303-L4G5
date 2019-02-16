@@ -2,8 +2,18 @@
 
 note "All private fields are implied to have getter and setter methods, as appropriate." as N1
 
-class Direction{
+enum Direction{
+  UP
+  DOWN
+  IDLE
 }
+
+class ElevatorVector <<Datatype>> {
+    +currentFloor: int
+    +currentDirection: Direction
+    +targetFloor: int
+}
+
 together {
   class Timer
   class TimerTask

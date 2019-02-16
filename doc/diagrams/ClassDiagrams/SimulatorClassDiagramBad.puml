@@ -1,0 +1,105 @@
+@startuml
+
+note "All private fields are implied to have getter and setter methods, as appropriate." as N1
+
+class ElevatorSender {
+    -{static} instance: ElevatorSender
+
+    +{static} getInstance()
+    +{static} setNull()
+    +sendElevatorClick(int elevatorID, int elevatorButton)
+}
+
+class Event {
+    -df: DateFormat
+    -timestamp: Date
+    -floor: int
+    -elevatorButton: int
+    -direction: Direction
+
+    -parseDate(String dateString): Date
+    +toString(): String
+}
+
+class EventMaker {
+    -{static} instance: EventMaker
+
+    +addEventsFromFileToTimer(String filePath)
+    -createEventAndAddToTimer(String[] stringArray)
+}
+
+class EventTimer {
+    -{static} instance: EventTimer
+
+    +{static} getInstance(): EventTimer
+    +setNull()
+    +add(Event event)
+}
+
+class TimedEvent {
+    -event: Event
+    +run()
+}
+
+class FileParser {
+    -{static} instance: FileParser
+    -parsed: List<String>
+
+    +{static} getInstance(): FileParser
+    +{static} setNull()
+    +parse(String filePath)
+    -parseLine(String line): String[]
+}
+
+class FloorReceiver {
+    -{static} instance: FloorReceiver
+
+    +{static} getInstance(): FloorReceiver
+    +{static} setNull()
+    +receiveElevatorArrival(int floor, Direction direction, int elevatorID)
+}
+
+class FloorSender {
+    -{static} instance: FloorSender
+    -{static} simulatorPort: int
+
+    +{static} getInstance(): FloorSender
+    +{static} setNull()
+    +sendFloorClick(int floor, Direction direction): boolean
+
+}
+
+class Runner {
+
+}
+
+class SimulatorMessageHandler {
+    -{static} instance: SimulatorMessageHandler
+    -schedulerAddress: InetAddress
+    -elevatorAddress: InetAddress
+    -{static} elevatorPort: int
+    -{static} schedulerPort: int
+    -log: Logger
+
+    +{static} getInstance(int receivePort): SimulatorMessageHandler
+    +received(Message message)
+    +sendFloorButtonClickSimulation(int floor, Direction direction)
+    +sendElevatorButtonClickSimulation(int floor, int elevatorID)
+}
+
+class TriggeredEventMap {
+    -{static} instance: TriggeredEventMap
+    -map: HashMap<Integer, HashMap<Direction, List<Event>>>
+
+    +{static} getInstance(int receivePort): TriggeredEventMap
+    +{static} setNull()
+    +add(Event event)
+    +send(int floor, Direction direction, int elevatorID)
+}
+
+TimedEvent --|> TimerTask
+EventTimer --|> Timer
+
+
+
+@enduml

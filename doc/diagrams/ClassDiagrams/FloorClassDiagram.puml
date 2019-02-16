@@ -2,6 +2,11 @@
 
 note "All private fields are implied to have getter and setter methods, as appropriate." as N1
 
+enum Direction {
+    UP
+    DOWN
+    IDLE
+}
 
 class FloorSystem {
     -{static} totalNumberOfFloors: int
@@ -37,7 +42,6 @@ class FloorMessageHandler {
     -{static} floorPort: int
     -{static} simulatorPort: int
     -{static} guiPort: int
-    -floorSystem: FloorSystem
     -log: Logger
     -{static} instance: FloorMessageHandler
 

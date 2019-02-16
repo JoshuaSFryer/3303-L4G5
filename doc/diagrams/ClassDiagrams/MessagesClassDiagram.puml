@@ -1,0 +1,109 @@
+@startuml
+
+note "All private fields are implied to have getter and setter methods, as appropriate." as N1
+
+class ElevatorVector <<Datatype>> {
+    +currentFloor: int
+    +currentDirection: Direction
+    +targetFloor: int
+}
+
+abstract class Message {
+    +opcode: byte
+
+    +toString(): String
+    +getOpcode(): byte
+}
+
+class ElevatorButtonMessage {
+    -destinationFloor: int
+    -elevatorID: int
+    -time: Date
+
+    +toString(): String
+}
+
+class ElevatorClickSimulationMessage {
+    -floor: int
+    -elevatorID: int
+
+    +toString(): String
+}
+
+class ElevatorStateMessage {
+    -elevatorVector: ElevatorVector
+    -elevatorID: int
+
+    +toString(): String
+}
+
+class FloorArrivalMessage {
+    -floor: int
+    -currentDirection: Direction
+    -elevatorID: int
+
+    +toString(): String
+}
+
+class FloorButtonMessage {
+    -floor: int
+    -direction: Direction
+    -time: Date
+
+    +toString(): String
+}
+
+class FloorClickSimulationMessage {
+    -floor: int
+    -direction: Direction
+
+    +toString(): String
+}
+
+class GoToFloorMessage {
+    -destinationFloor: int
+    -elevatorID: int
+
+    +toString(): String
+}
+
+class GUIElevatorCarMessage {
+    -buttonNum: int
+}
+
+class GUIElevatorMoveMessage {
+    -currentFloor: int
+    -currentDirection: Direction
+    -doorOpen: boolean
+    -ID: int
+}
+
+class GUIFloorMessage {
+    +passengerFloor: int
+
+    +toString: String
+}
+
+class ButtonPair {
+    +up: boolean
+    +down: boolean
+}
+
+Message <|-- ElevatorButtonMessage
+Message <|-- ElevatorClickSimulationMessage
+Message <|-- ElevatorStateMessage
+
+Message <|-- FloorArrivalMessage
+Message <|-- FloorButtonMessage
+Message <|-- FloorClickSimulationMessage
+
+Message <|-- GoToFloorMessage
+
+Message <|-- GUIElevatorCarMessage
+Message <|-- GUIElevatorMoveMessage
+Message <|-- GUIFloorMessage
+
+GUIFloorMessage *-- ButtonPair
+
+
+@enduml

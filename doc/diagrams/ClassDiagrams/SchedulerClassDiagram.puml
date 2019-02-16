@@ -8,6 +8,19 @@ enum Direction {
     IDLE
 }
 
+abstract class Message {
+    +opcode: byte
+
+    +toString(): String
+    +getOpcode(): byte
+}
+
+class ElevatorVector <<Datatype>> {
+    +currentFloor: int
+    +currentDirection: Direction
+    +targetFloor: int
+}
+
 class SchedulerSystem {
     -log: Logger
 
@@ -47,7 +60,11 @@ class Request {
     +toString(): String
 }
 
-class ElevatorStatus {
+class FloorButtonMessage {
+
+}
+
+class ElevatorStatus <<Datatype>> {
     -elevatorVector: ElevatorVector
     -elevatorButtonMessageArr: ArrayList<ElevatorButtonMessage>
 
@@ -111,6 +128,8 @@ RequestHandler <|-- FloorRequestHandler
 RequestHandler <|-- ElevatorRequestHandler
 
 TargetFloorDecider *-- TargetFloorValidator
+
+Message <|-- FloorButtonMessage
 
 
 @enduml
