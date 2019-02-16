@@ -44,7 +44,7 @@ class Request {
     +addElevatorButtonMessage(ElevatorButtonMessage elevatorButtonMessage)
     +floorButtonMessagesIsEmpty(): boolean
     +floorButtonMessagesContains(int floor): boolean
-    +toString()
+    +toString(): String
 }
 
 class ElevatorStatus {
@@ -52,7 +52,7 @@ class ElevatorStatus {
     -elevatorButtonMessageArr: ArrayList<ElevatorButtonMessage>
 
     +addElevatorButtonMessage(ElevatorButtonMessage elevatorButtonMessage)
-    +toString()
+    +toString(): String
 }
 
 abstract class RequestHandler {

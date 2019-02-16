@@ -50,7 +50,7 @@ class ElevatorMessageHandler {
     -{static} schedulerPort: int
     -log: Logger
 
-    +getInstance(): ElevatorMessageHandler
+    +getInstance(int receivePort, ElevatorSystem context): ElevatorMessageHandler
     +received(Message message)
     +sendElevatorState(ElevatorVector elevatorVector, int elevatorID)
     +sendElevatorButton(int destinationFloor, int elevatorID)
