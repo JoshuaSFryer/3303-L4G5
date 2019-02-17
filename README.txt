@@ -20,7 +20,6 @@ If you do not have Maven installed, follow the directions [here](https://maven.a
 Follow the instructions [here](https://www.tutorialspoint.com/maven/maven_eclispe_ide.htm) to 
 import and run the project. Eclipse has native Maven support, so this should work.
 Your Import window, before you click Finish, should look like this:
-![Alt text if this image breaks](doc/images/maven-eclipse-import.png)
 
 # Subsystems
 This Elevator System Consists of four subsystems:
