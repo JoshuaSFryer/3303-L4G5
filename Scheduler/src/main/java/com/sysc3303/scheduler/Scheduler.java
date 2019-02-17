@@ -2,6 +2,7 @@ package com.sysc3303.scheduler;
 
 import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.communication.ElevatorButtonMessage;
+import com.sysc3303.communication.ElevatorStateMessage;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.Message;
 
