@@ -61,7 +61,6 @@ public class MovementHandler implements Runnable {
 				} else if(targetFloor < floor) {
 					moveDown();
 				} else { // already at the target floor
-					
 					// If the elevator is partway to the next floor, move down
 					// to the base of the floor.
 					if(context.getCurrentHeight() > 
@@ -71,6 +70,7 @@ public class MovementHandler implements Runnable {
 						// Don't need to move any more, so kill this thread.
 						System.out.println("Elevator " + elevatorId +
 								": arrived at destination ("+targetFloor+") !");
+						context.notifyArrival(floor);
 						context.openDoors();
 						//context.clearButton(targetFloor);
 						return;

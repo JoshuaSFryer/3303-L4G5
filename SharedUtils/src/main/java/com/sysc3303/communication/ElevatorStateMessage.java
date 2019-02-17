@@ -13,7 +13,7 @@ public class ElevatorStateMessage extends Message{
     private final int elevatorId;
 
     public ElevatorStateMessage(ElevatorVector elevatorVector, int elevatorId) {
-        // Opcode for this message is 4
+        // Opcode for this message is 3
         super(OpCodes.ELEVATOR_STATE.getOpCode());
         this.elevatorVector = elevatorVector;
         this.elevatorId = elevatorId;
