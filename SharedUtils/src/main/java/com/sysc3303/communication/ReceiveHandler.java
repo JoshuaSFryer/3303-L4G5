@@ -47,13 +47,13 @@ public class ReceiveHandler extends Thread{
     public void run(){
         // wait for packet to be received by socket
         byte[] data = socketHandler.waitForPacket(new byte[MAX_PACKET_BYTES], false);
+        // While the current thread is handling the message the new thread will listen for packets
+        // Make and start a new receive handler with the same socket handler and port
+        ReceiveHandler receiveHandler = new ReceiveHandler(this.port, this.messageHandler, this.socketHandler);
+        receiveHandler.start();
         int length = socketHandler.getReceivePacketLength();
         // deserialize packet into a message object
         Message message = serializationUtil.deserialize(data, length);
-        // Make and start a new receive handler with the same socket handler and port
-        // While the current thread is handling the message the new thread will listen for packets
-        ReceiveHandler receiveHandler = new ReceiveHandler(this.port, this.messageHandler, this.socketHandler);
-        receiveHandler.start();
         // Send message to MessageHandler
         messageHandler.received(message);
     }

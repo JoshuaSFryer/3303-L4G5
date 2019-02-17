@@ -28,9 +28,7 @@ public class Scheduler {
 	 */
 	public void startFloorMessageHandler(Message message) {
 		floorMessageHandler = new FloorRequestHandler(request, (FloorButtonMessage)message, schedulerMessageHandler);
-		int floor = ((FloorButtonMessage) message).getFloor();
-		Direction direction = ((FloorButtonMessage) message).getDirection();
-		new Thread(floorMessageHandler, "Floor Message Handler: floor-" + floor + " direction-" + direction).start();
+		new Thread(floorMessageHandler, message.getSummary()).start();
 	}
 	
 	/**
@@ -39,15 +37,6 @@ public class Scheduler {
 	 */
 	public void startElevatorMessageHandler(Message message) {
 		elevatorMessageHandler = new ElevatorRequestHandler(request, message, schedulerMessageHandler);
-		int elevatorId = -1;
-		
-		if(message instanceof ElevatorButtonMessage) {
-			elevatorId = ((ElevatorButtonMessage) message).getElevatorId();
-		}
-		else {
-			elevatorId = ((ElevatorStateMessage) message).getElevatorId();
-		}
-		
-		new Thread(elevatorMessageHandler, "Elevator Message Handler : elevator-" + elevatorId ).start();
+		new Thread(elevatorMessageHandler, message.getSummary()).start();
 	}
 }

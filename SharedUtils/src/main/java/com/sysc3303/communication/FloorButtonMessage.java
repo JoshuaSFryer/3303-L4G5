@@ -26,10 +26,16 @@ public class FloorButtonMessage extends Message{
         this.time = time;
     }
 
+    @Override
     public String toString(){
         return "Floor Button Message\n\tfloor: " +
                 floor +"\n\tdirection: " + direction +
                 "\n\ttime: " + time;
+    }
+
+    @Override
+    public String getSummary(){
+        return "FloorButton: floor-"  + floor  + " direction-" + direction;
     }
 
     public int getFloor() {

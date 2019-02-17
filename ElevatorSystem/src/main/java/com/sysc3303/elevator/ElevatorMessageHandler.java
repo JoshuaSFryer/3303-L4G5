@@ -12,15 +12,6 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 
 
-/*
-@SuppressWarnings("serial")
-class BadMessageTypeException extends Exception {
-	BadMessageTypeException(String msg) {
-		super(msg);
-	}
-}
-*/
-
 public class ElevatorMessageHandler extends MessageHandler {
     private static ElevatorMessageHandler instance;
 
@@ -58,10 +49,11 @@ public class ElevatorMessageHandler extends MessageHandler {
         this.context = context;
         try{
             if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
-                schedulerAddress = InetAddress.getLocalHost();
+                schedulerAddress = uiAddress = InetAddress.getLocalHost();
             }
             else{
                 schedulerAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("schedulerAddress"));
+                uiAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("uiAddress"));
             }
         }catch(UnknownHostException e){
             e.printStackTrace();
@@ -70,6 +62,7 @@ public class ElevatorMessageHandler extends MessageHandler {
 
     @Override
     public void received(Message message){
+        super.received(message);
         switch (message.getOpcode()){
             case 2:
             	GoToFloorMessage goToFloorMessage = (GoToFloorMessage) message;
@@ -79,7 +72,7 @@ public class ElevatorMessageHandler extends MessageHandler {
             	
             	Elevator elevator = context.getElevators().get(goToFloorMessage.getElevatorId());
             	// send it to the floor in the message
-            	elevator.goToFloor(goToFloorMessage.getDestinationFloor());
+                elevator.receiveMessageFromScheduler(goToFloorMessage.getDestinationFloor());
                 break;
             case 6:
             	System.out.println("recieved click simulation message, sending to scheduler");
@@ -102,6 +95,12 @@ public class ElevatorMessageHandler extends MessageHandler {
         }
     }
 
+    /**
+     * Send an elevator's status to the scheduler.
+     * @see ElevatorVector
+     * @param elevatorVector    Information about the elevator's movement
+     * @param elevatorId        The ID of the elevator in question.
+     */
     public void sendElevatorState(ElevatorVector elevatorVector, int elevatorId){
         ElevatorStateMessage elevatorStateMessage = new ElevatorStateMessage(elevatorVector, elevatorId);
        
@@ -109,6 +108,14 @@ public class ElevatorMessageHandler extends MessageHandler {
         log.info(elevatorStateMessage.toString());
         send(elevatorStateMessage, schedulerAddress, schedulerPort);
     }
+
+    /**
+     * Notify the scheduler that a button within the elevator has been pressed,
+     * meaning that a passenger within is requesting to visit the corresponding
+     * floor.
+     * @param destinationFloor  The floor to go to.
+     * @param elevatorId        The ID of the elevator in question.
+     */
     public void sendElevatorButton(int destinationFloor, int elevatorId){
     	System.out.println("Elevator button pressed, notifying scheduler");
     	log.info("Sending ElevatorButtonMessage to scheduler");
@@ -119,6 +126,13 @@ public class ElevatorMessageHandler extends MessageHandler {
         send(elevatorButtonMessage, schedulerAddress, schedulerPort);
     }
 
+    /**
+     * Notify the UI that it needs to update.
+     * @param elevatorID        The ID of the relevant elevator.
+     * @param currentFloor      The floor the elevator is currently on.
+     * @param dir               The Direction in which the elevator is travelling.
+     * @param open              True if the elevator's doors are open, false otherwise.
+     */
     public void updateUI(int elevatorID, int currentFloor, Direction dir, boolean open) {
         GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, dir, open);
         send(msg, uiAddress, uiPort);

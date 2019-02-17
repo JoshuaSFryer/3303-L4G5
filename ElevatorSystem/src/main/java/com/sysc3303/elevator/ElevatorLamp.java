@@ -9,9 +9,11 @@ import com.sysc3303.commons.Direction;
 public class ElevatorLamp {
 	private int 		currentFloor;
 	private Direction 	currentDirection;
+	private Elevator	parent;
 	
-	public ElevatorLamp() {
-		this.setCurrentFloor(1, Direction.IDLE); //TODO: Demagicify
+	public ElevatorLamp(Elevator parent) {
+		this.parent = parent;
+		this.setCurrentFloor(Elevator.GROUND_FLOOR, Direction.IDLE);
 	}
 
 	/**
@@ -23,7 +25,7 @@ public class ElevatorLamp {
 	public void setCurrentFloor(int currentFloor, Direction dir) {
 		this.currentFloor = currentFloor;
 		this.currentDirection = dir;
-		System.out.println("Lamp says: Floor " + currentFloor + ", moving "
+		System.out.println("Elevator " + parent.elevatorID + ": Lamp says: Floor " + currentFloor + ", moving "
 							+ currentDirection.name());
 	}
 

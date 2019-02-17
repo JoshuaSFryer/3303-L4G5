@@ -26,13 +26,14 @@ public class ElevatorSystem {
      * @param elevatorSystemPort the port for the message handler
      */
     public ElevatorSystem(int num_elevators, int num_floors, int elevatorSystemPort){
-        ElevatorMessageHandler messageHandler = ElevatorMessageHandler.getInstance(elevatorSystemPort, this);
-        
+        //ElevatorMessageHandler messageHandler = ElevatorMessageHandler.getInstance(elevatorSystemPort, this);
+        this.messageHandler = ElevatorMessageHandler.getInstance(elevatorSystemPort, this);
+
         DOMConfigurator.configure(ElevatorSystem.class.getResource("/log4j.xml"));
         log.info("ElevatorSystem starting at port " + elevatorSystemPort);
         
         for (int i = 0; i<num_elevators; i++){
-            elevators.add(new Elevator(num_floors, i, messageHandler));
+            elevators.add(new Elevator(num_floors, i, this));
         }
     }
 

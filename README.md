@@ -11,20 +11,20 @@ After code review, it can be pushed to the branch "iteration#"
 - Yu Yamanaka
 - Xinrui Zhang
 
-
-# Running the System
-Run the FloorSystem, Scheduler, and Elevator systems, in any order. Then, run the
-Runner class of the Simulator system, which will begin loading from an input file located at
-/src/resources/inputFile.txt. Please place the input file you wish to test
-with at this location.
-
-## Running from Eclipse
-In Eclipse, to to File -> Open Projects from File System, and select the root
-(3303-L4G5) folder. Then, either open or right click the files, and run them
-as Java Applications.
+# Running from Eclipse
+1. In Eclipse, click File -> Open Projects from File System
+2. check 3303-L4G5,  3303-L4G5/ElevatorSystem, 3303-L4G5/FloorSystem, 3303-L4G5/Scheduler, 3303-L4G5/SharedUtils, 3303-L4G5/Simulator and click ok
+3. wait for eclipse to load project as Maven file and install dependencies
+4. Run ElevatorSystem.java in ElevatorSystem package
+5. Run FloorSystem.java in FloorSystem package
+6. Run SchedulerSystem.java in SchedulerSystem package
+7. Right click Runner.java in simulator package and click run configuration
+8. click arguments tab and add file path for input textfile (to use default provided input, type /testEvents.txt) 
+9. Run Runner.java 
 
 # Subsystems
 This Elevator System Consists of four subsystems:
+
 ## Floor System
 FloorSystem is responsible for simulating passenger actions on the floors of
 a building, and the operation of lamps. It contains an array of Floor objects,

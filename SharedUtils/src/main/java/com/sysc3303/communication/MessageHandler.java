@@ -22,7 +22,8 @@ public abstract class MessageHandler{
      * @throws InterruptedException 
      */
     public void received(Message message){
-        return;
+        // Rename the thread to something useful
+        Thread.currentThread().setName("Handling " + message.getSummary());
     }
 
     /**

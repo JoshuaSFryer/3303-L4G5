@@ -47,6 +47,7 @@ public class FloorMessageHandler extends MessageHandler {
 
     @Override
     public synchronized void received(Message message){
+        super.received(message);
     	System.out.println("From Floor");
     	System.out.println("received message!");
     	System.out.println(message.toString());

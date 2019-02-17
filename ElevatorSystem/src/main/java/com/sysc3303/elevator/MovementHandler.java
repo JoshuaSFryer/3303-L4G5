@@ -10,6 +10,7 @@ public class MovementHandler implements Runnable {
 	Motor motor;
 	Elevator context;
 	FloorSensor sensor;
+	private boolean atFloor;
 	
 	public MovementHandler(int targetFloor, Elevator context,
 							FloorSensor sensor, Motor motor, int elevatorId) {
@@ -18,6 +19,7 @@ public class MovementHandler implements Runnable {
 		this.sensor = sensor;
 		this.context = context;
 		this.elevatorId = elevatorId;
+		this.atFloor = false;
 	}
 	
 	/**
@@ -25,7 +27,9 @@ public class MovementHandler implements Runnable {
 	 * is reached, or the elevator is interrupted by a new request.
 	 */
 	public void run() {
-		while(true) {
+		// Run continuously, until this elevator's floor sensor has let us know
+		// (via this.arrived) that is has reached a floor.
+		while(!this.atFloor) {
 			try {
 				// Wait a short time between movement calls.
 				Thread.sleep(MOVEMENTDELAY);
@@ -34,9 +38,9 @@ public class MovementHandler implements Runnable {
 				int floor = context.getCurrentFloor();
 				
 				// Check whether the elevator has arrived at a floor.
-				if(sensor.isAtFloor()) { //TODO: Have the sensor interrupt, instead of polling it.
+				if(sensor.isAtFloor()) { //TODO: Have floor sensor interrupt this in some way instead of polling the sensor
 					floor = sensor.getFloor();
-					System.out.println("Arrived at floor: " + floor);
+					System.out.println("Elevator " + context.elevatorID + ": Arrived at floor: " + floor);
 					// If the current floor is the target floor, set the
 					// direction to Idle, as we want to stop.
 					if(context.getCurrentFloor() == targetFloor) {
@@ -65,7 +69,8 @@ public class MovementHandler implements Runnable {
 						moveDown();
 					} else {
 						// Don't need to move any more, so kill this thread.
-						System.out.println("Elevator Id: " + elevatorId + " arrived at destination ("+targetFloor+") !");
+						System.out.println("Elevator " + elevatorId +
+								": arrived at destination ("+targetFloor+") !");
 						context.openDoors();
 						//context.clearButton(targetFloor);
 						return;
@@ -83,7 +88,7 @@ public class MovementHandler implements Runnable {
 	 */
 	public void moveUp() {
 		motor.moveUp();
-		System.out.println("Height: " + context.getCurrentHeight() + " cm");
+		System.out.println("Elevator " +context.elevatorID+ ": Height: " + context.getCurrentHeight() + " cm");
 	}
 
 	/**
@@ -91,7 +96,14 @@ public class MovementHandler implements Runnable {
 	 */
 	public void moveDown() {
 		motor.moveDown();
-		System.out.println("Height: " + context.getCurrentHeight() + " cm");
+		System.out.println("Elevator " +context.elevatorID+ ": Height: " + context.getCurrentHeight() + " cm");
+	}
+
+	/**
+	 * Let this handler know that the elevator has reached a floor and should
+	 */
+	public void setAtFloor() {
+		atFloor = true;
 	}
 
 }

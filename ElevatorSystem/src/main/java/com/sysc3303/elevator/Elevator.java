@@ -1,7 +1,6 @@
 package com.sysc3303.elevator;
 
 
-import java.io.IOException;
 
 
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ import com.sysc3303.commons.ElevatorVector;
  *
  */
 public class Elevator {
-	private static final int GROUND_FLOOR = 1;
+	public static final int GROUND_FLOOR = 0;
 	
 	public final int elevatorID;
 
@@ -38,6 +37,7 @@ public class Elevator {
 	private Thread 						mover;
 
 	private ElevatorMessageHandler 		messageHandler;
+	private ElevatorSystem				parentSystem;
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -47,20 +47,21 @@ public class Elevator {
 	 * Class constructor.
 	 * @param numFloors		The number of floors in the system.
 	 * @param ID			The unique ID of this elevator.
-	 * @param handler		The ElevatorMessageHandler for this elevator to use.
+	 * @param system		The ElevatorSystem this elevator is part of.
 	 */
-	public Elevator(int numFloors, int ID, ElevatorMessageHandler handler) {
+	public Elevator(int numFloors, int ID, ElevatorSystem system) {
 		elevatorID 			= ID;
-		lamp          		= new ElevatorLamp();
+		lamp          		= new ElevatorLamp(this);
 		buttons       		= generateButtons(numFloors);
 		sensor 				= new FloorSensor(this);
 		motor         		= new Motor(this);
-		door          		= new Door();
+		door          		= new Door(this);
 		currentFloor   		= Elevator.GROUND_FLOOR;
 		currentState		= new Idle();
-		currentHeight 		= 0; //TODO: de-magicify this number
+		currentHeight 		= GROUND_FLOOR;
 		currentDirection 	= Direction.IDLE;
-		messageHandler 		= handler;
+		parentSystem 		= system;
+		messageHandler		= parentSystem.getMessageHandler();
 	}
 	
 	/**
@@ -103,7 +104,7 @@ public class Elevator {
 	 * @param targetFloor	The number of the new target floor
 	 */
 	public void receiveMessageFromScheduler(int targetFloor) {
-		System.out.println("Received new message from scheduler");
+		System.out.println("Received new message from scheduler: Go to floor " + targetFloor);
 		// Interrupt the movement handler
 		try {
 			this.mover.interrupt();
@@ -148,7 +149,7 @@ public class Elevator {
 	 */
 	public void notifyArrival(int targetFloor) {
 		ElevatorVector v = new ElevatorVector(this.currentFloor, this.currentDirection, targetFloor);
-		this.messageHandler.sendElevatorState(v, this.elevatorID);
+		messageHandler.sendElevatorState(v, this.elevatorID);
 	}
 
 	/**
@@ -221,7 +222,11 @@ public class Elevator {
 	 * @return	The MessageHandler instance used by this elevator.
 	 */
 	public ElevatorMessageHandler getMessageHandler() {
-		return this.messageHandler;
+		return messageHandler;
+	}
+
+	public Thread getMovementHandler() {
+		return this.mover;
 	}
 	
 	/**

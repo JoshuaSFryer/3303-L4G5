@@ -18,7 +18,7 @@ class ElevatorMessageHandlerTest {
 	    ElevatorSystem elevatorSystem = new ElevatorSystem(5,
                 3,
                 Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort")));
-		e = new Elevator( 10, 0, elevatorSystem.getMessageHandler());
+		e = new Elevator( 10, 0, elevatorSystem);
 	}
 	
 	@Test
