@@ -11,16 +11,16 @@ After code review, it can be pushed to the branch "iteration#"
 - Yu Yamanaka
 - Xinrui Zhang
 
+# Running with Maven (RECOMMENDED, if possible)
+This project can be run by navigating to the directory where the project is extracted and executing
+`./start.sh` in the Linux terminal, or `start.bat` in the Windows command prompt.
+If you do not have Maven installed, follow the directions [here](https://maven.apache.org/guides/getting-started/windows-prerequisites.html).
+
 # Running from Eclipse
-1. In Eclipse, click File -> Open Projects from File System
-2. check 3303-L4G5,  3303-L4G5/ElevatorSystem, 3303-L4G5/FloorSystem, 3303-L4G5/Scheduler, 3303-L4G5/SharedUtils, 3303-L4G5/Simulator and click ok
-3. wait for eclipse to load project as Maven file and install dependencies
-4. Run ElevatorSystem.java in ElevatorSystem package
-5. Run FloorSystem.java in FloorSystem package
-6. Run SchedulerSystem.java in SchedulerSystem package
-7. Right click Runner.java in simulator package and click run configuration
-8. click arguments tab and add file path for input textfile (to use default provided input, type /testEvents.txt) 
-9. Run Runner.java 
+Follow the instructions [here](https://www.tutorialspoint.com/maven/maven_eclispe_ide.htm) to 
+import and run the project. Eclipse has native Maven support, so this should work.
+Your Import window, before you click Finish, should look like this:
+![Alt text if this image breaks](doc/images/maven-eclipse-import.png)
 
 # Subsystems
 This Elevator System Consists of four subsystems:

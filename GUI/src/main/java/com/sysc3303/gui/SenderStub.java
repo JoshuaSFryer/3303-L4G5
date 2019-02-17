@@ -5,6 +5,7 @@ import com.sysc3303.communication.*;
 
 /**
  * Class to send test messages to the GUI message handler.
+ * UNUSED.
  */
 public class SenderStub {
     //private GUIMessageHandler handler = GUIMessageHandler.getInstance(6666);
