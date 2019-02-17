@@ -57,13 +57,12 @@ using the read data to simulate button presses within the Floor and Elevator
 systems. 
 
 # Directory Structure
-- Compiled binaries/*.class files are located in /bin.
 - Documentation such as diagrams are located in /doc.
-- All source code is located in /src. The subdirectories follow a structure.
-commonly used in Java programs, and particularly Android applications,wherein
-the directories spell out a reversed domain name (in this case, com.sysc3303).
-Within this domain package are packages for each of the subsystems, as well as
-commons, which contains classes used by multiple subsystems, and a Constants
-class.
-- Test files are located in /test, and its directory structure mirrors the one
-found in /src.
+- Each module's source code is located in <packagename>/src/main.java.
+From there, the subdirectories follow a structure commonly used in Java programs,
+and particularly Android applications, wherein the directories spell out a 
+reversed domain name (in this case, com.sysc3303). Within this domain package
+are the .java source files for that module.
+- Additionaly, the Shared-Utils directory contains sources for classes that
+are used by multiple modules, such as most of the communications code.
+
