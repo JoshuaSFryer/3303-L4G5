@@ -8,29 +8,36 @@ import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
 /**
+ * Elevator represents a physical elevator within the system. It is directed
+ * by the Scheduler, and notifies the Scheduler whenever it arrives at a floor.
+ * The system can have several elevators, and each will run as a separate
+ * thread.
+ *
  * @author Joshua Fryer, Yu Yamanaka
  *
  */
 public class Elevator {
-	private static final int GROUND_FLOOR = 1;
+	public static final int GROUND_FLOOR = 0;
 	
 	public final int elevatorID;
 
-	private ElevatorLamp   		lamp;
-	private Motor          		motor;
-	private Door           		door;
+	// Elevator components.
+	private ElevatorLamp   				lamp;
+	private Motor          				motor;
+	private Door           				door;
 	private ArrayList<ElevatorButton> 	buttons;
-	private FloorSensor 		sensor;
+	private FloorSensor 				sensor;
+
+	// Variables concerning the elevator's current status
+	private int 						currentFloor;
+	private int							currentHeight; // Current height in CM
+	private ElevatorState 				currentState;
+	private Direction					currentDirection;
 	
-	private int 			currentFloor;
-	
-	private int				currentHeight; // Current height in CM
-	private ElevatorState 	currentState;
-	private Direction		currentDirection;
-	
-	private Thread 			mover;
-	
-	private ElevatorMessageHandler messageHandler;
+	private Thread 						mover;
+
+	private ElevatorMessageHandler 		messageHandler;
+	private ElevatorSystem				parentSystem;
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -40,21 +47,21 @@ public class Elevator {
 	 * Class constructor.
 	 * @param numFloors		The number of floors in the system.
 	 * @param ID			The unique ID of this elevator.
-     * @param messageHandler The messagehandler for sending and receiving
+	 * @param system		The ElevatorSystem this elevator is part of.
 	 */
-	public Elevator(int numFloors, int ID, ElevatorMessageHandler messageHandler) {
-		elevatorID 		= ID;
-		lamp          	= new ElevatorLamp();
-		buttons       	= generateButtons(numFloors);
-		sensor 			= new FloorSensor(this);
-		motor         	= new Motor(this);
-		door          	= new Door();
-		currentFloor   	= Elevator.GROUND_FLOOR;
-		currentState	= new Idle();
-		currentHeight 	= 0; //TODO: de-magicify this number
-		currentDirection = Direction.IDLE;
-		this.messageHandler = messageHandler;
-		
+	public Elevator(int numFloors, int ID, ElevatorSystem system) {
+		elevatorID 			= ID;
+		lamp          		= new ElevatorLamp(this);
+		buttons       		= generateButtons(numFloors);
+		sensor 				= new FloorSensor(this);
+		motor         		= new Motor(this);
+		door          		= new Door(this);
+		currentFloor   		= Elevator.GROUND_FLOOR;
+		currentState		= new Idle();
+		currentHeight 		= GROUND_FLOOR;
+		currentDirection 	= Direction.IDLE;
+		parentSystem 		= system;
+		messageHandler		= parentSystem.getMessageHandler();
 	}
 	
 	/**
@@ -65,21 +72,21 @@ public class Elevator {
 	private ArrayList<ElevatorButton> generateButtons(int numButtons) {
 		ArrayList<ElevatorButton> buttonList = new ArrayList<ElevatorButton>();
 		for(int i=0; i<numButtons; i++) {
-			buttonList.add(new ElevatorButton(this, i+1));
+			buttonList.add(new ElevatorButton(this, i));
 		}
 		return buttonList;
 	}
 	
 	/**
-	 * Get the current state.
-	 * @return	The current ElevatorState
+	 * Get the current state. Currently unused until State pattern is
+	 * implemented.
 	 */
 	public ElevatorState getState() {
 		return this.currentState;
 	}
 	
 	/**
-	 * Change the current state.
+	 * Change the current State.
 	 * Perform the exit action of the state being left, change the current
 	 * state to the new one, and perform the new state's entry action.
 	 * @param state	The ElevatorState to switch to.
@@ -97,12 +104,11 @@ public class Elevator {
 	 * @param targetFloor	The number of the new target floor
 	 */
 	public void receiveMessageFromScheduler(int targetFloor) {
-		System.out.println("Received new message from scheduler");
+		System.out.println("Received new message from scheduler: Go to floor " + targetFloor);
 		// Interrupt the movement handler
 		try {
 			this.mover.interrupt();
 		} catch (NullPointerException e) {
-			//e.printStackTrace();
 			System.out.println("No movement thread to interrupt!");
 		}
 		// Assign the new target floor and move towards it.
@@ -143,9 +149,17 @@ public class Elevator {
 	 */
 	public void notifyArrival(int targetFloor) {
 		ElevatorVector v = new ElevatorVector(this.currentFloor, this.currentDirection, targetFloor);
-		this.messageHandler.sendElevatorState(v, this.elevatorID);
+		messageHandler.sendElevatorState(v, this.elevatorID);
 	}
-	
+
+	/**
+	 * Turn off a button's light.
+	 * @param floorNum	The number of the button to turn off.
+	 */
+	public void clearButton(int floorNum) {
+		buttons.get(floorNum).turnOff();
+	}
+
 	/**
 	 * Open this elevator's doors.
 	 */
@@ -160,8 +174,12 @@ public class Elevator {
 		door.closeDoors();
 	}
 
+	/**
+	 * Update this elevator's direction.
+	 * @param dir	The new Direction. IDLE if the elevator is not moving.
+	 */
 	public void setCurrentDirection(Direction dir) { this.currentDirection = dir;}
-	
+
 	/**
 	 * Get this elevator's current floor.
 	 * Note that if the elevator is partway between floors, this will return
@@ -204,7 +222,11 @@ public class Elevator {
 	 * @return	The MessageHandler instance used by this elevator.
 	 */
 	public ElevatorMessageHandler getMessageHandler() {
-		return this.messageHandler;
+		return messageHandler;
+	}
+
+	public Thread getMovementHandler() {
+		return this.mover;
 	}
 	
 	/**
@@ -244,13 +266,23 @@ public class Elevator {
 		
 		this.mover = new Thread(
 						new MovementHandler(targetFloor, this, this.sensor, 
-											this.motor, this.elevatorID));
-		 
+											this.motor, this.elevatorID), "Movement Handler Elevator " + elevatorID );
+		
 		// Launch the mover thread. It will continue until the target floor is
 		// reached, or this elevator receives a new goToFloor request. Upon
 		// receiving this request, the elevator will interrupt the thread
 		// and launch a new one by invoking goToFloor() again.
-		
 		mover.start();
 	}
+
+	/**
+	 * Instruct the MessageHandler to build an ElevatorMoveMessage and send it
+	 * to the UI to update it.
+	 */
+	public void updateUI() {
+		messageHandler.updateUI(elevatorID, currentFloor, currentDirection,
+				door.isOpen());
+	}
+
+
 }

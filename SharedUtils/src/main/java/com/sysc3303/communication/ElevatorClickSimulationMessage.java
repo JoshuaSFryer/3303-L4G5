@@ -18,9 +18,15 @@ public class ElevatorClickSimulationMessage extends Message{
         this.elevatorId = elevatorId;
     }
 
+    @Override
     public String toString(){
         return "Elevator Button Click Simulation Message\n\televatorId: " +
                 elevatorId +"\n\tfloor: " + floor;
+    }
+
+    @Override
+    public String getSummary(){
+        return "ElevatorClickSim: floor-"  + floor  + " elevatorId-" + elevatorId;
     }
 
     public int getFloor() {

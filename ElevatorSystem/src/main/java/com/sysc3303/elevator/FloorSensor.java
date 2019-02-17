@@ -7,9 +7,11 @@ package com.sysc3303.elevator;
  * @author Joshua Fryer
  *
  */
-public class FloorSensor {
+public class FloorSensor implements Runnable {
 	// Height of each floor, in meters
 	public static final int FLOORHEIGHT = 5;
+	// How long to sleep, in milliseconds.
+	public static final int SLEEPTIME = 500;
 	
 	private Elevator parent;
 	
@@ -32,10 +34,8 @@ public class FloorSensor {
 			// If the elevator's height is a whole multiple of FLOORHEIGHT, it has
 			// arrived at a floor.
 			
-			// Use floorDiv() to get a rounded value. This shouldn't be
-			// necessary if the modulus is zero, but is being used out of 
-			// paranoia.
-			//return Math.floorDiv(height, FLOORHEIGHT);
+			// Using bare integer division should be perfectly acceptable; since
+			// the modulus is 0, they must by definition be divisible.
 			return height/FLOORHEIGHT;
 		} else { 
 			// The elevator is somewhere between two floors.
@@ -60,5 +60,20 @@ public class FloorSensor {
 	 */
 	public boolean hasArrived(int target) {
 		return (getFloor() == target);
+	}
+
+	public void run() {
+		while(true) {
+			try {
+				Thread.sleep(SLEEPTIME);
+			} catch (InterruptedException e) {
+				System.out.println("Floor sensor was interrupted while sleeping");
+			}
+
+			if(isAtFloor()) {
+				// Interrupt the movement handler.
+				parent.getMovementHandler().interrupt();
+			}
+		}
 	}
 }

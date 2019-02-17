@@ -7,9 +7,13 @@
  */
 package com.sysc3303.floor;
 
+
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 
 import static com.sysc3303.floor.FloorMessageHandler.floorPort;
@@ -17,9 +21,19 @@ import static com.sysc3303.floor.FloorMessageHandler.floorPort;
 
 public class FloorSystem {
 	//TODO change this number to properties file value
-	private static int totalNumberofFloors = 5;
+
+	String  inputFilePath = "./src/resource/inputFile.txt";
+	static Properties prop = new Properties();
+	private String propFileName = "config.properties";
+	private InputStream inputStream =getClass().getClassLoader().getResourceAsStream(propFileName);
+
+
+
+	private static int totalNumberofFloors=Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors"));
 	private List<Floor> floorList;
 	private FloorMessageHandler floorMessageHandler;
+
+
 
 	//Constructor
 	public FloorSystem(){
@@ -27,7 +41,7 @@ public class FloorSystem {
 		floorMessageHandler = FloorMessageHandler.getInstance(floorPort, this);
 		
 		for (int i=0; i< FloorSystem.totalNumberofFloors; i++) {
-			floorList.add(new Floor(i+1));
+			floorList.add(new Floor(i));
 		}
 	}
 	
@@ -74,6 +88,12 @@ public class FloorSystem {
 			arriveFloor.getButtons().setDownButtonLight(false);
 			arriveFloor.getLamps().turnUpLampOFF();
 		}
+
+		// Update the UI with the updated states of the buttons on this floor.
+		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
+				arriveFloor.getButtons().isUpButtonLight(),
+				arriveFloor.getFloorNum());
+
 		floorMessageHandler.sendFloorArrival(arrivalFloor, direction, elevatorId);
 	}
 
@@ -96,7 +116,15 @@ public class FloorSystem {
 		}
 		//send floor button request
 		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection);
+
+		// Update the UI with the updated states of the buttons on this floor.
+		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
+				arriveFloor.getButtons().isUpButtonLight(),
+				arriveFloor.getFloorNum());
 	}
+
+
+
 
 
 }

@@ -48,6 +48,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 			if(currentFloor == destinationFloor) {
 				log.info("Elevator " + elevatorId + " arrived at destination");
 				
+
 				removeTargetFloor(currentFloor, elevatorId, targetDirection);
 				
 				log.info("Removed target floor");
@@ -145,6 +146,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		
 		for(int i = 0; i < floorRequestList.size(); i++) {
 			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
+
 			log.debug(curFloorRequest);
 			if(curFloorRequest.getFloor() == targetFloor && curFloorRequest.getDirection() == targetDirection) {
 				log.debug("removing... " + curFloorRequest);

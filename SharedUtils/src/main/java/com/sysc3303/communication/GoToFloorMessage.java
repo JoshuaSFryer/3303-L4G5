@@ -20,11 +20,17 @@ public class GoToFloorMessage extends Message{
         this.elevatorId = elevatorId;
     }
 
+    @Override
     public String toString(){
         return "Go To Floor Message\n\tDestination Floor: " +
         destinationFloor + 
         "\n\t Elevator Id: " +
         elevatorId;
+    }
+
+    @Override
+    public String getSummary(){
+        return "GoToFloor: floor-"  + destinationFloor  + " elevator-" + elevatorId;
     }
 
     public int getDestinationFloor() {

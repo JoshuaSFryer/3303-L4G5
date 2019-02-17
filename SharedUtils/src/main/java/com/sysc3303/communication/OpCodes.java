@@ -7,7 +7,9 @@ public enum OpCodes {
     ELEVATOR_STATE((byte)3),
     ELEVATOR_BUTTON((byte)4),
     FLOOR_CLICK_SIMULATION((byte)5),
-    ELEVATOR_CLICK_SIMULATION((byte)6)
+    ELEVATOR_CLICK_SIMULATION((byte)6),
+    ELEVATOR_UPDATE_GUI((byte)7),
+    FLOOR_UPDATE_GUI((byte)8)
     ;
 
     private final byte opCode;
