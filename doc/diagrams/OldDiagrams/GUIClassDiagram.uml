@@ -1,0 +1,29 @@
+
+java.lang.IllegalStateException: net.sourceforge.plantuml.posimo.Cluster@3fee9989
+	at net.sourceforge.plantuml.posimo.DotxMaker.printCluster(DotxMaker.java:74)
+	at net.sourceforge.plantuml.posimo.DotxMaker.createDotString(DotxMaker.java:61)
+	at net.sourceforge.plantuml.posimo.GraphvizSolverB.solve(GraphvizSolverB.java:88)
+	at net.sourceforge.plantuml.cucadiagram.dot.CucaDiagramTxtMaker.<init>(CucaDiagramTxtMaker.java:103)
+	at net.sourceforge.plantuml.cucadiagram.CucaDiagram.createFilesTxt(CucaDiagram.java:354)
+	at net.sourceforge.plantuml.cucadiagram.CucaDiagram.exportDiagramInternal(CucaDiagram.java:305)
+	at net.sourceforge.plantuml.classdiagram.ClassDiagram.exportDiagramInternal(ClassDiagram.java:206)
+	at net.sourceforge.plantuml.UmlDiagram.exportDiagram(UmlDiagram.java:227)
+	at net.sourceforge.plantuml.PSystemUtils.exportDiagramsCuca(PSystemUtils.java:208)
+	at net.sourceforge.plantuml.PSystemUtils.exportDiagrams(PSystemUtils.java:69)
+	at net.sourceforge.plantuml.SourceFileReader.getGeneratedImages(SourceFileReader.java:210)
+	at net.sourceforge.plantuml.Run.manageFileInternal(Run.java:403)
+	at net.sourceforge.plantuml.Run.processArgs(Run.java:325)
+	at net.sourceforge.plantuml.Run.manageAllFiles(Run.java:300)
+	at net.sourceforge.plantuml.Run.main(Run.java:135)
+
+@startuml
+
+package GUI{
+  class FloorLights
+  class DoorDisplay
+  class MotorVisualization
+}
+
+
+@enduml
+

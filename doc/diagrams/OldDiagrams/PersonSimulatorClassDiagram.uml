@@ -1,0 +1,21 @@
+
+,----------------------------------------------------------.
+|PersonSimulatorCommunicator                               |
+|----------------------------------------------------------|
+|----------------------------------------------------------|
+|+createEventsFromFile(String filename)                    |
+|~sendClickFloorButton(int floor, int direction): boolean  |
+|+floorButtonClickServiced(int id)                         |
+|~sendClickElevatorButton(int floor, int elevatorNum): boolean|
+`----------------------------------------------------------'
+
+@startuml
+package PersonSimulator{
+interface PersonSimulatorCommunicator {
+    + createEventsFromFile(String filename)
+    ~ sendClickFloorButton(int floor, int direction): boolean
+    + floorButtonClickServiced(int id)
+    ~ sendClickElevatorButton(int floor, int elevator): boolean
+  }
+}
+@enduml
