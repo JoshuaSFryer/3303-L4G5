@@ -51,7 +51,7 @@ public class MovementHandler implements Runnable {
 					// Update the elevator's current floor.
 					context.setCurrentFloor(floor);
 					// Update the UI.
-					//context.updateUI();
+					context.updateUI();
 				}
 				
 				// If not at a floor yet, move towards the target.
@@ -72,7 +72,7 @@ public class MovementHandler implements Runnable {
 						System.out.println("Elevator " + elevatorId +
 								": arrived at destination ("+targetFloor+") !");
 						context.openDoors();
-						//context.clearButton(targetFloor);
+						context.clearButton(targetFloor);
 						return;
 					}
 				}
