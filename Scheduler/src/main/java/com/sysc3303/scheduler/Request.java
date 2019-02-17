@@ -3,6 +3,7 @@ package com.sysc3303.scheduler;
 import java.util.ArrayList;
 
 import com.sysc3303.commons.ConfigProperties;
+import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.ElevatorButtonMessage;
 import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.commons.ElevatorVector;
@@ -24,6 +25,10 @@ public class Request {
 			initElevatorStatusArray();
 		}
 		
+		public void setTargetDirection(Direction direction, int elevatorId) {
+			elevatorStatusArray.get(elevatorId).setTargetDirection(direction);
+		}
+		
 		public boolean containsTargetFloorInElevatorButtonMessages(int elevatorId, int targetFloor) {
 			ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr = elevatorStatusArray.get(elevatorId).getElevatorButtonMessageArr();
 			
@@ -33,6 +38,10 @@ public class Request {
 				}
 			}
 			return false;
+		}
+		
+		public Direction getTargetDirection(int elevatorId) {
+			return elevatorStatusArray.get(elevatorId).getTargetDirection();
 		}
 		
 		private void initElevatorStatusArray() {
@@ -169,5 +178,14 @@ public class Request {
 			}
 			
 			return false;
+		}
+		
+		public boolean elevatorButtonMessagesIsEmpty() {
+			for(int i = 0; i < NUMBER_OF_ELEVATOR; i++) {
+				if(!elevatorStatusArray.get(i).elevatorButtonMessageIsEmpty()) {
+					return false;
+				}
+			}
+			return true;
 		}
 }

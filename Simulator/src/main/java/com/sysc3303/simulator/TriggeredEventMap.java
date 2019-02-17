@@ -96,7 +96,12 @@ public class TriggeredEventMap {
      * @param elevatorId the elevator to send t
      */
     public void send(int floor, Direction direction, int elevatorId){
-        List<Event> eventList = map.get(floor).remove(direction);
+        List<Event> eventList;
+        try{
+            eventList = map.get(floor).remove(direction);
+        }catch(NullPointerException e){
+            eventList = null;
+        }
         if (eventList == null){
             System.out.println("No passengers were found to pick up at this floor");
             return;
