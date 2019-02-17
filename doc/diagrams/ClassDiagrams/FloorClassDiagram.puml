@@ -1,0 +1,70 @@
+@startuml
+
+note "All private fields are implied to have getter and setter methods, as appropriate." as N1
+
+enum Direction {
+    UP
+    DOWN
+    IDLE
+}
+
+class FloorSystem {
+    -{static} totalNumberOfFloors: int
+
+    +floorArrival(int arrivalFloor, Direction direction, int elevatorID)
+    +buttonPress(int requestFloor, Direction buttonDirection)
+}
+
+class Floor {
+    -floorNum: int
+    -passengerIsOnFloor: int
+}
+
+class FloorButton {
+    -upButtonLight: boolean
+    -downButtonLight: boolean
+
+    +getButtonStatusString: String
+}
+
+class FloorLamp {
+    -upLamp: boolean
+    -downLamp: boolean
+
+    +flashLamp(Direction direction)
+}
+
+class FloorMessageHandler {
+    -schedulerAddress: InetAddress
+    -simulatorAddress: InetAddress
+    -guiAddress: InetAddress
+    -{static} schedulerPort: int
+    -{static} floorPort: int
+    -{static} simulatorPort: int
+    -{static} guiPort: int
+    -log: Logger
+    -{static} instance: FloorMessageHandler
+
+    +getInstance(int receivePort, FloorSystem floorSystem): FloorMessageHandler
+    +received(Message message)
+    +sendFloorButton(int floor, Direction direction)
+    +sendFloorArrival(int floor, Direction direction, int elevatorID)
+    +updateUI(boolean downState, boolean upState, int floor)
+}
+
+abstract class MessageHandler {
+    +received(Message message)
+    +send(Message message, InetAddress address, int port)
+}
+
+Floor *-- FloorButton
+Floor *-- FloorLamp
+Floor -- FloorMessageHandler
+
+FloorSystem o-- "*" Floor
+FloorSystem o-- FloorMessageHandler
+
+MessageHandler <|.. FloorMessageHandler
+
+
+@enduml

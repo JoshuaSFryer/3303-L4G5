@@ -1,0 +1,139 @@
+@startuml
+
+note "All private fields are implied to have getter and setter methods, as appropriate." as N1
+
+enum Direction {
+    UP
+    DOWN
+    IDLE
+}
+
+abstract class Message {
+    +opcode: byte
+
+    +toString(): String
+    +getOpcode(): byte
+}
+
+class ElevatorVector <<Datatype>> {
+    +currentFloor: int
+    +currentDirection: Direction
+    +targetFloor: int
+}
+
+class SchedulerSystem {
+    -log: Logger
+
+    +printRunning(int port)
+}
+
+class Scheduler {
+    +startFloorMessageHandler(Message message)
+    +startElevatorMessageHandler(Message message)
+}
+
+class SchedulerMessageHandler {
+    -{static} instance: SchedulerMessageHandler
+    -schedulerAddress: InetAddress
+    -elevatorAddress: InetAddress
+    -{static} elevatorPort: int
+    -{static} schedulerPort: int
+    -log: Logger
+
+    +getInstance(): SchedulerMessageHandler
+    +received(Message message)
+    +sendGoToFloor(ElevatorVector elevatorVector, int elevatorID)
+    +sendFloorArrival(int destinationFloor, int elevatorID)
+}
+
+class Request {
+    -floorButtonMessages: ArrayList<FloorButtonMessage>
+    -elevatorStatusArray: ArrayList<ElevatorStatus>
+    -{static} NUMBER_OF_ELEVATORS: int
+
+    +containsTargetFloorInElevatorButtonMessages(intElevatorID, int targetFloor): boolean
+    -initElevatorStatusArray()
+    +addFloorButtonMessage(FloorButtonMessage floorButtonMessage)
+    +addElevatorButtonMessage(ElevatorButtonMessage elevatorButtonMessage)
+    +floorButtonMessagesIsEmpty(): boolean
+    +floorButtonMessagesContains(int floor): boolean
+    +toString(): String
+}
+
+class FloorButtonMessage {
+
+}
+
+class ElevatorStatus <<Datatype>> {
+    -elevatorVector: ElevatorVector
+    -elevatorButtonMessageArr: ArrayList<ElevatorButtonMessage>
+
+    +addElevatorButtonMessage(ElevatorButtonMessage elevatorButtonMessage)
+    +toString(): String
+}
+
+abstract class RequestHandler {
+    #generateAndSendGoToFloorMessage()
+}
+
+class FloorRequestHandler <<Runnable>> {
+    +run()
+}
+
+class ElevatorRequestHandler <<Runnable>> {
+    +run()
+    +sendGoToFloorMessageFromElevatorButtonMessage()
+    -selectTargetFloor(int elevatorID): int
+    -removeTargetFloor(int targetFloor, Direction direction)
+}
+
+class TargetFloorDecider {
+    +selectTargetFloorCandidates(int numberOfElevator, Request request): ArrayList<ArrayList<Integer>>
+    +selectFloorFromAllElevatorsElevatorButtonMessage(Request request): int[]
+    +selectTargetFloorFromCandidates(int numberOfElevator, ArrayList<ArrayList<Integer>> targetFloorCandidates, Request request): int[]
+    +selectTargetFloorFromFloorButtonMessages(Request request, int elevatorId): int
+    +selectTargetFloorFromFloorButtonMessages(Request request): int[]
+    +selectTargetFloorFromElevatorButtonMessages(ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr, ElevatorVector elevatorVector): int
+    -elevatorIsOnItsWay(int targetFloor, Request request): boolean
+    -getClosestElevatorIdFromNearestFloor(int firstElevatorId, int secondElevatorId, int nearestFloor, Request request): int
+    -getDuplicateIndex(int[] targetFloors, int nearestFloor): int
+    -containsInt(int[] array, int number): boolean
+    -getNearestFloor(ArrayList<Integer> targetFloorCandidates, int currentFloor): int
+    +getNearestFloor(int firstFloor, int secondFloor, int currentFloor): int
+}
+
+class TargetFloorValidator {
+    +validTargetFloor(int targetFloor, Direction targetDirection, ElevatorVector elevatorVector): boolean
+    +validTargetFloor(int targetFloor, ElevatorVector elevatorVector): boolean
+}
+
+
+SchedulerSystem *-- Scheduler
+SchedulerSystem o-- SchedulerMessageHandler
+
+
+Scheduler *-- FloorMessageHandler
+Scheduler *-- ElevatorMessageHandler
+Scheduler *-- SchedulerMessageHandler
+Scheduler *-- Request
+
+
+RequestHandler o-- Request
+RequestHandler o-- SchedulerMessageHandler
+RequestHandler o-- Message
+RequestHandler *-- TargetFloorDecider
+RequestHandler *-- Logger
+
+MessageHandler <|-- SchedulerMessageHandler
+MessageHandler <|-- ElevatorMessageHandler
+MessageHandler <|-- FloorMessageHandler
+
+RequestHandler <|-- FloorRequestHandler
+RequestHandler <|-- ElevatorRequestHandler
+
+TargetFloorDecider *-- TargetFloorValidator
+
+Message <|-- FloorButtonMessage
+
+
+@enduml
