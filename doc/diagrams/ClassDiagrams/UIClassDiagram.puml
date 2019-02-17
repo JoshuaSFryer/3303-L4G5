@@ -1,0 +1,31 @@
+@startuml
+
+abstract class MessageHandler {
+    +received(Message message)
+    +send(Message message, Inetaddress address, int port)
+}
+
+class GUIMessageHandler {
+    -{static} instance: GUIMessageHandler
+    -context: UserInterface
+
+    +{static} getInstance(): GUIMessageHandler
+    +received(Message message)
+}
+
+class TestCLI {
+    -{static} instance: TestCLI
+
+    +{static} getInstance(): TestCLI
+}
+
+interface UserInterface {
+    +moveElevator(GUIElevatorMoveMessage msg)
+    +pressFloorButton(GUIFloorMessage msg)
+}
+
+MessageHandler <|.. GUIMessageHandler
+
+UserInterface <|.. TestCLI
+
+@enduml
