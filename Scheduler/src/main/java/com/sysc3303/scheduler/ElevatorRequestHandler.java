@@ -87,7 +87,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		
 		int targetFloor = selectTargetFloor(elevatorId);
 		
-		if(targetFloor != INVALID_FLOOR_1) {
+		if(targetFloor != INVALID_FLOOR_1 && targetFloor != 0) {
 			ElevatorVector curElevatorVector = request.getElevatorVector(elevatorId);
 			ElevatorVector elevatorVector    = new ElevatorVector(curElevatorVector.currentFloor, curElevatorVector.currentDirection, targetFloor);
 			

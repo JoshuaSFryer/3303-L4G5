@@ -40,7 +40,7 @@ public abstract class RequestHandler {
 				int                 targetFloor            = targetFloorDecider.getNearestFloor(targetFromFloorButton, 
 						                                                                         targetFloorsFromElevatorButtonMessages[i], currentFloor);
 				
-				if(targetFloor != -1) {
+				if(targetFloor != -1 && targetFloor != 0) {
 					ElevatorVector curElevatorVector = request.getElevatorVector(i);
 					ElevatorVector elevatorVector    = new ElevatorVector(curElevatorVector.currentFloor, curElevatorVector.currentDirection, targetFloor);
 					request.setElevatorVector(elevatorVector, i);
