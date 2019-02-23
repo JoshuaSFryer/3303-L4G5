@@ -25,27 +25,41 @@ public class TargetFloorDecider {
 	 */
 	private ArrayList<ArrayList<TargetWithDirection>> selectTargetFloorCandidates(int numberOfElevator, Request request) {
 		ArrayList<ArrayList<TargetWithDirection>> targetFloorCandidates = new ArrayList<ArrayList<TargetWithDirection>>();
-		ArrayList<FloorButtonMessage> floorButtonMessages   = (ArrayList<FloorButtonMessage>)request.getFloorButtonMessageArray();
+		ArrayList<FloorButtonMessage>             floorButtonMessages   = request.getFloorButtonMessageArray();
 		
 		for(int i = 0; i < numberOfElevator; i++) {
 			targetFloorCandidates.add(null);
 		}
 		
 		for(int i = 0; i < floorButtonMessages.size(); i++) {
-			int      curTargetFloor = floorButtonMessages.get(i).getFloor();
-			Direction curDirection  = floorButtonMessages.get(i).getDirection();
-			
-			for(int j = 0; j < numberOfElevator; j++) {
-				if(targetFloorValidator.validTargetFloor(curTargetFloor, curDirection, request.getElevatorVector(j))) {
-					if(targetFloorCandidates.get(j) == null) {
-						targetFloorCandidates.set(j, new ArrayList<TargetWithDirection>());
-					}
-					targetFloorCandidates.get(j).add(new TargetWithDirection(curTargetFloor, curDirection));
-				}
-			}
+			addValidTargetFloor(numberOfElevator, request, targetFloorCandidates,floorButtonMessages.get(i));
+		}
+				
+	/*	for(int i = 0; i < downDirectionMessages.size(); i++) {
+			addValidTargetFloor(numberOfElevator, request, targetFloorCandidates,downDirectionMessages.get(i));
+		}
+		*/
+		return targetFloorCandidates;
+	}
+	
+	private void addValidTargetFloor(int numberOfElevator, Request request, ArrayList<ArrayList<TargetWithDirection>> targetFloorCandidates, FloorButtonMessage message) {
+		if(message == null) {
+			return;
 		}
 		
-		return targetFloorCandidates;
+		int      buttonTargetFloor = message.getFloor();
+		Direction buttonDirection  = message.getDirection();
+		
+		for(int j = 0; j < numberOfElevator; j++) {
+			Direction targetDirection = request.getTargetDirection(j);
+			
+			if(targetFloorValidator.validTargetFloor(buttonTargetFloor, buttonDirection, request.getElevatorVector(j), targetDirection)) {
+				if(targetFloorCandidates.get(j) == null) {
+					targetFloorCandidates.set(j, new ArrayList<TargetWithDirection>());
+				}
+				targetFloorCandidates.get(j).add(new TargetWithDirection(buttonTargetFloor, buttonDirection));
+			}
+		}
 	}
 	
 	/**
@@ -312,8 +326,8 @@ public class TargetFloorDecider {
 		int secondFloorDiff = Math.abs(secondFloor - currentFloor);
 		
 		if(firstFloorDiff < secondFloorDiff) {
-			return firstFloorDiff;
+			return firstFloor;
 		}
-		return secondFloorDiff;
+		return secondFloor;
 	}
 }
