@@ -30,7 +30,7 @@ public class ElevatorStatus {
 	}
 	
 	public void setTargetDirection(Direction direction) {
-		targetDirection = direction;
+		this.targetDirection = direction;
 	}
 	
 	/**

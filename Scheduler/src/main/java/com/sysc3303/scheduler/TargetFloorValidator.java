@@ -20,22 +20,22 @@ public class TargetFloorValidator {
 	 * @param elevatorVector
 	 * @return
 	 */
-	public boolean validTargetFloor(int targetFloor, Direction targetDirection, ElevatorVector elevatorVector) {
+	public boolean validTargetFloor(int buttonFloor, Direction buttonDirection, ElevatorVector elevatorVector, Direction targetDirection) {
 		Direction      currentDirection   = elevatorVector.currentDirection;
 		int            currentTargetFloor = elevatorVector.targetFloor;
 		int            currentFloor       = elevatorVector.currentFloor;
 		
-		if(currentFloor == currentTargetFloor || elevatorVector.currentDirection == Direction.IDLE) {
+		if(currentFloor == currentTargetFloor || currentDirection == Direction.IDLE) {
 			return true;
 		}
 		
-		if(currentDirection == Direction.UP && targetDirection == Direction.UP) {
-			if(targetFloor < currentTargetFloor && targetFloor > currentFloor) {
+		if(buttonDirection == Direction.UP && targetDirection == Direction.UP) {
+			if(buttonFloor < currentTargetFloor && buttonFloor > currentFloor) {
 				return true;
 			}
 		}
-		else if(currentDirection == Direction.DOWN && targetDirection == Direction.DOWN) {
-			if(targetFloor > currentTargetFloor && targetFloor < currentFloor) {
+		else if(buttonDirection == Direction.DOWN && targetDirection == Direction.DOWN) {
+			if(buttonFloor > currentTargetFloor && buttonFloor < currentFloor) {
 				return true;
 			}
 		}

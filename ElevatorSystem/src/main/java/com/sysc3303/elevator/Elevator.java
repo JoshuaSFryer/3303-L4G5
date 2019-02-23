@@ -4,6 +4,9 @@ package com.sysc3303.elevator;
 
 
 import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
+
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
@@ -38,6 +41,7 @@ public class Elevator {
 
 	private ElevatorMessageHandler 		messageHandler;
 	private ElevatorSystem				parentSystem;
+    private Logger          log = Logger.getLogger(Elevator.class);
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -254,6 +258,7 @@ public class Elevator {
 	public void goToFloor(int targetFloor) {
 		// Close the doors before proceeding. Safety first!
 		closeDoors();
+		
 		// Set the current direction and update the lamp.
 		if(targetFloor > currentFloor) {
 			this.currentDirection = Direction.UP;
@@ -267,6 +272,8 @@ public class Elevator {
 		this.mover = new Thread(
 						new MovementHandler(targetFloor, this, this.sensor, 
 											this.motor, this.elevatorID), "Movement Handler Elevator " + elevatorID );
+		log.debug("Current targetFloor: " + targetFloor);
+		log.debug("Current direction: " + currentDirection);
 		
 		// Launch the mover thread. It will continue until the target floor is
 		// reached, or this elevator receives a new goToFloor request. Upon

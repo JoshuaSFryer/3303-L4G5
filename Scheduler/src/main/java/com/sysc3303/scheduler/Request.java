@@ -18,11 +18,59 @@ public class Request {
 		private ArrayList<FloorButtonMessage> floorButtonMessages;
 		private ArrayList<ElevatorStatus>     elevatorStatusArray;
 		private final int                     NUMBER_OF_ELEVATOR;
+		private boolean                       generatorIsOn;
 		
 		public Request() {
 			NUMBER_OF_ELEVATOR  = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators"));
 			floorButtonMessages = new ArrayList<FloorButtonMessage>();
 			initElevatorStatusArray();
+		}
+		
+		public synchronized void setGeneratorOn() {
+			generatorIsOn = true;
+		}
+		
+		public synchronized void setGeneratorOff() {
+			generatorIsOn = false;
+		}
+		
+		public synchronized boolean generatorIsOn() {
+			return generatorIsOn;
+		}
+		
+		public ArrayList<FloorButtonMessage> getFloorButtonUpMessageArray() {
+			ArrayList<FloorButtonMessage> upMessage = new ArrayList<FloorButtonMessage>();
+			
+			for(int i = 0; i < floorButtonMessages.size(); i++) {
+				FloorButtonMessage curMessage = floorButtonMessages.get(i);
+				if(curMessage.getDirection() == Direction.UP) {
+					upMessage.add(curMessage);
+				}
+			}
+			
+			return upMessage;
+		}
+		
+		public void resetTargetDirection() {
+			for(int i = 0; i < elevatorStatusArray.size(); i++) {
+				ElevatorStatus curStatus = elevatorStatusArray.get(i);
+				if(curStatus.getElevatorVector().currentDirection == Direction.IDLE) {
+					curStatus.setTargetDirection(Direction.IDLE);
+				}
+			}
+		}
+		
+		public ArrayList<FloorButtonMessage> getFloorButtonDownMessageArray() {
+			ArrayList<FloorButtonMessage> downMessage = new ArrayList<FloorButtonMessage>();
+			
+			for(int i = 0; i < floorButtonMessages.size(); i++) {
+				FloorButtonMessage curMessage = floorButtonMessages.get(i);
+				if(curMessage.getDirection() == Direction.DOWN) {
+					downMessage.add(curMessage);
+				}
+			}
+			
+			return downMessage;
 		}
 		
 		public void setTargetDirection(Direction direction, int elevatorId) {
