@@ -89,9 +89,11 @@ public class ElevatorMessageHandler extends MessageHandler {
                 break;
             case 9:
                 System.out.println("received door stick message: No functionality has been added to handle this yet");
+                DoorStickMessage doorStickMessage = (DoorStickMessage) message;
                 break;
             case 10:
                 System.out.println("received elevator stick message: No functionality has been added to handle this yet");
+                ElevatorStickMessage elevatorStickMessage = (ElevatorStickMessage) message;
                 break;
             default:
             	// throw new BadMessageTypeException("This message cannot be handled by this module!");
