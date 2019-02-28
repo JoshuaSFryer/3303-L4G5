@@ -8,4 +8,4 @@ RUN apt-get install -y \
 COPY ./ /tmp
 WORKDIR /tmp
 CMD ["mvn", "clean", "package", "-DskipTests"]
-CMD ["java", "-jar", "target/Simulator-1.0.jar", "/testEvents.txt"]
+CMD ["java", "-jar", "target/Simulator-1.0.jar", "/testEventsErrors.txt"]
