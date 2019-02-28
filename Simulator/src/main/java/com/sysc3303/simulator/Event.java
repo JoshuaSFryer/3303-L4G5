@@ -1,6 +1,4 @@
 package com.sysc3303.simulator;
-import com.sysc3303.commons.Direction;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,6 +31,17 @@ public abstract class Event {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void send(){
     }
 
     /**

@@ -48,4 +48,10 @@ public class RequestEvent extends Event{
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+
+    public void send(){
+        FloorSender.getInstance().sendFloorClick(floor, getDirection());
+        // add it to the triggered event map to send on receipt of floor arrival
+        TriggeredEventMap.getInstance().add(this);
+    }
 }

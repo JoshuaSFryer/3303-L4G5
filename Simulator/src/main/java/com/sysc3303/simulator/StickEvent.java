@@ -28,4 +28,7 @@ public abstract class StickEvent extends Event{
     public void setNumSecondsStuck(int numSecondsStuck) {
         this.numSecondsStuck = numSecondsStuck;
     }
+
+    public void send(){
+    }
 }
