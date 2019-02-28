@@ -19,7 +19,7 @@ public class EventFactory {
                 // make elevator stick
                 event = new ElevatorStickEvent(eventStringArray);
                 break;
-            case default:
+            default:
                 // if neither, print type does not exist
                 System.out.println("Event type : " + eventStringArray[1] + " does not exist");
                 break;
