@@ -28,6 +28,4 @@ public class DoorStickMessage extends Message{
     public int getNumSecondsStuck() {
         return numSecondsStuck;
     }
-
-
 }

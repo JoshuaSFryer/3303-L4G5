@@ -16,9 +16,9 @@ public class RequestEvent extends Event{
      */
     public RequestEvent(String[] stringArray) throws ParseException{
         super(stringArray);
-        this.floor = Integer.parseInt(stringArray[1]);
-        this.direction = Direction.valueOf(stringArray[2].toUpperCase());
-        this.elevatorButton = Integer.parseInt(stringArray[3]);
+        this.floor = Integer.parseInt(stringArray[2]);
+        this.direction = Direction.valueOf(stringArray[3].toUpperCase());
+        this.elevatorButton = Integer.parseInt(stringArray[4]);
     }
 
     public String toString(){
