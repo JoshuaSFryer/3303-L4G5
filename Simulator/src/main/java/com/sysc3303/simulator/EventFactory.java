@@ -7,7 +7,7 @@ public class EventFactory {
     public Event makeEvent(String[] eventStringArray) throws ParseException {
         Event event = null;
         // the type of event is specified as the second string in the event file
-        switch(eventStringArray[1]){
+        switch (eventStringArray[1]) {
             case "request":
                 event = new RequestEvent(eventStringArray);
                 break;
@@ -24,5 +24,6 @@ public class EventFactory {
                 System.out.println("Event type : " + eventStringArray[1] + " does not exist");
                 break;
         }
+        return event;
     }
 }
