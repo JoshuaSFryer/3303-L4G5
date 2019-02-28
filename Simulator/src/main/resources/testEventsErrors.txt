@@ -1,0 +1,14 @@
+14:05:15.0 request 2 Down 1
+14:05:15.0 stick_door 0 451
+14:05:15.0 request 1 Down 1
+14:05:15.0 request 3 Up 2
+14:05:15.0 request 4 Up 1
+14:05:15.0 request 2 Down 1
+14:05:15.0 request 1 Down 1
+14:05:15.0 stick_elevator 1 200
+14:05:15.0 request 3 Up 2
+14:05:15.0 request 4 Up 1
+14:05:15.0 request 2 Down 1
+14:05:15.0 request 1 Down 1
+14:05:15.0 request 3 Up 2
+14:05:15.0 request 4 Up 1
