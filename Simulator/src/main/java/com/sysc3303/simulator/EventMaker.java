@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class EventMaker {
 
+    private EventFactory eventFactory;
+
     // TODO Definitely could be a singleton
     public EventMaker(){
     }
@@ -22,6 +24,8 @@ public class EventMaker {
      */
     public void addEventsFromFileToTimer(String filePath){
         FileParser fp = FileParser.getInstance();
+        eventFactory = new EventFactory();
+
         try {
             fp.parse(filePath);
         } catch (IOException e){
@@ -47,7 +51,7 @@ public class EventMaker {
     private void createEventAndAddToTimer(String[] stringArray){
         Event event;
         try {
-            event = new Event(stringArray);
+            event = eventFactory.makeEvent(stringArray);
         } catch (ParseException e){
             System.out.println("Could not parse: " + stringArray);
             return;
