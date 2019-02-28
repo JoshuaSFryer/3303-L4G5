@@ -9,7 +9,9 @@ public enum OpCodes {
     FLOOR_CLICK_SIMULATION((byte)5),
     ELEVATOR_CLICK_SIMULATION((byte)6),
     ELEVATOR_UPDATE_GUI((byte)7),
-    FLOOR_UPDATE_GUI((byte)8)
+    FLOOR_UPDATE_GUI((byte)8),
+    DOOR_STICK((byte)9),
+    ELEVATOR_STICK((byte)10)
     ;
 
     private final byte opCode;

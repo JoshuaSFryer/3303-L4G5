@@ -39,4 +39,12 @@ public class ElevatorSender {
     public void sendElevatorClick(int elevatorId, int elevatorButton){
         SimulatorMessageHandler.getInstance(simulatorPort).sendElevatorButtonClickSimulation(elevatorButton, elevatorId);
     }
+
+    public void sendDoorStick(int elevatorId, int numSecondsStuck){
+        SimulatorMessageHandler.getInstance(simulatorPort).sendDoorStick(elevatorId, numSecondsStuck);
+    }
+
+    public void sendElevatorStick(int elevatorId, int numSecondsStuck){
+        SimulatorMessageHandler.getInstance(simulatorPort).sendElevatorStick(elevatorId, numSecondsStuck);
+    }
 }

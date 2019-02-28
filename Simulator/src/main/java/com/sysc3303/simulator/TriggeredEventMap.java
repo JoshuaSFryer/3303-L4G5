@@ -20,7 +20,7 @@ import java.util.List;
 public class TriggeredEventMap {
     public static TriggeredEventMap instance;
     // TODO this will need to be a list of events
-    private HashMap<Integer, HashMap<Direction, List<Event>>> map;
+    private HashMap<Integer, HashMap<Direction, List<RequestEvent>>> map;
 
     /**
      * Singleton patern uses a private empty constructor
@@ -52,11 +52,11 @@ public class TriggeredEventMap {
      * @param event the event to be added
      * @return returns a boolean if it is added successfully
      */
-    public boolean add(Event event){
+    public boolean add(RequestEvent event){
         Direction direction = event.getDirection();
         Integer floor = new Integer(event.getFloor());
-        HashMap<Direction, List<Event>> subMap;
-        List<Event> eventList;
+        HashMap<Direction, List<RequestEvent>> subMap;
+        List<RequestEvent> eventList;
 
         // if the map doesn't yet have that floor mapped
         if (!map.containsKey(floor)){
@@ -96,7 +96,7 @@ public class TriggeredEventMap {
      * @param elevatorId the elevator to send t
      */
     public void send(int floor, Direction direction, int elevatorId){
-        List<Event> eventList;
+        List<RequestEvent> eventList;
         try{
             eventList = map.get(floor).remove(direction);
         }catch(NullPointerException e){
@@ -106,7 +106,7 @@ public class TriggeredEventMap {
             System.out.println("No passengers were found to pick up at this floor");
             return;
         }
-        for (Event event: eventList){
+        for (RequestEvent event: eventList){
             ElevatorSender.getInstance().sendElevatorClick(elevatorId, event.getElevatorButton());
         }
     }
