@@ -64,4 +64,14 @@ public class SimulatorMessageHandler extends MessageHandler {
         ElevatorClickSimulationMessage elevatorButtonClickSimulation = new ElevatorClickSimulationMessage(floor, elevatorId);
         send(elevatorButtonClickSimulation, elevatorAddress, elevatorPort);
     }
+
+    public void sendDoorStick(int elevatorId, int numSecondsStuck){
+        DoorStickMessage doorStickMessage = new DoorStickMessage(elevatorId, numSecondsStuck);
+        send(doorStickMessage, elevatorAddress, elevatorPort);
+    }
+
+    public void sendElevatorStick(int elevatorId, int numSecondsStuck){
+        ElevatorStickMessage elevatorStickMessage = new ElevatorStickMessage(elevatorId, numSecondsStuck);
+        send(elevatorStickMessage, elevatorAddress, elevatorPort);
+    }
 }

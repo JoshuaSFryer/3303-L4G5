@@ -1,5 +1,4 @@
 package com.sysc3303.simulator;
-import com.sysc3303.commons.Direction;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,38 +13,35 @@ import java.util.Locale;
  * Event is a data structure created to represent one user of the elevator, requesting it at a floor at a specific time
  * then once the elevator arrives, entering and pressing a floor button
  */
-public class Event {
+public abstract class Event {
     // defining the date format
     private static DateFormat df = new SimpleDateFormat("kk:mm:ss", Locale.CANADA);
 
-    private Date timestamp;
-    private int floor, elevatorButton;
-    private Direction direction;
+    protected Date timestamp;
+    protected String type;
 
-    /**
-     * Constructor that takes the correct data types for attributes as parameters
-     * @param timestamp
-     * @param floor
-     * @param elevatorButton
-     * @param direction
-     */
-    public Event(Date timestamp, int floor, int elevatorButton, Direction direction) {
-        this.timestamp = timestamp;
-        this.floor = floor;
-        this.direction = direction;
-        this.elevatorButton = elevatorButton;
+    public Event(String[] eventStringArray) throws ParseException{
+        this.timestamp = parseDate(eventStringArray[0]);
+        this.type = eventStringArray[1];
     }
 
-    /**
-     * Constructor that takes the parameters as one array of strings that need to be parsed
-     * @param stringArray
-     * @throws ParseException
-     */
-    public Event(String[] stringArray) throws ParseException{
-        this.timestamp = parseDate(stringArray[0]);
-        this.floor = Integer.parseInt(stringArray[1]);
-        this.direction = Direction.valueOf(stringArray[2].toUpperCase());
-        this.elevatorButton = Integer.parseInt(stringArray[3]);
+    public Date getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void send(){
     }
 
     /**
@@ -68,39 +64,5 @@ public class Event {
         return finalTime.getTime();
     }
 
-    public String toString(){
-        return "Event:\n\tTimestamp: " + timestamp + "\n\tFloor: " + floor + "\n\tDirection: " + direction + "\n\tElevator Button: " + elevatorButton;
-    }
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public int getFloor() {
-        return floor;
-    }
-
-    public void setFloor(int floor) {
-        this.floor = floor;
-    }
-
-    public int getElevatorButton() {
-        return elevatorButton;
-    }
-
-    public void setElevatorButton(int elevatorButton) {
-        this.elevatorButton = elevatorButton;
-    }
-
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
 }

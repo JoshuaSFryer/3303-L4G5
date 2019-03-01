@@ -23,8 +23,6 @@ public class TimedEvent extends TimerTask {
     public void run(){
         System.out.println("\nThe event being sent is:\n" + event);
         // send it using the floor sender
-        FloorSender.getInstance().sendFloorClick(event.getFloor(), event.getDirection());
-        // add it to the triggered event map to send on receipt of floor arrival
-        TriggeredEventMap.getInstance().add(event);
+        event.send();
     }
 }

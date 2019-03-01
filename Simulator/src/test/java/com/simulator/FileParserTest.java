@@ -1,6 +1,7 @@
 package com.simulator;
 
 import com.sysc3303.simulator.Event;
+import com.sysc3303.simulator.EventFactory;
 import com.sysc3303.simulator.FileParser;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -26,7 +27,7 @@ public class FileParserTest {
         fp.parse("simpleTestEvents.txt");
 
         System.out.println(fp.getParsed());
-        Event event = new Event(fp.getParsed().get(0));
+        Event event = new EventFactory().makeEvent((fp.getParsed().get(0)));
         System.out.println(event.getTimestamp());
         Assert.assertEquals(2, fp.getParsed().size());
     }
