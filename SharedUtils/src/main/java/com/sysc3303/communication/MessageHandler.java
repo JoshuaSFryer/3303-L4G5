@@ -36,4 +36,3 @@ public abstract class MessageHandler{
         communicationHandler.send(message, address, port);
     }
 }
-
