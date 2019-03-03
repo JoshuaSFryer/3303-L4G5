@@ -78,6 +78,20 @@ public class SchedulerMessageHandler extends MessageHandler{
                 
             	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             	break;
+            case 11: 
+            	StuckMessage imStuckMessage = (StuckMessage)message;
+
+            	log.info("Received StuckMessage from elevator");
+            	log.info(imStuckMessage);
+            	
+            	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
+            case 12:
+            	UnStuckMessage unStuckMessage = (UnStuckMessage)message;
+ 
+            	log.info("Received UnStuckMessage from elevator");
+            	log.info(unStuckMessage);
+            	
+            	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             default:
                 // TODO what happens when you get an invalid upcode
         }

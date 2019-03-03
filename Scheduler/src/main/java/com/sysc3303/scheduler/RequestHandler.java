@@ -1,9 +1,14 @@
 package com.sysc3303.scheduler;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 import org.apache.log4j.Logger;
 
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
+import com.sysc3303.communication.ElevatorButtonMessage;
+import com.sysc3303.communication.FloorButtonMessage;
 import com.sysc3303.communication.GoToFloorMessage;
 import com.sysc3303.communication.Message;
 
@@ -19,6 +24,7 @@ public abstract class RequestHandler {
 	protected Message                 message;
 	protected TargetFloorDecider      targetFloorDecider = new TargetFloorDecider();
 	protected Logger                  log                = Logger.getLogger(SchedulerMessageHandler.class);
+	protected ElevatorStateMessageValidator elevatorStateMessageValidator = new ElevatorStateMessageValidator();
 
 	/**
 	 * generates and sends goToFloorMessage
@@ -27,19 +33,28 @@ public abstract class RequestHandler {
 	 * @throws InterruptedException 
 	 */
 	protected void generateAndSendGoToFloorMessage() {
+		if(request.generatorIsOn()) {
+			return;
+		}
+		request.setGeneratorOn();
 		while(!request.floorButtonMessagesIsEmpty() || !request.elevatorButtonMessagesIsEmpty()) {
 			TargetWithDirection[] targetFloorsFromFloorButtonMessages    = targetFloorDecider.selectTargetFloorFromFloorButtonMessages(request);
 			int[]                 targetFloorsFromElevatorButtonMessages = targetFloorDecider.selectFloorFromAllElevatorsElevatorButtonMessage(request);
 			int                   numberOfElevator                       = request.getNumberOfElevator();
 			
+			if(hasOnlyInvalidFloor(targetFloorsFromFloorButtonMessages) && hasOnlyInvalidFloor(targetFloorsFromElevatorButtonMessages)) {
+				if(request.everyElevatorArrived()) {
+					request.resetTargetDirection();
+					continue;
+				}
+			}
+			
 			for(int i = 0; i < numberOfElevator; i++) {
-				TargetWithDirection curTargetWithDirection = targetFloorsFromFloorButtonMessages[i];
-				Direction           curTargetDirection     = curTargetWithDirection.getTargetDirection();
+				Direction           curTargetDirection     = targetFloorsFromFloorButtonMessages[i].getTargetDirection();
 				int                 targetFromFloorButton  = targetFloorsFromFloorButtonMessages[i].getTargetFloor();
 				int                 currentFloor           = request.getElevatorVector(i).currentFloor;
 				int                 targetFloor            = targetFloorDecider.getNearestFloor(targetFromFloorButton, 
 						                                                                         targetFloorsFromElevatorButtonMessages[i], currentFloor);
-				
 				if(targetFloor != -1 && targetFloor != 0) {
 					ElevatorVector curElevatorVector = request.getElevatorVector(i);
 					ElevatorVector elevatorVector    = new ElevatorVector(curElevatorVector.currentFloor, curElevatorVector.currentDirection, targetFloor);
@@ -59,5 +74,55 @@ public abstract class RequestHandler {
 				e.printStackTrace();
 			}
 		}
+		request.setGeneratorOff();
+	}
+	
+	protected boolean hasOnlyInvalidFloor(int[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			if(arr[i] != INVALID_FLOOR_1) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	protected boolean hasOnlyInvalidFloor(TargetWithDirection[] arr) {
+		for(int i = 0; i < arr.length; i++) {
+			if(arr[i].getTargetFloor() != INVALID_FLOOR_1) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * This function is to update the floorRequestList and elevatorRequestList
+	 * once the elevator arrived a target floor, the target floor needs to be removed potentially
+	 * both from floorRequestList and elevatorRequestList.
+	 * 
+	 * @para targetFloor
+	 * @para targetDirection
+	 */
+	protected void removeTargetFloor(int targetFloor, int elevatorId, Direction targetDirection) {	
+		ArrayList<ElevatorButtonMessage> elevatorRequestList = request.getElevatorButtonMessageArray(elevatorId);
+		ArrayList<FloorButtonMessage>    floorRequestList    = request.getFloorButtonMessageArray();
+		
+		for(int i = 0; i < elevatorRequestList.size(); i++) {
+			if(elevatorRequestList.get(i).getDestinationFloor() == targetFloor) {
+				elevatorRequestList.set(i, null);
+			}
+		}
+		
+		elevatorRequestList.removeAll(Collections.singleton(null));
+		
+		for(int i = 0; i < floorRequestList.size(); i++) {
+			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
+
+			if(curFloorRequest.getFloor() == targetFloor && curFloorRequest.getDirection() == targetDirection) {
+				floorRequestList.set(i, null);
+			}
+		}
+		
+		floorRequestList.removeAll(Collections.singleton(null));
 	}
 }

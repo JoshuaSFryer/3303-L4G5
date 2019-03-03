@@ -15,11 +15,26 @@ public class ElevatorStatus {
 	private ElevatorVector                   elevatorVector;
 	private ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr;
 	private Direction                        targetDirection;
+	private boolean                          isStuck;
 	
 	public ElevatorStatus() {
 		elevatorVector           = new ElevatorVector(0, Direction.IDLE, 0);
 		elevatorButtonMessageArr = new ArrayList<ElevatorButtonMessage>(); 
 		targetDirection          = Direction.IDLE;
+		isStuck                  = false;
+	}
+	
+	public boolean elevatorIsStuck() {
+		return isStuck;
+	}
+		
+	public void setElevatorIsStuck() {
+		isStuck = true;
+		elevatorVector = new ElevatorVector(elevatorVector.currentFloor, elevatorVector.currentDirection, 0);
+	}
+
+	public void setElevatorIsUnstuck() {
+		isStuck = false;
 	}
 	
 	public boolean elevatorButtonMessageIsEmpty() {
@@ -30,7 +45,7 @@ public class ElevatorStatus {
 	}
 	
 	public void setTargetDirection(Direction direction) {
-		targetDirection = direction;
+		this.targetDirection = direction;
 	}
 	
 	/**
@@ -87,8 +102,8 @@ public class ElevatorStatus {
 		}
 		
 		output += elevatorVector.toString() + 
-				  "\nTargetDirection: " + targetDirection;
-		
+				  "\nTargetDirection: " + targetDirection +
+				  "\nStuck: " + isStuck;
 		return output;
 	}
 }
