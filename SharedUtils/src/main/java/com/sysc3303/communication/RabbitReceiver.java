@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.SerializationUtilJSON;
 
 public class RabbitReceiver implements Runnable {
@@ -22,7 +23,14 @@ public class RabbitReceiver implements Runnable {
 
     public void run(){
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost(HOSTNAME);
+        String hostname;
+        if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
+            hostname = "localhost";
+        }
+        else {
+            hostname = ConfigProperties.getInstance().getProperty("rabbitAddress");
+        }
+        factory.setHost(hostname);
         try{
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
