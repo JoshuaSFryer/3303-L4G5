@@ -1,5 +1,7 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sysc3303.commons.ElevatorVector;
 
 /**
@@ -12,7 +14,8 @@ public class ElevatorStateMessage extends Message{
     private final ElevatorVector elevatorVector;
     private final int elevatorId;
 
-    public ElevatorStateMessage(ElevatorVector elevatorVector, int elevatorId) {
+    @JsonCreator
+    public ElevatorStateMessage(@JsonProperty("elevatorVector") ElevatorVector elevatorVector,@JsonProperty("elevatorId") int elevatorId) {
         // Opcode for this message is 3
         super(OpCodes.ELEVATOR_STATE.getOpCode());
         this.elevatorVector = elevatorVector;
@@ -27,7 +30,7 @@ public class ElevatorStateMessage extends Message{
     }
 
     @Override
-    public String getSummary(){
+    public String summary(){
         return "ElevatorState: currentFloor-"  + elevatorVector.currentFloor  + " direction-" + elevatorVector.currentDirection + " elevator-" + elevatorId;
     }
 
