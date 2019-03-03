@@ -78,6 +78,12 @@ public class SchedulerMessageHandler extends MessageHandler{
                 
             	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             	break;
+            case 99: 
+            	ImStuckMessage imStuckMessage = (ImStuckMessage)message;
+            	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
+            case 98:
+            	UnStuckMessage unStuckMessage = (UnStuckMessage)message;
+            	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             default:
                 // TODO what happens when you get an invalid upcode
         }

@@ -76,6 +76,18 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 				sendGoToFloorMessageFromElevatorButtonMessage();
 			}
 		}
+		else if(message instanceof ImStuckMessage) {
+			ImStuckMessage message    = (ImStuckMessage)this.message;
+			int            elevatorId = message.getElevatorId();
+
+			request.setElevatorIsStuck(elevatorId);
+		}
+		else if(message instanceof UnStuckMessage) {
+			UnStuckMessage message    = (UnStuckMessage)this.message;
+			int            elevatorId = message.getElevatorId();
+			
+			request.setElevatorIsUnstuck(elevatorId);
+		}
 	}
 	
 	/**
