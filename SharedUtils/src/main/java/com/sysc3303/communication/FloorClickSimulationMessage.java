@@ -1,5 +1,7 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sysc3303.commons.Direction;
 
 /**
@@ -13,7 +15,8 @@ public class FloorClickSimulationMessage extends Message{
     private int floor;
     private Direction direction;
 
-    public FloorClickSimulationMessage(int floor, Direction direction) {
+    @JsonCreator
+    public FloorClickSimulationMessage(@JsonProperty("floor") int floor,@JsonProperty("direction") Direction direction) {
         // Opcode for this message is 5
         super(OpCodes.FLOOR_CLICK_SIMULATION.getOpCode());
         this.floor = floor;
@@ -27,7 +30,7 @@ public class FloorClickSimulationMessage extends Message{
     }
 
     @Override
-    public String getSummary(){
+    public String summary(){
         return "FloorClickSim: floor-"  + floor  + " direction-" + direction;
     }
 

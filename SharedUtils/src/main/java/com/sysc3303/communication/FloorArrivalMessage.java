@@ -1,5 +1,7 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sysc3303.commons.Direction;
 
 /**
@@ -14,7 +16,8 @@ public class FloorArrivalMessage extends Message{
     private Direction currentDirection;
     private int elevatorId;
 
-    public FloorArrivalMessage(int floor, Direction currentDirection, int elevatorId) {
+    @JsonCreator
+    public FloorArrivalMessage(@JsonProperty("floor") int floor, @JsonProperty("currentDirection") Direction currentDirection, @JsonProperty("elevatorId") int elevatorId) {
         // Opcode for this message is 1
         super(OpCodes.FLOOR_ARRIVAL.getOpCode());
         this.floor = floor;
@@ -29,7 +32,7 @@ public class FloorArrivalMessage extends Message{
     }
 
     @Override
-    public String getSummary(){
+    public String summary(){
         return "FloorArrival: floor-"  + floor  + " direction-" + currentDirection + " elevator-" + elevatorId;
     }
 
