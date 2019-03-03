@@ -4,20 +4,20 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DeliverCallback;
-import com.sysc3303.commons.SerializationUtil;
+import com.sysc3303.commons.SerializationUtilJSON;
 
 public class RabbitReceiver implements Runnable {
 
     private final static boolean AUTO_ACK = true;
     private final static String HOSTNAME = "localhost";
     private MessageHandler messageHandler;
-    private SerializationUtil<Message> serializationUtil;
+    private SerializationUtilJSON<Message> serializationUtil;
     private String queueName;
 
     public RabbitReceiver(MessageHandler messageHandler, String queueName){
         this.messageHandler = messageHandler;
         this.queueName = queueName;
-        serializationUtil = new SerializationUtil<>();
+        serializationUtil = new SerializationUtilJSON<>();
     }
 
     public void run(){
@@ -31,7 +31,7 @@ public class RabbitReceiver implements Runnable {
             System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-                Message message = serializationUtil.deserialize(delivery.getBody(), delivery.getBody().length);
+                Message message = serializationUtil.deserialize(delivery.getBody(), Message.class);
 
                 System.out.println(" [x] Received '" + message + "'");
 

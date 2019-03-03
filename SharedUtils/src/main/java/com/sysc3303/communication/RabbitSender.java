@@ -3,19 +3,19 @@ package com.sysc3303.communication;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
-import com.sysc3303.commons.SerializationUtil;
+import com.sysc3303.commons.SerializationUtilJSON;
 
 public class RabbitSender implements Runnable{
 
     private final static String HOSTNAME = "localhost";
-    private SerializationUtil<Message> serializationUtil;
+    private SerializationUtilJSON<Message> serializationUtil;
     private String queueName;
     private Message message;
 
     public RabbitSender(String queueName, Message message){
         this.queueName = queueName;
         this.message = message;
-        serializationUtil = new SerializationUtil<>();
+        serializationUtil = new SerializationUtilJSON<>();
     }
     public void run() {
         ConnectionFactory factory = new ConnectionFactory();
