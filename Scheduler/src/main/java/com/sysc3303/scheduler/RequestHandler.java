@@ -43,16 +43,10 @@ public abstract class RequestHandler {
 			int                   numberOfElevator                       = request.getNumberOfElevator();
 			
 			if(hasOnlyInvalidFloor(targetFloorsFromFloorButtonMessages) && hasOnlyInvalidFloor(targetFloorsFromElevatorButtonMessages)) {
-				request.resetTargetDirection();
-				continue;
-			}
-			log.debug("Printing target floor buttons for each elevator");
-			for(int i = 0; i < targetFloorsFromFloorButtonMessages.length; i++) {
-				log.debug(targetFloorsFromFloorButtonMessages[i].getTargetFloor());
-			}
-			
-			for(int i = 0; i < targetFloorsFromElevatorButtonMessages.length; i++) {
-				log.debug(targetFloorsFromElevatorButtonMessages[i]);
+				if(request.everyElevatorArrived()) {
+					request.resetTargetDirection();
+					continue;
+				}
 			}
 			
 			for(int i = 0; i < numberOfElevator; i++) {
@@ -66,14 +60,7 @@ public abstract class RequestHandler {
 					ElevatorVector elevatorVector    = new ElevatorVector(curElevatorVector.currentFloor, curElevatorVector.currentDirection, targetFloor);
 					request.setElevatorVector(elevatorVector, i);
 					
-					log.debug("printing prps...");
-					log.debug(curTargetDirection);
-					log.debug(targetFromFloorButton);
-					log.debug(currentFloor);
-					log.debug(targetFloor);
-					
 					if(targetFloor == targetFromFloorButton) {
-						log.debug("Setting target direction for elevator " + i);
 						request.setTargetDirection(curTargetDirection, i);
 					}
 					
@@ -121,10 +108,7 @@ public abstract class RequestHandler {
 		ArrayList<FloorButtonMessage>    floorRequestList    = request.getFloorButtonMessageArray();
 		
 		for(int i = 0; i < elevatorRequestList.size(); i++) {
-			log.debug("cur size: " + elevatorRequestList.size());
-			log.debug("cur index: " + i);
 			if(elevatorRequestList.get(i).getDestinationFloor() == targetFloor) {
-				log.debug("removing... " + elevatorRequestList.get(i));
 				elevatorRequestList.set(i, null);
 			}
 		}
@@ -134,9 +118,7 @@ public abstract class RequestHandler {
 		for(int i = 0; i < floorRequestList.size(); i++) {
 			FloorButtonMessage curFloorRequest = floorRequestList.get(i);
 
-			log.debug(curFloorRequest);
 			if(curFloorRequest.getFloor() == targetFloor && curFloorRequest.getDirection() == targetDirection) {
-				log.debug("removing... " + curFloorRequest);
 				floorRequestList.set(i, null);
 			}
 		}

@@ -7,6 +7,8 @@ import com.sysc3303.communication.ElevatorButtonMessage;
 import com.sysc3303.communication.ElevatorStateMessage;
 import com.sysc3303.communication.FloorArrivalMessage;
 import com.sysc3303.communication.Message;
+import com.sysc3303.communication.StuckMessage;
+import com.sysc3303.communication.UnStuckMessage;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
@@ -29,7 +31,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 	}
 
 	public void run() {
-		log.debug("ElevatorRequestHandler starting");
+		log.info("ElevatorRequestHandler starting");
 		
 		if(message instanceof ElevatorStateMessage) {
 			ElevatorStateMessage message          = (ElevatorStateMessage)this.message;
@@ -40,7 +42,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 			Direction            targetDirection  = request.getTargetDirection(elevatorId);
 			
 			if(!elevatorStateMessageValidator.isValidStateMessage(message, request)) {
-				log.debug("Recieved invalid state message: " + message);
+				log.info("Recieved invalid state message: " + message);
 				return;
 			}
 			
@@ -51,11 +53,10 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 			if(currentFloor == destinationFloor) {
 				log.info("Elevator " + elevatorId + " arrived at destination");
 				
-
 				removeTargetFloor(currentFloor, elevatorId, targetDirection);
 				
 				log.info("Removed target floor");
-				log.debug("cur request" + request);
+				log.info(request);
 				
 				ElevatorVector      elevatorVectorResetTargetFloor = new ElevatorVector(currentFloor, Direction.IDLE, 0);
 				FloorArrivalMessage floorArrivalMessage            = new FloorArrivalMessage(destinationFloor, targetDirection, elevatorId);
@@ -76,9 +77,9 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 				sendGoToFloorMessageFromElevatorButtonMessage();
 			}
 		}
-		else if(message instanceof ImStuckMessage) {
-			ImStuckMessage message    = (ImStuckMessage)this.message;
-			int            elevatorId = message.getElevatorId();
+		else if(message instanceof StuckMessage) {
+			StuckMessage message    = (StuckMessage)this.message;
+			int          elevatorId = message.getElevatorId();
 
 			request.setElevatorIsStuck(elevatorId);
 		}
@@ -102,7 +103,7 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		request.addElevatorButtonMessage(message, elevatorId);
 		
 		log.info("Setting elevator button message");
-		log.debug(request);
+		log.info(request);
 		
 		generateAndSendGoToFloorMessage();
 	}
