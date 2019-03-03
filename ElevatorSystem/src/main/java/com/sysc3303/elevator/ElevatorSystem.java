@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sysc3303.communication.RabbitReceiver;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -28,6 +29,8 @@ public class ElevatorSystem {
     public ElevatorSystem(int num_elevators, int num_floors, int elevatorSystemPort){
         //ElevatorMessageHandler messageHandler = ElevatorMessageHandler.getInstance(elevatorSystemPort, this);
         this.messageHandler = ElevatorMessageHandler.getInstance(elevatorSystemPort, this);
+
+        RabbitReceiver rabbitReceiver = new RabbitReceiver(this.messageHandler, ConfigProperties.getInstance().getProperty("elevatorQueueName"));
 
         DOMConfigurator.configure(ElevatorSystem.class.getResource("/log4j.xml"));
         log.info("ElevatorSystem starting at port " + elevatorSystemPort);
