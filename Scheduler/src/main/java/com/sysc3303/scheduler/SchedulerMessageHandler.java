@@ -25,6 +25,7 @@ public class SchedulerMessageHandler extends MessageHandler{
      */
     static int elevatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
     static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
+    static String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
 
     public SchedulerMessageHandler(int receivePort, SchedulerSystem schedulerSystem){
         super(receivePort);
@@ -41,6 +42,8 @@ public class SchedulerMessageHandler extends MessageHandler{
         }catch(UnknownHostException e){
             e.printStackTrace();
         }
+        RabbitReceiver rabbitReceiver = new RabbitReceiver(this, schedulerQueueName);
+        new Thread(rabbitReceiver, "elevator queue receiver").start();
     }
     /**
      * Handles three situations for scheduler which is receiving floorButtonMessage
