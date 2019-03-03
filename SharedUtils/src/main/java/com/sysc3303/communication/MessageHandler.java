@@ -23,7 +23,7 @@ public abstract class MessageHandler{
      */
     public void received(Message message){
         // Rename the thread to something useful
-        Thread.currentThread().setName("Handling " + message.getSummary());
+        Thread.currentThread().setName("Handling " + message.summary());
     }
 
     /**
