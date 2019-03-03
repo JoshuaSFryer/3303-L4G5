@@ -1,5 +1,6 @@
 package com.sysc3303.communication;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 import org.junit.After;
@@ -17,6 +18,39 @@ public class RabbitSenderReceiverTest {
     public static void setUpClass(){
         messageHandler = new TestMessageHandler(2000);
     }
+
+
+//    // These 5 tests are manual tests and thus are commented out for automation purposes
+//    @Test
+//    public void testSendElevatorClick(){
+//        RabbitSender sender = new RabbitSender(ConfigProperties.getInstance().getProperty("elevatorQueueName"), new ElevatorClickSimulationMessage(1, 1));
+//        new Thread(sender).run();
+//    }
+//
+//    @Test
+//    public void testSendDoorStick(){
+//        RabbitSender sender = new RabbitSender(ConfigProperties.getInstance().getProperty("elevatorQueueName"), new DoorStickMessage(1, 20));
+//        new Thread(sender).run();
+//    }
+//
+//    @Test
+//    public void testSendElevatorStick(){
+//        RabbitSender sender = new RabbitSender(ConfigProperties.getInstance().getProperty("elevatorQueueName"), new ElevatorStickMessage(1, 20));
+//        new Thread(sender).run();
+//    }
+//
+//    @Test
+//    public void testSendFloorClick(){
+//        RabbitSender sender = new RabbitSender(ConfigProperties.getInstance().getProperty("floorQueueName"), new FloorClickSimulationMessage(1, Direction.UP));
+//        new Thread(sender).run();
+//    }
+//
+//    @Test
+//    public void testReceive() throws Exception{
+//        RabbitReceiver rabbitReceiver = new RabbitReceiver(messageHandler, ConfigProperties.getInstance().getProperty("observerQueueName"));
+//        new Thread(rabbitReceiver).start();
+//        sleep(30000);
+//    }
 
     @Test
     public void testRegularMessage() throws InterruptedException{
