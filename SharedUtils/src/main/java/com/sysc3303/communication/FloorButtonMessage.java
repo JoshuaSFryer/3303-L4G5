@@ -1,5 +1,7 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sysc3303.commons.Direction;
 
 import java.util.Date;
@@ -18,7 +20,8 @@ public class FloorButtonMessage extends Message{
     private final Direction direction;
     private final Date time;
 
-    public FloorButtonMessage(int floor, Direction direction, Date time) {
+    @JsonCreator
+    public FloorButtonMessage(@JsonProperty("floor") int floor,@JsonProperty("direction") Direction direction,@JsonProperty("time") Date time) {
         // Opcode for this message is 0
         super(OpCodes.FLOOR_BUTTON.getOpCode());
         this.floor = floor;
@@ -34,7 +37,7 @@ public class FloorButtonMessage extends Message{
     }
 
     @Override
-    public String getSummary(){
+    public String summary(){
         return "FloorButton: floor-"  + floor  + " direction-" + direction;
     }
 
