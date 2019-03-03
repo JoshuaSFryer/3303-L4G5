@@ -17,8 +17,8 @@
         <module>GUI</module>
     </modules>
     <properties>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -34,36 +34,6 @@
     </dependencies>
     <build>
         <plugins>
-            <!--<plugin>-->
-                <!--<artifactId>exec-maven-plugin</artifactId>-->
-                <!--<version>1.6.0</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>Scheduler</id>-->
-                        <!--<configuration>-->
-                            <!--<mainClass>com.sysc3303.scheduler.Scheduler</mainClass>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                        <!--<id>Elevator</id>-->
-                        <!--<configuration>-->
-                            <!--<mainClass>com.sysc3303.elevator.Elevator</mainClass>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                        <!--<id>FloorSystem</id>-->
-                        <!--<configuration>-->
-                            <!--<mainClass>com.sysc3303.floor.FloorSystem</mainClass>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--<execution>-->
-                        <!--<id>Simulator</id>-->
-                        <!--<configuration>-->
-                            <!--<mainClass>com.sysc3303.simulator.Runner</mainClass>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
