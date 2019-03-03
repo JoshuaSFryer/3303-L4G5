@@ -15,11 +15,25 @@ public class ElevatorStatus {
 	private ElevatorVector                   elevatorVector;
 	private ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr;
 	private Direction                        targetDirection;
+	private boolean                          isStuck;
 	
 	public ElevatorStatus() {
 		elevatorVector           = new ElevatorVector(0, Direction.IDLE, 0);
 		elevatorButtonMessageArr = new ArrayList<ElevatorButtonMessage>(); 
 		targetDirection          = Direction.IDLE;
+		isStuck                  = false;
+	}
+	
+	public boolean elevatorIsStuck() {
+		return isStuck;
+	}
+		
+	public void setElevatorIsStuck() {
+		isStuck = true;
+	}
+
+	public void setElevatorIsUnstuck() {
+		isStuck = false;
 	}
 	
 	public boolean elevatorButtonMessageIsEmpty() {
