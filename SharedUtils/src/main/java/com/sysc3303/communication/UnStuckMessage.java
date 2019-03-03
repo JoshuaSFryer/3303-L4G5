@@ -1,9 +1,13 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UnStuckMessage extends Message{
     private final int elevatorId;
 
-    public UnStuckMessage(int elevatorId) {
+    @JsonCreator
+    public UnStuckMessage(@JsonProperty("elevatorId") int elevatorId) {
         super(OpCodes.UNSTUCK.getOpCode());
         this.elevatorId = elevatorId;
     }
@@ -15,7 +19,7 @@ public class UnStuckMessage extends Message{
     }
 
     @Override
-    public String getSummary(){
+    public String summary(){
         return "Stuck Message: elevatorId-"  + elevatorId;
     }
 

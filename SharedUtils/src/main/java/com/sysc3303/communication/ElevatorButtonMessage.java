@@ -1,5 +1,8 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 /**
@@ -12,7 +15,8 @@ public class ElevatorButtonMessage extends Message{
     private final int elevatorId;
     private final Date time;
 
-    public ElevatorButtonMessage(int destinationFloor, int elevatorId, Date time) {
+    @JsonCreator
+    public ElevatorButtonMessage(@JsonProperty("destinationFloor") int destinationFloor, @JsonProperty("elevatorId") int elevatorId, @JsonProperty("time") Date time) {
         // the opcode for this message type is 5
         super(OpCodes.ELEVATOR_BUTTON.getOpCode());
         this.destinationFloor = destinationFloor;
@@ -28,7 +32,7 @@ public class ElevatorButtonMessage extends Message{
     }
 
     @Override
-    public String getSummary(){
+    public String summary(){
         return "ElevatorButton: floor-"  + destinationFloor  + " elevatorId-" + elevatorId;
     }
 

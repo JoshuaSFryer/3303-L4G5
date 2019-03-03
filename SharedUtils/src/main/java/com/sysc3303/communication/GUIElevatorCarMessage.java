@@ -1,5 +1,7 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 /**
  * Message sent when a button pressed within the elevator car.
  */

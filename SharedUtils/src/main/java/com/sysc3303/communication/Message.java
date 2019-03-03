@@ -1,5 +1,8 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 /**
@@ -11,9 +14,10 @@ import java.io.Serializable;
 public abstract class Message implements Serializable {
 	public static final long serialVersionUID = 1097867564019283746L;
 	// Opcodes are used to identify the type of message
-	public final byte   	opcode;
+	private byte   	opcode;
 
-	public Message(byte opcode){
+	@JsonCreator
+	public Message(@JsonProperty("opcode") byte opcode){
 	    this.opcode = opcode;
 	}
 
@@ -25,7 +29,11 @@ public abstract class Message implements Serializable {
 		return opcode;
 	}
 
-	public String getSummary(){
+	public void setOpcode(byte opcode){
+		this.opcode = opcode;
+	}
+
+	public String summary(){
 	    return "" + opcode;
 	}
 }
