@@ -132,6 +132,20 @@ public class Request {
 			return false;
 		}
 		
+		public boolean everyElevatorArrived() {
+			for(int i = 0; i < elevatorStatusArray.size(); i++) {
+				ElevatorStatus elevatorStatus = elevatorStatusArray.get(i);
+				ElevatorVector elevatorVector = elevatorStatus.getElevatorVector();
+				if(elevatorStatus.elevatorIsStuck()) {
+					continue;
+				}
+				if(elevatorVector.targetFloor != elevatorVector.currentFloor) {
+					return false;
+				}
+				
+			}
+			return true;
+		}
 		
 		/**
 		 * 

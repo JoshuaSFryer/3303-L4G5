@@ -30,6 +30,7 @@ public class ElevatorStatus {
 		
 	public void setElevatorIsStuck() {
 		isStuck = true;
+		elevatorVector = new ElevatorVector(elevatorVector.currentFloor, elevatorVector.currentDirection, 0);
 	}
 
 	public void setElevatorIsUnstuck() {
@@ -101,8 +102,8 @@ public class ElevatorStatus {
 		}
 		
 		output += elevatorVector.toString() + 
-				  "\nTargetDirection: " + targetDirection;
-		
+				  "\nTargetDirection: " + targetDirection +
+				  "\nStuck: " + isStuck;
 		return output;
 	}
 }
