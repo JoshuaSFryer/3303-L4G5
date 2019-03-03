@@ -53,7 +53,8 @@ public class TargetFloorDecider {
 		for(int j = 0; j < numberOfElevator; j++) {
 			Direction targetDirection = request.getTargetDirection(j);
 			
-			if(targetFloorValidator.validTargetFloor(buttonTargetFloor, buttonDirection, request.getElevatorVector(j), targetDirection)) {
+			if(targetFloorValidator.validTargetFloor(buttonTargetFloor, buttonDirection, request.getElevatorVector(j), targetDirection)
+					&& !request.elevatorIsStuck(j)) {
 				if(targetFloorCandidates.get(j) == null) {
 					targetFloorCandidates.set(j, new ArrayList<TargetWithDirection>());
 				}
@@ -73,7 +74,12 @@ public class TargetFloorDecider {
 		int[] targetFloors   = new int[numberOfElevator];
 		
 		for(int i = 0; i < numberOfElevator; i++) {
-			targetFloors[i] = selectTargetFloorFromElevatorButtonMessages(request.getElevatorButtonMessageArray(i), request.getElevatorVector(i));
+			if(request.elevatorIsStuck(i)) {
+				targetFloors[i] = -1;
+			}
+			else {
+				targetFloors[i] = selectTargetFloorFromElevatorButtonMessages(request.getElevatorButtonMessageArray(i), request.getElevatorVector(i));
+			}
 		}
 		
 		return targetFloors;

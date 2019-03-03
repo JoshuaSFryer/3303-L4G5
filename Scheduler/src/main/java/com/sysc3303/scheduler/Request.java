@@ -26,6 +26,18 @@ public class Request {
 			initElevatorStatusArray();
 		}
 		
+		public synchronized void setElevatorIsStuck(int elevatorId) {
+			elevatorStatusArray.get(elevatorId).setElevatorIsStuck();
+		}
+		
+		public synchronized void setElevatorIsUnstuck(int elevatorId) {
+			elevatorStatusArray.get(elevatorId).setElevatorIsUnstuck();
+		}
+		
+		public boolean elevatorIsStuck(int elevatorId) {
+			return elevatorStatusArray.get(elevatorId).elevatorIsStuck();
+		}
+		
 		public synchronized void setGeneratorOn() {
 			generatorIsOn = true;
 		}
