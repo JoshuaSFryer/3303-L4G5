@@ -61,7 +61,7 @@ public class Elevator {
 		motor         		= new Motor(this);
 		door          		= new Door(this);
 		currentFloor   		= Elevator.GROUND_FLOOR;
-		currentState		= new Idle();
+		currentState		= new Idle(this);
 		currentHeight 		= GROUND_FLOOR;
 		currentDirection 	= Direction.IDLE;
 		parentSystem 		= system;
@@ -96,10 +96,9 @@ public class Elevator {
 	 * @param state	The ElevatorState to switch to.
 	 */
 	public void setState(ElevatorState state) {
-		this.currentState.exitAction(this);
+		this.currentState.exitAction();
 		this.currentState = state;
-		this.currentState.entryAction(this);
-		this.currentState.doAction(this);
+		this.currentState.entryAction();
 	}
 	
 	/**
