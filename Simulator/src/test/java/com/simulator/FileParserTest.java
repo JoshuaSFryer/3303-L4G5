@@ -24,7 +24,7 @@ public class FileParserTest {
     @Test
     public void testEventsFileProducesArray() throws Exception {
         FileParser fp = FileParser.getInstance();
-        fp.parse("simpleTestEvents.txt");
+        fp.parse("/simpleTestEvents.txt");
 
         System.out.println(fp.getParsed());
         Event event = new EventFactory().makeEvent((fp.getParsed().get(0)));
