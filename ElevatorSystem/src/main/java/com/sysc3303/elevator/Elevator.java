@@ -57,7 +57,7 @@ public class Elevator {
 		motor         		= new Motor(this);
 		door          		= new Door(this);
 		currentFloor   		= Elevator.GROUND_FLOOR;
-		currentState		= new Idle();
+		currentState		= new Idle(this);
 		currentHeight 		= GROUND_FLOOR;
 		currentDirection 	= Direction.IDLE;
 		parentSystem 		= system;
@@ -92,10 +92,7 @@ public class Elevator {
 	 * @param state	The ElevatorState to switch to.
 	 */
 	public void setState(ElevatorState state) {
-		this.currentState.exitAction(this);
-		this.currentState = state;
-		this.currentState.entryAction(this);
-		this.currentState.doAction(this);
+		this.currentState.changeState(state);
 	}
 	
 	/**
@@ -106,13 +103,18 @@ public class Elevator {
 	public void receiveMessageFromScheduler(int targetFloor) {
 		System.out.println("Received new message from scheduler: Go to floor " + targetFloor);
 		// Interrupt the movement handler
-		try {
-			this.mover.interrupt();
-		} catch (NullPointerException e) {
-			System.out.println("No movement thread to interrupt!");
-		}
+		stopMovementHandler();
 		// Assign the new target floor and move towards it.
 		goToFloor(targetFloor);
+	}
+
+	private void stopMovementHandler() {
+		System.out.println("Interrupting moement handler...");
+		try {
+			this.mover.interrupt();
+		} catch (NullPointerException e ) {
+			System.out.println("No movement thread to interrupt!");
+		}
 	}
 	
 	/**
@@ -172,6 +174,13 @@ public class Elevator {
 	 */
 	public void closeDoors() {
 		door.closeDoors();
+	}
+
+	/**
+	 * Stop the elevator's movement, killing any handler currently moving it.
+	 */
+	public void stopElevator() {
+		stopMovementHandler();
 	}
 
 	/**
@@ -252,6 +261,8 @@ public class Elevator {
 	 * @param targetFloor	The number of the floor to travel to.
 	 */
 	public void goToFloor(int targetFloor) {
+		//TODO: closing doors should be handled in state transitions.
+
 		// Close the doors before proceeding. Safety first!
 		closeDoors();
 		// Set the current direction and update the lamp.
