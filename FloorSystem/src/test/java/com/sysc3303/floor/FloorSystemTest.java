@@ -7,9 +7,9 @@ import org.junit.Test;
 
 
 @SuppressWarnings("deprecation")
-class FloorSystemTest {
+public class FloorSystemTest {
 	@Test
-	void test() {
+	public void test() {
 		FloorSystem floorSystem = new FloorSystem();
 		Floor floor = floorSystem.getFloorList().get(2);
 		//floor.getLamps().turnBothLampOFF();
