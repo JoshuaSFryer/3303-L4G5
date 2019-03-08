@@ -1,7 +1,15 @@
-OP	Source		Target		Contents
+OP	  Name            Source		  Target		    Contents
 
-0x0	FloorSystem	Scheduler	int floor, int dir, Date time
-0x1	Scheduler	FloorSystem	int floorArrival, int currDir
-0x2	Scheduler	Elevator	int targetFloor
-0x3	Elevator	Scheduler	int floorButton, Date timestamp, int elevatorID
-0x4	Elevator	Scheduler	ElevatorVector v, int elevatorID
+0x0	  FLOOR_BUTTON    FloorSystem	Scheduler	    int floor, Direction dir, Date time
+0x1	  FLOOR_ARRIVAL   Scheduler	  FloorSystem	  int floorArrival, Direction currDir
+0x2	  GO_TO_FLOOR     Scheduler	  Elevator	    int targetFloor
+0x3	  ELEVATOR_STATE  Elevator	  Scheduler	    int floorButton, Date timestamp, int elevatorID
+0x4	  ELEVATOR_BUTTON Elevator	  Scheduler	    ElevatorVector v, int elevatorID
+0x5   FLOOR_CLICK     Simulator   Floor         int floor, Direction direction, Date time
+0x6   ELEVATOR_CLICK  Simulator   Elevator      int floor, Direction direction, int elevatorID, Date time
+0x7   ELEVATOR_GUI    Elevator    GUI           
+0x8   FLOOR_GUI       Floor       GUI           
+0x9   DOOR_STICK      Simulator   Elevator      int elevatorId, int numSecondsStuck
+0x10  ELEVATOR_STICK  Simulator   Elevator      int elevatorId, int numSecondsStuck
+0x11  STUCK           Elevator    Scheduler     int elevatorId
+0x12  UNSTUCK         Elevator    Scheduler     int elevatorId
