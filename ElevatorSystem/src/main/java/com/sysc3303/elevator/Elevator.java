@@ -209,7 +209,6 @@ public class Elevator {
 		messageHandler.sendElevatorStuck(elevatorID);
 
 	}
-
 	/**
 	 * Update this elevator's direction.
 	 * @param dir	The new Direction. IDLE if the elevator is not moving.
