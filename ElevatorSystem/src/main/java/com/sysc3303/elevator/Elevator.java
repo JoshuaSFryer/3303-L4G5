@@ -190,6 +190,8 @@ public class Elevator {
 
 	public void stickDoors(int secondsStuck) {
 		messageHandler.sendElevatorStuck(elevatorID);
+
+
 		door.stick();
 		try {
 			Thread.sleep(secondsStuck*1000);
@@ -206,6 +208,7 @@ public class Elevator {
 
 	public void terminateStuckElevator() {
 		shutDown = true;
+
 		messageHandler.sendElevatorStuck(elevatorID);
 
 	}
