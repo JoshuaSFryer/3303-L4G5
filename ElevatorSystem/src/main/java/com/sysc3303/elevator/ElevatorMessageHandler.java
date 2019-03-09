@@ -8,8 +8,10 @@ import com.sysc3303.communication.*;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
+import java.util.logging.FileHandler;
 
 import org.apache.log4j.Logger;
+
 
 
 public class ElevatorMessageHandler extends MessageHandler {
@@ -24,7 +26,7 @@ public class ElevatorMessageHandler extends MessageHandler {
     static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
     static int uiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
     static String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
-
+    //FileHandler fileHandler =new
 
     /**
      * Create an instance of this handler if one does not exist. Whether a new
