@@ -188,17 +188,24 @@ public class Elevator {
 	}
 
 	public void stickDoors(int secondsStuck) {
-		System.out.println("Doors are stuck open!");
+		System.out.println("Elevator "+elevatorID+": Doors are stuck open!");
 		try {
 			Thread.sleep(secondsStuck/1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Elevator "+elevatorID+": Doors no longer stuck!");
 		messageHandler.sendElevatorUnstuck(elevatorID);
 	}
 
 	public void stickElevator() {
+		motor.stick();
+	}
+
+	public void terminateStuckElevator() {
+
 		messageHandler.sendElevatorStuck(elevatorID, 1);
+
 	}
 
 	/**
