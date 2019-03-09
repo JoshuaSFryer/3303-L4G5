@@ -183,6 +183,20 @@ public class Elevator {
 		stopMovementHandler();
 	}
 
+	public void stickDoors(int secondsStuck) {
+		System.out.println("Doors are stuck open!");
+		try {
+			Thread.sleep(secondsStuck/1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		messageHandler.sendElevatorUnstuck(elevatorID);
+	}
+
+	public void stickElevator() {
+		messageHandler.sendElevatorStuck(elevatorID, 1);
+	}
+
 	/**
 	 * Update this elevator's direction.
 	 * @param dir	The new Direction. IDLE if the elevator is not moving.
