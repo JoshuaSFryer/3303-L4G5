@@ -41,7 +41,9 @@ public class Elevator {
 
 	private ElevatorMessageHandler 		messageHandler;
 	private ElevatorSystem				parentSystem;
-    private Logger          log = Logger.getLogger(Elevator.class);
+
+	private boolean						shutDown = false;
+  private Logger          log = Logger.getLogger(Elevator.class);
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -61,7 +63,7 @@ public class Elevator {
 		motor         		= new Motor(this);
 		door          		= new Door(this);
 		currentFloor   		= Elevator.GROUND_FLOOR;
-		currentState		= new Idle();
+		currentState		= new Idle(this);
 		currentHeight 		= GROUND_FLOOR;
 		currentDirection 	= Direction.IDLE;
 		parentSystem 		= system;
@@ -96,10 +98,7 @@ public class Elevator {
 	 * @param state	The ElevatorState to switch to.
 	 */
 	public void setState(ElevatorState state) {
-		this.currentState.exitAction(this);
-		this.currentState = state;
-		this.currentState.entryAction(this);
-		this.currentState.doAction(this);
+		this.currentState.changeState(state);
 	}
 	
 	/**
@@ -110,13 +109,18 @@ public class Elevator {
 	public void receiveMessageFromScheduler(int targetFloor) {
 		System.out.println("Received new message from scheduler: Go to floor " + targetFloor);
 		// Interrupt the movement handler
-		try {
-			this.mover.interrupt();
-		} catch (NullPointerException e) {
-			System.out.println("No movement thread to interrupt!");
-		}
+		stopMovementHandler();
 		// Assign the new target floor and move towards it.
 		goToFloor(targetFloor);
+	}
+
+	private void stopMovementHandler() {
+		System.out.println("Interrupting movement handler...");
+		try {
+			this.mover.interrupt();
+		} catch (NullPointerException e ) {
+			System.out.println("No movement thread to interrupt!");
+		}
 	}
 	
 	/**
@@ -176,6 +180,34 @@ public class Elevator {
 	 */
 	public void closeDoors() {
 		door.closeDoors();
+	}
+
+	/**
+	 * Stop the elevator's movement, killing any handler currently moving it.
+	 */
+	public void stopElevator() {
+		stopMovementHandler();
+	}
+
+	public void stickDoors(int secondsStuck) {
+		door.stick();
+		try {
+			Thread.sleep(secondsStuck*1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		door.unstick();
+		messageHandler.sendElevatorUnstuck(elevatorID);
+	}
+
+	public void stickElevator() {
+		motor.stick();
+	}
+
+	public void terminateStuckElevator() {
+		shutDown = true;
+		messageHandler.sendElevatorStuck(elevatorID, 1);
+
 	}
 
 	/**
@@ -239,14 +271,18 @@ public class Elevator {
 	 * @param num	The floor number of the button to press.
 	 */
 	public void pressButton(int num) {
-		if(num > this.buttons.size() || num < 0) {
-			//TODO: Throw an exception here?
-			System.out.println("Invalid button press, out of bounds!");
-			return;
+		if (!shutDown) {
+			if (num > this.buttons.size() || num < 0) {
+				//TODO: Throw an exception here?
+				System.out.println("Invalid button press, out of bounds!");
+				return;
+			}
+			this.buttons.get(num).press();
+			// Notify the scheduler that a
+			messageHandler.sendElevatorButton(num, this.elevatorID);
+		} else {
+			shutDownError(elevatorID);
 		}
-		this.buttons.get(num).press();
-		// Notify the scheduler that a 
-		messageHandler.sendElevatorButton(num, this.elevatorID);
 	}
 	
 	
@@ -256,30 +292,36 @@ public class Elevator {
 	 * @param targetFloor	The number of the floor to travel to.
 	 */
 	public void goToFloor(int targetFloor) {
-		// Close the doors before proceeding. Safety first!
-		closeDoors();
-		
-		// Set the current direction and update the lamp.
-		if(targetFloor > currentFloor) {
-			this.currentDirection = Direction.UP;
-		} else if (targetFloor < currentFloor) {
-			this.currentDirection = Direction.DOWN;
+		if(!shutDown) {
+			//TODO: closing doors should be handled in state transitions.
+
+			// Close the doors before proceeding. Safety first!
+			while(door.isStuckOpen()) {
+				// Busy wait until the doors stop being stuck open.
+			} // Proceed
+			closeDoors();
+			// Set the current direction and update the lamp.
+			if (targetFloor > currentFloor) {
+				this.currentDirection = Direction.UP;
+			} else if (targetFloor < currentFloor) {
+				this.currentDirection = Direction.DOWN;
+			} else {
+				this.currentDirection = Direction.IDLE;
+			}
+			this.lamp.setCurrentFloor(currentFloor, currentDirection);
+
+			this.mover = new Thread(
+					new MovementHandler(targetFloor, this, this.sensor,
+							this.motor, this.elevatorID), "Movement Handler Elevator " + elevatorID);
+
+			// Launch the mover thread. It will continue until the target floor is
+			// reached, or this elevator receives a new goToFloor request. Upon
+			// receiving this request, the elevator will interrupt the thread
+			// and launch a new one by invoking goToFloor() again.
+			mover.start();
 		} else {
-			this.currentDirection = Direction.IDLE;
+			shutDownError(elevatorID);
 		}
-		this.lamp.setCurrentFloor(currentFloor, currentDirection);
-		
-		this.mover = new Thread(
-						new MovementHandler(targetFloor, this, this.sensor, 
-											this.motor, this.elevatorID), "Movement Handler Elevator " + elevatorID );
-		log.debug("Current targetFloor: " + targetFloor);
-		log.debug("Current direction: " + currentDirection);
-		
-		// Launch the mover thread. It will continue until the target floor is
-		// reached, or this elevator receives a new goToFloor request. Upon
-		// receiving this request, the elevator will interrupt the thread
-		// and launch a new one by invoking goToFloor() again.
-		mover.start();
 	}
 
 	/**
@@ -291,5 +333,7 @@ public class Elevator {
 				door.isOpen());
 	}
 
-
+	private void shutDownError(int elevatorID) {
+		System.out.println("ERROR: Elevator "+elevatorID+ "is shut down and should not be used.");
+	}
 }

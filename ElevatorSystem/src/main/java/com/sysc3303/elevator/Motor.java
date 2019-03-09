@@ -9,6 +9,7 @@ public class Motor {
 	// How far a single call of moveUp() or moveDown() will move the elevator.
 	private final int INCREMENT = 1; // 1 cm
 	private Elevator parent;
+	private boolean isStuck = false;
 	
 	/**
 	 * Class constructor.
@@ -22,18 +23,26 @@ public class Motor {
 	 * Move the elevator up by one unit.
 	 */
 	public void moveUp() {
-		parent.setCurrentHeight(parent.getCurrentHeight() + INCREMENT);
+		if (!isStuck) {
+			parent.setCurrentHeight(parent.getCurrentHeight() + INCREMENT);
+		}
 	}
 	
 	/**
 	 * Move the elevator down by one unit.
 	 */
 	public void moveDown() {
-		parent.setCurrentHeight(parent.getCurrentHeight() - INCREMENT);
+		if (!isStuck) {
+			parent.setCurrentHeight(parent.getCurrentHeight() - INCREMENT);
+		}
 	}
-	/*
-	public void stop() {
-		
+
+	public void stick() {
+		isStuck = true;
 	}
-	*/
+
+	public void unstick() {
+		isStuck = false;
+	}
+
 }
