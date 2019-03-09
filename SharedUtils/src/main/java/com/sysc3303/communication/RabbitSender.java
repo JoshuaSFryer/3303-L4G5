@@ -1,8 +1,8 @@
 package com.sysc3303.communication;
 
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.SerializationUtilJSON;
 
