@@ -1,5 +1,8 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Message from Simulator to Elevator to simulate
  * an elevator button being clicked
@@ -11,7 +14,8 @@ public class ElevatorClickSimulationMessage extends Message{
     private int floor;
     private int elevatorId;
 
-    public ElevatorClickSimulationMessage(int floor, int elevatorId) {
+    @JsonCreator
+    public ElevatorClickSimulationMessage(@JsonProperty("floor") int floor, @JsonProperty("elevatorId") int elevatorId) {
         // Opcode for this message is 6
         super(OpCodes.ELEVATOR_CLICK_SIMULATION.getOpCode());
         this.floor = floor;
@@ -25,7 +29,7 @@ public class ElevatorClickSimulationMessage extends Message{
     }
 
     @Override
-    public String getSummary(){
+    public String summary(){
         return "ElevatorClickSim: floor-"  + floor  + " elevatorId-" + elevatorId;
     }
 

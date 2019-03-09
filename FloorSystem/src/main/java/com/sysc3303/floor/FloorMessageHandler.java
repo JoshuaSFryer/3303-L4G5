@@ -17,6 +17,7 @@ public class FloorMessageHandler extends MessageHandler {
     static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
     static int simulatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("simulatorPort"));
     static int guiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
+    static String floorQueueName = ConfigProperties.getInstance().getProperty("floorQueueName");
 
     private static FloorMessageHandler instance;
 
@@ -43,6 +44,8 @@ public class FloorMessageHandler extends MessageHandler {
         }catch(UnknownHostException e){
             e.printStackTrace();
         }
+        RabbitReceiver rabbitReceiver = new RabbitReceiver(this, floorQueueName);
+        new Thread(rabbitReceiver, "elevator queue receiver").start();
     }
 
     @Override

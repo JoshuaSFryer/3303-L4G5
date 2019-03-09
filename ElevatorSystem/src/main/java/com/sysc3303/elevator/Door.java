@@ -9,6 +9,7 @@ public class Door {
 	@SuppressWarnings("unused")
 	private boolean doorState;
 	private Elevator parent;
+	private boolean stuckOpen;
 
 	/**
 	 * Class constructor.
@@ -41,6 +42,21 @@ public class Door {
 	 */
 	public boolean isOpen() {
 		return this.doorState;
+	}
+
+	public boolean isStuckOpen() {
+		return stuckOpen;
+	}
+
+	public void stick() {
+		System.out.println("Elevator "+parent.elevatorID+": Doors are stuck open!");
+		stuckOpen = true;
+	}
+
+	public void unstick() {
+		System.out.println("Elevator "+parent.elevatorID+": Doors no longer stuck!");
+
+		stuckOpen = false;
 	}
 
 }

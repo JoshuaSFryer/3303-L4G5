@@ -1,5 +1,8 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Message from Scheduler to Elevator
  * Tells the elevator to go to a specific floor now
@@ -13,7 +16,8 @@ public class GoToFloorMessage extends Message{
     private final int destinationFloor;
     private final int elevatorId;
 
-    public GoToFloorMessage(int destinationFloor, int elevatorId) {
+    @JsonCreator
+    public GoToFloorMessage(@JsonProperty("destinationFloor") int destinationFloor,@JsonProperty("elevatorId") int elevatorId) {
         // Opcode for this message is 2
         super(OpCodes.GO_TO_FLOOR.getOpCode());
         this.destinationFloor = destinationFloor;
@@ -29,7 +33,7 @@ public class GoToFloorMessage extends Message{
     }
 
     @Override
-    public String getSummary(){
+    public String summary(){
         return "GoToFloor: floor-"  + destinationFloor  + " elevator-" + elevatorId;
     }
 

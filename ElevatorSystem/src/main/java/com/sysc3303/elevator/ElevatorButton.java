@@ -29,7 +29,7 @@ public class ElevatorButton {
 	 * Acknowledges that this button was pressed, and turn on the button's light.
 	 */
 	public void press() {
-		System.out.println("Button " + this.id + " pressed");
+		System.out.println("Elevator " +parent.elevatorID+": Button " + this.id + " pressed");
 		turnOn();
 	}
 	
@@ -37,7 +37,7 @@ public class ElevatorButton {
 	 * Turns the button's light on. Call this when the button has been pressed.
 	 */
 	private void turnOn() {
-		System.out.println("Button " + this.id + "'s light is on.");
+		System.out.println("Elevator " +parent.elevatorID+": Button " + this.id + "'s light is on.");
 		this.illuminated = true;
 	}
 

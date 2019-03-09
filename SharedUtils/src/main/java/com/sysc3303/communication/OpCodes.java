@@ -11,7 +11,9 @@ public enum OpCodes {
     ELEVATOR_UPDATE_GUI((byte)7),
     FLOOR_UPDATE_GUI((byte)8),
     DOOR_STICK((byte)9),
-    ELEVATOR_STICK((byte)10)
+    ELEVATOR_STICK((byte)10),
+    STUCK((byte)11),
+    UNSTUCK((byte)12)
     ;
 
     private final byte opCode;

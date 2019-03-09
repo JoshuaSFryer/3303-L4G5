@@ -23,6 +23,7 @@ public class ElevatorMessageHandler extends MessageHandler {
     // Read ports from the configuration file.
     static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
     static int uiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
+    static String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
 
 
     /**
@@ -58,11 +59,14 @@ public class ElevatorMessageHandler extends MessageHandler {
         }catch(UnknownHostException e){
             e.printStackTrace();
         }
+        RabbitReceiver rabbitReceiver = new RabbitReceiver(this, elevatorQueueName);
+        new Thread(rabbitReceiver, "elevator queue receiver").start();
     }
 
     @Override
     public void received(Message message){
         super.received(message);
+        Elevator e;
         switch (message.getOpcode()){
             case 2:
             	GoToFloorMessage goToFloorMessage = (GoToFloorMessage) message;
@@ -70,9 +74,9 @@ public class ElevatorMessageHandler extends MessageHandler {
             	log.info("Recieved Go To Floor Message");
             	log.info(goToFloorMessage);
             	
-            	Elevator elevator = context.getElevators().get(goToFloorMessage.getElevatorId());
+            	e = context.getElevators().get(goToFloorMessage.getElevatorId());
             	// send it to the floor in the message
-                elevator.receiveMessageFromScheduler(goToFloorMessage.getDestinationFloor());
+                e.receiveMessageFromScheduler(goToFloorMessage.getDestinationFloor());
                 break;
             case 6:
             	System.out.println("recieved click simulation message, sending to scheduler");
@@ -82,18 +86,26 @@ public class ElevatorMessageHandler extends MessageHandler {
                 log.info("recieved click simulation message, sending to scheduler");
                 log.info(elevatorClickSimulationMessage);
                 // get elevator based on the id in the message
-                Elevator elevator1 = context.getElevators().get(elevatorClickSimulationMessage.getElevatorId());
+                e = context.getElevators().get(elevatorClickSimulationMessage.getElevatorId());
                 
                 // send press the button in that elevator
-                elevator1.pressButton(elevatorClickSimulationMessage.getFloor());
+                e.pressButton(elevatorClickSimulationMessage.getFloor());
                 break;
             case 9:
-                System.out.println("received door stick message: No functionality has been added to handle this yet");
+                //System.out.println("received door stick message: No functionality has been added to handle this yet");
                 DoorStickMessage doorStickMessage = (DoorStickMessage) message;
+                System.out.println("Received door stick message for elevator: " + doorStickMessage.getElevatorId());
+                e = context.getElevators().get(doorStickMessage.getElevatorId());
+                e.stickDoors(doorStickMessage.getNumSecondsStuck());
                 break;
             case 10:
-                System.out.println("received elevator stick message: No functionality has been added to handle this yet");
+                //System.out.println("received elevator stick message: No functionality has been added to handle this yet");
+                log.info("recieved elevator stick message");
                 ElevatorStickMessage elevatorStickMessage = (ElevatorStickMessage) message;
+                System.out.println("Received elevator stick message for elevator: " + elevatorStickMessage.getElevatorId());
+
+                e = context.getElevators().get(elevatorStickMessage.getElevatorId());
+                e.stickElevator();
                 break;
             default:
             	// throw new BadMessageTypeException("This message cannot be handled by this module!");
@@ -144,6 +156,16 @@ public class ElevatorMessageHandler extends MessageHandler {
     public void updateUI(int elevatorID, int currentFloor, Direction dir, boolean open) {
         GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, dir, open);
         send(msg, uiAddress, uiPort);
+    }
+
+    public void sendElevatorStuck(int elevatorID, int numSecondsStuck) {
+        StuckMessage msg = new StuckMessage(elevatorID, numSecondsStuck);
+        send(msg, schedulerAddress, schedulerPort);
+    }
+
+    public void sendElevatorUnstuck(int elevatorID) {
+        UnStuckMessage msg = new UnStuckMessage(elevatorID);
+        send(msg, schedulerAddress, schedulerPort);
     }
 }
 

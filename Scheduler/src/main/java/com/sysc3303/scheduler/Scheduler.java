@@ -1,9 +1,6 @@
 package com.sysc3303.scheduler;
 
 import com.sysc3303.communication.FloorButtonMessage;
-import com.sysc3303.communication.ElevatorButtonMessage;
-import com.sysc3303.communication.ElevatorStateMessage;
-import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.Message;
 
 /**
@@ -28,7 +25,7 @@ public class Scheduler {
 	 */
 	public void startFloorMessageHandler(Message message) {
 		floorMessageHandler = new FloorRequestHandler(request, (FloorButtonMessage)message, schedulerMessageHandler);
-		new Thread(floorMessageHandler, message.getSummary()).start();
+		new Thread(floorMessageHandler, message.summary()).start();
 	}
 	
 	/**
@@ -37,6 +34,6 @@ public class Scheduler {
 	 */
 	public void startElevatorMessageHandler(Message message) {
 		elevatorMessageHandler = new ElevatorRequestHandler(request, message, schedulerMessageHandler);
-		new Thread(elevatorMessageHandler, message.getSummary()).start();
+		new Thread(elevatorMessageHandler, message.summary()).start();
 	}
 }
