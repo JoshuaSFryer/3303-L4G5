@@ -2,8 +2,17 @@ package com.sysc3303.elevator;
 
 import com.sysc3303.commons.Direction;
 
+import static java.lang.System.currentTimeMillis;
+
 public class MovementHandler implements Runnable {
+	// How long to wait between calls of moveUp().
+	// Effectively, this is how long it takes the elevator to move one unit
+	// of distance up or down.
 	public static final int MOVEMENTDELAY = 1250;
+
+	// How long the elevator can take between floors before declaring itself to
+	// be stuck, and shutting down.
+	public static final int WATCHDOGTIME = 20 * MOVEMENTDELAY;
 	
 	int targetFloor;
 	int elevatorId;
@@ -27,6 +36,7 @@ public class MovementHandler implements Runnable {
 	 * is reached, or the elevator is interrupted by a new request.
 	 */
 	public void run() {
+		long startTime = currentTimeMillis();
 		// Run continuously, until this elevator's floor sensor has let us know
 		// (via this.arrived) that is has reached a floor.
 		while(!this.atFloor) {
@@ -75,6 +85,9 @@ public class MovementHandler implements Runnable {
 						context.clearButton(targetFloor);
 						return;
 					}
+				}
+				if (( currentTimeMillis() - startTime) >= WATCHDOGTIME) {
+					context.stickElevator();
 				}
 			} catch (InterruptedException e) {
 				// Thread was interrupted, so return and kill it.
