@@ -23,6 +23,7 @@ public class ElevatorMessageHandler extends MessageHandler {
     // Read ports from the configuration file.
     static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
     static int uiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
+    static String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
 
 
     /**
@@ -58,6 +59,8 @@ public class ElevatorMessageHandler extends MessageHandler {
         }catch(UnknownHostException e){
             e.printStackTrace();
         }
+        RabbitReceiver rabbitReceiver = new RabbitReceiver(this, elevatorQueueName);
+        new Thread(rabbitReceiver, "elevator queue receiver").start();
     }
 
     @Override

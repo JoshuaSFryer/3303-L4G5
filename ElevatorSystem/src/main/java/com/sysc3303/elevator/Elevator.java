@@ -4,6 +4,9 @@ package com.sysc3303.elevator;
 
 
 import java.util.ArrayList;
+
+import org.apache.log4j.Logger;
+
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
@@ -40,6 +43,7 @@ public class Elevator {
 	private ElevatorSystem				parentSystem;
 
 	private boolean						shutDown = false;
+  private Logger          log = Logger.getLogger(Elevator.class);
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -315,7 +319,6 @@ public class Elevator {
 			// receiving this request, the elevator will interrupt the thread
 			// and launch a new one by invoking goToFloor() again.
 			mover.start();
-
 		} else {
 			shutDownError(elevatorID);
 		}
