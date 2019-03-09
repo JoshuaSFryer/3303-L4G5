@@ -99,6 +99,7 @@ public class ElevatorMessageHandler extends MessageHandler {
             case 10:
                 System.out.println("received elevator stick message: No functionality has been added to handle this yet");
                 ElevatorStickMessage elevatorStickMessage = (ElevatorStickMessage) message;
+
                 break;
             default:
             	// throw new BadMessageTypeException("This message cannot be handled by this module!");
@@ -149,6 +150,16 @@ public class ElevatorMessageHandler extends MessageHandler {
     public void updateUI(int elevatorID, int currentFloor, Direction dir, boolean open) {
         GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, dir, open);
         send(msg, uiAddress, uiPort);
+    }
+
+    public void sendElevatorStuck(int elevatorID, int numSecondsStuck) {
+        StuckMessage msg = new StuckMessage(elevatorID, numSecondsStuck);
+        send(msg, schedulerAddress, schedulerPort);
+    }
+
+    public void sendElevatorUnstuck(int elevatorID) {
+        UnStuckMessage msg = new UnStuckMessage(elevatorID);
+        send(msg, schedulerAddress, schedulerPort);
     }
 }
 
