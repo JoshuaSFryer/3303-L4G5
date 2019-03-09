@@ -1,151 +1,123 @@
 package com.sysc3303.elevator;
-/*
-import java.util.EnumSet;
-import java.util.Set;
 
-public enum ElevatorState {
-	IDLE {
-		@Override
-		public Set<ElevatorState> nextStates() {
-			return EnumSet.of(MOVINGUP, MOVINGDOWN, OPENINGDOORS);
-		}
-	},
-	
-	MOVINGUP {
-		@Override
-		public Set<ElevatorState> nextStates() {
-			return EnumSet.of(IDLE);
-		}
-	},
-	
-	MOVINGDOWN {
-		@Override
-		public Set<ElevatorState> nextStates() {
-			return EnumSet.of(IDLE);
-		}
-	},
-	
-	OPENINGDOORS {
-		@Override
-		public Set<ElevatorState> nextStates() {
-			return EnumSet.of(DOORSOPEN);
-		}
-	},
-	
-	DOORSOPEN {
-		@Override
-		public Set<ElevatorState> nextStates() {
-			return EnumSet.of(DOORSCLOSING);
-		}
-	},
-	
-	DOORSCLOSING {
-		@Override
-		public Set<ElevatorState> nextStates() {
-			return EnumSet.of(IDLE);
-		}
-	};
-	
-	public Set<ElevatorState> nextStates() {
-		return EnumSet.noneOf(ElevatorState.class);
+public class ElevatorState {
+	public static final int DOORSOPENTIME = 100; // ms
+	Elevator context;
+
+	public ElevatorState(Elevator context) {
+		this.context = context;
+		// Any Entry actions should be placed in the state's constructor.
 	}
-}
-*/
 
-abstract interface ElevatorState {
-	public void entryAction(Elevator context);
-	public void doAction(Elevator context);
-	public void exitAction(Elevator context);
+	public void changeState(ElevatorState newState) {
+		// Any Exit actions for a state should be placed in this method.
+		context.setState(newState);
+	}
+
+	public void goToFloor(int targetFloor) {
+		System.out.println("Method not valid in this current ElevatorState.");
+	}
+
+	public void openDoors() {
+		System.out.println("Method not valid in this current ElevatorState.");
+	}
+
+	public void closeDoors() {
+		System.out.println("Method not valid in this current ElevatorState.");
+	}
+
 }
 
-class Idle implements ElevatorState {
-	public void entryAction(Elevator context) {
-		
+
+class MovingUp extends ElevatorState {
+
+	public MovingUp(Elevator context) {
+		super(context);
 	}
-	
-	public void doAction(Elevator context) {
-		
+
+	@Override
+	public void goToFloor(int targetFloor) {
+		context.goToFloor(targetFloor);
 	}
-	
-	public void exitAction(Elevator context) {
-		
+
+	@Override
+	public void changeState(ElevatorState newState) {
+		context.stopElevator();
+		super.changeState(newState);
 	}
 }
 
-class MovingUp implements ElevatorState {
-	public void entryAction(Elevator context) {
-		//context.moveUp();
+class MovingDown extends ElevatorState {
+	public MovingDown(Elevator context) {
+		super(context);
 	}
-	
-	public void doAction(Elevator context) {
-		
+
+	@Override
+	public void goToFloor(int targetFloor) {
+		context.goToFloor(targetFloor);
 	}
-	
-	public void exitAction(Elevator context) {
-		//context.stop();
+
+	@Override
+	public void changeState(ElevatorState newState) {
+		context.stopElevator();
+		super.changeState(newState);
 	}
 }
 
-class MovingDown implements ElevatorState {
-	public void entryAction(Elevator context) {
-		//context.moveDown();
-	}
-	
-	public void doAction(Elevator context) {
-		
-	}
-	
-	public void exitAction(Elevator context) {
-		//context.stop();
-	}
-}
+class Idle extends ElevatorState {
 
-class OpeningDoors implements ElevatorState {
-	public void entryAction(Elevator context) {
+	public Idle(Elevator context) {
+		super(context);
+	}
+
+	@Override
+	public void goToFloor(int targetFloor) {
+		context.goToFloor(targetFloor);
+	}
+
+	@Override
+	public void openDoors() {
 		context.openDoors();
 	}
-	
-	public void doAction(Elevator context) {
-		
-	}
-	
-	public void exitAction(Elevator context) {
-		
-	}
-}
 
-class DoorsOpen implements ElevatorState {
-	public void entryAction(Elevator context) {
-		
-	}
-	
-	public void doAction(Elevator context) {
-		try {
-			Thread.sleep(20000);
-		} catch(InterruptedException e) {
-			// TODO: interrupt handling? or just let this pass through and break
-			// early?
-		}
-		// After time elapses, force the state to change.
-		context.setState(new ClosingDoors());
-	}
-	
-	public void exitAction(Elevator context) {
-		
-	}
-}
-
-class ClosingDoors implements ElevatorState {
-	public void entryAction(Elevator context) {
+	@Override
+	public void closeDoors() {
 		context.closeDoors();
-		context.setState(new Idle());
 	}
-	
-	public void doAction(Elevator context) {
-		
+
+}
+
+class OpeningDoors extends ElevatorState {
+	public OpeningDoors(Elevator context) {
+		super(context);
+
+		context.openDoors();
+		// Wait a short amount of time while doors open.
+		super.changeState(new DoorsOpen(context));
 	}
-	
-	public void exitAction(Elevator context) {
-		
+}
+
+class DoorsOpen extends ElevatorState {
+	public DoorsOpen(Elevator context) {
+		super(context);
+
+		// Hold doors open for a set amount of time.
+		try {
+			Thread.sleep(DOORSOPENTIME);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		super.changeState(new ClosingDoors(context));
+	}
+}
+
+class ClosingDoors extends ElevatorState {
+	public ClosingDoors(Elevator context) {
+		super(context);
+
+		context.closeDoors();
+		// Wait a short amount of time while doors close.
+		super.changeState(new Idle(context));
 	}
 }
