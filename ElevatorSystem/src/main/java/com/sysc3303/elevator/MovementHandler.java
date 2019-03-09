@@ -3,6 +3,7 @@ package com.sysc3303.elevator;
 import com.sysc3303.commons.Direction;
 
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.setOut;
 
 public class MovementHandler implements Runnable {
 	// How long to wait between calls of moveUp().
@@ -12,14 +13,18 @@ public class MovementHandler implements Runnable {
 
 	// How long the elevator can take between floors before declaring itself to
 	// be stuck, and shutting down.
-	public static final int WATCHDOGTIME = 20 * MOVEMENTDELAY;
-	
+	// For now, this time is twice the time that it would ordinarily take to reach the next floor.
+	public static final int WATCHDOGTIME = MOVEMENTDELAY * FloorSensor.FLOORHEIGHT * 2;
+	//public static final int WATCHDOGTIME = MOVEMENTDELAY * 20;
+
+
 	int targetFloor;
 	int elevatorId;
 	Motor motor;
 	Elevator context;
 	FloorSensor sensor;
 	private boolean atFloor;
+	int lastHeight;
 	
 	public MovementHandler(int targetFloor, Elevator context,
 							FloorSensor sensor, Motor motor, int elevatorId) {
@@ -37,6 +42,7 @@ public class MovementHandler implements Runnable {
 	 */
 	public void run() {
 		long startTime = currentTimeMillis();
+		lastHeight = context.getCurrentHeight();
 		// Run continuously, until this elevator's floor sensor has let us know
 		// (via this.arrived) that is has reached a floor.
 		while(!this.atFloor) {
@@ -48,7 +54,7 @@ public class MovementHandler implements Runnable {
 				int floor = context.getCurrentFloor();
 				
 				// Check whether the elevator has arrived at a floor.
-				if(sensor.isAtFloor()) { //TODO: Have floor sensor interrupt this in some way instead of polling the sensor
+				if(sensor.isAtFloor() && lastHeight != context.getCurrentHeight()) { //TODO: Have floor sensor interrupt this in some way instead of polling the sensor
 					floor = sensor.getFloor();
 					System.out.println("Elevator " + context.elevatorID + ": Arrived at floor: " + floor);
 					// If the current floor is the target floor, set the
@@ -62,6 +68,10 @@ public class MovementHandler implements Runnable {
 					context.setCurrentFloor(floor);
 					// Update the UI.
 					context.updateUI();
+					lastHeight = context.getCurrentHeight();
+					// Reset the watchdog timer.
+					System.out.println("Elevator "+elevatorId+": Refreshing watchdog");
+					startTime = currentTimeMillis();
 				}
 				
 				// If not at a floor yet, move towards the target.
@@ -81,13 +91,19 @@ public class MovementHandler implements Runnable {
 						System.out.println("Elevator " + elevatorId +
 								": arrived at destination ("+targetFloor+") !");
 						context.notifyArrival(floor);
+						// Open the elevator doors.
 						context.openDoors();
+						// Turn off the light of the button corresponding to this floor.
 						context.clearButton(targetFloor);
+						// Kill.
 						return;
 					}
 				}
 				if (( currentTimeMillis() - startTime) >= WATCHDOGTIME) {
-					context.stickElevator();
+					System.out.println("I'VE FALLEN AND I CAN'T GET UP!\n "
+					+ "Killing Elevator " +elevatorId);
+					context.terminateStuckElevator();
+					return;
 				}
 			} catch (InterruptedException e) {
 				// Thread was interrupted, so return and kill it.
