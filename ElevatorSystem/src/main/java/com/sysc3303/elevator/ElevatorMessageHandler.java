@@ -160,8 +160,8 @@ public class ElevatorMessageHandler extends MessageHandler {
         send(msg, uiAddress, uiPort);
     }
 
-    public void sendElevatorStuck(int elevatorID, int numSecondsStuck) {
-        StuckMessage msg = new StuckMessage(elevatorID, numSecondsStuck);
+    public void sendElevatorStuck(int elevatorID) {
+        StuckMessage msg = new StuckMessage(elevatorID);
         send(msg, schedulerAddress, schedulerPort);
     }
 
