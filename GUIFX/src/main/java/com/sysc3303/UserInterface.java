@@ -1,7 +1,5 @@
-package com.sysc3303.gui;
+package com.sysc3303;
 
-import com.sysc3303.commons.Direction;
-import com.sysc3303.communication.GUIElevatorCarMessage;
 import com.sysc3303.communication.GUIElevatorMoveMessage;
 import com.sysc3303.communication.GUIFloorMessage;
 
