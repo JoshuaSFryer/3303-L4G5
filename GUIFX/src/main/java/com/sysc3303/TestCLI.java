@@ -1,11 +1,5 @@
-package com.sysc3303.gui;
+package com.sysc3303;
 
-
-
-import com.sysc3303.communication.*;
-import org.junit.Test;
-
-import java.util.ArrayList;
 
 /**
  * TestCLI is a console-output mock for the GUI. It is meant to act as a
