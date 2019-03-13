@@ -15,7 +15,7 @@
         <module>FloorSystem</module>
         <module>Simulator</module>
         <module>SharedUtils</module>
-        <module>GUI</module>
+        
         <module>GUIFX</module>
   </modules>
     <properties>
