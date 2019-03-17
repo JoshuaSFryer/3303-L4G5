@@ -1,2 +1,2 @@
-12:19:15.0 request 2 Up 4
-14:20:15.0 request 5 Down 2
+5 request 2 Up 4
+10 request 5 Down 2
