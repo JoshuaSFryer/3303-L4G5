@@ -1,14 +1,13 @@
-14:05:15.0 request 2 Down 1
-14:05:15.0 stick_door 0 10
-14:05:15.0 request 1 Down 1
-14:05:15.0 request 3 Up 2
-14:05:15.0 request 4 Up 1
-14:05:15.0 request 2 Down 1
-14:05:15.0 request 1 Down 1
-14:05:15.0 stick_elevator 1 200
-14:05:15.0 request 3 Up 2
-14:05:15.0 request 4 Up 1
-14:05:15.0 request 2 Down 1
-14:05:15.0 request 1 Down 1
-14:05:15.0 request 3 Up 2
-14:05:15.0 request 4 Up 1
+10 request 2 Down 1
+20 stick_door 0 10
+21 request 1 Down 1
+25 request 3 Up 2
+29 request 4 Up 1
+38 request 2 Down 1
+32 request 1 Down 1
+42 stick_elevator 1 200
+49 request 4 Up 1
+58 request 3 Up 2
+71 request 2 Down 1
+79 request 1 Down 1
+92 request 3 Up 2

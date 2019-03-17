@@ -39,8 +39,7 @@ public class EventTimer extends Timer{
      */
     public void add(Event event){
         TimedEvent timedEvent = new TimedEvent(event);
-        // FIXME This is for testing purposes, I don't want to wait till the particular times
-        this.schedule(timedEvent, 5000);
+        this.schedule(timedEvent, event.timestamp);
     }
 }
 
