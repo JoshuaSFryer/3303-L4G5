@@ -57,7 +57,17 @@ public abstract class RequestHandler {
 						                                                                         targetFloorsFromElevatorButtonMessages[i], currentFloor);
 				if(targetFloor != -1 && targetFloor != 0) {
 					ElevatorVector curElevatorVector = request.getElevatorVector(i);
-					ElevatorVector elevatorVector    = new ElevatorVector(curElevatorVector.currentFloor, curElevatorVector.currentDirection, targetFloor);
+					Direction      direction         = Direction.IDLE;
+					int            curFloor          = curElevatorVector.currentFloor;
+					
+					if(curFloor < targetFloor) {
+						direction = Direction.UP;
+					}
+					else if(curFloor > targetFloor) {
+						direction = Direction.DOWN;
+					}
+					
+					ElevatorVector elevatorVector = new ElevatorVector(curFloor, direction, targetFloor);
 					request.setElevatorVector(elevatorVector, i);
 					
 					if(targetFloor == targetFromFloorButton) {
