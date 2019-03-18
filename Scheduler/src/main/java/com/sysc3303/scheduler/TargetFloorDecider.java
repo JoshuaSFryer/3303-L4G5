@@ -174,7 +174,7 @@ public class TargetFloorDecider {
 			ElevatorButtonMessage elevatorButtonMessage = elevatorButtonMessageArr.get(i);
 			int                   destinationFloor      = elevatorButtonMessage.getDestinationFloor();
 			
-			if(targetFloorValidator.validTargetFloor(destinationFloor, elevatorVector)) {
+			if(targetFloorValidator.validTargetFloor(destinationFloor, elevatorVector) && elevatorVector.targetFloor != destinationFloor) {
 				targetFloorCandidates.add(destinationFloor);
 			}
 		}
