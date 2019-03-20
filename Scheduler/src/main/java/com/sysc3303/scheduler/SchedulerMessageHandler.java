@@ -17,6 +17,8 @@ public class SchedulerMessageHandler extends MessageHandler{
     private InetAddress     floorAddress;
     private SchedulerSystem schedulerSystem;
     private Logger          log = Logger.getLogger(SchedulerMessageHandler.class);
+    private Timer           floorButtonTimer    = new Timer("Floor Button");
+    private Timer           elevatorButtonTimer = new Timer("Elevator Button");
     
     /**
      * The schedulerMessageHandler's constructer
@@ -26,7 +28,8 @@ public class SchedulerMessageHandler extends MessageHandler{
     static int elevatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
     static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
     static String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
-
+    static String telemetaryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");            	
+    
     public SchedulerMessageHandler(int receivePort, SchedulerSystem schedulerSystem){
         super(receivePort);
         this.schedulerSystem = schedulerSystem;
@@ -45,6 +48,7 @@ public class SchedulerMessageHandler extends MessageHandler{
         RabbitReceiver rabbitReceiver = new RabbitReceiver(this, schedulerQueueName);
         new Thread(rabbitReceiver, "elevator queue receiver").start();
     }
+    
     /**
      * Handles three situations for scheduler which is receiving floorButtonMessage
      * ElevatorStateMessage and ElevatorButtonMessage.
@@ -53,13 +57,33 @@ public class SchedulerMessageHandler extends MessageHandler{
     @Override
     public synchronized void received(Message message){
         super.received(message);
+		long         buttonPressedTime; 
+		long         messageArriveTime;
+		long         nanoTime;
+		int          secTime;
+		RabbitSender rabbitSender;
         switch (message.getOpcode()){
             case 0:
                 // What happens when you receive FloorButton
             	FloorButtonMessage floorButtonMessage = (FloorButtonMessage)message;
-  
+            	buttonPressedTime = floorButtonMessage.getPressedTime(); 
+            	messageArriveTime = System.nanoTime();
+            	nanoTime          = messageArriveTime - buttonPressedTime;
+            	secTime           = (int)(nanoTime / 1000000000);           
+            	
+            	floorButtonTimer.insert(buttonPressedTime, messageArriveTime);
+            	
+            	log.info("\n---------------");
+            	log.info(floorButtonTimer);
+            	log.info("\n---------------");
+            	
             	log.info("Received FloorButtonMessage from floor");
             	log.info(floorButtonMessage);
+            	
+            	TelemetryFloorMessage telemetryFloorMessage = new TelemetryFloorMessage(secTime, nanoTime);
+            	
+            	rabbitSender = new RabbitSender(telemetaryQueueName, telemetryFloorMessage);
+            	(new Thread(rabbitSender)).start();
             	
             	schedulerSystem.getScheduler().startFloorMessageHandler(message);
                 break;
@@ -76,8 +100,25 @@ public class SchedulerMessageHandler extends MessageHandler{
                 // What happens when you receive ElevatorButton
             	ElevatorButtonMessage elevatorButtonMessage = (ElevatorButtonMessage)message;
             	
+            	buttonPressedTime = elevatorButtonMessage.getPressedTime(); 
+            	messageArriveTime = System.nanoTime();
+            	nanoTime          = messageArriveTime - buttonPressedTime;
+            	secTime           = (int)(nanoTime / 1000000000);           
+            	
+            	elevatorButtonTimer.insert(buttonPressedTime, messageArriveTime);
+            	
+            	
+            	log.info("\n---------------");
+            	log.info(elevatorButtonTimer);
+            	log.info("\n---------------");
+            	
             	log.info("Received ElevatorButtonMessage from elevator");
             	log.info(elevatorButtonMessage);
+            	
+            	TelemetryElevatorMessage telemetryElevatorMessage = new TelemetryElevatorMessage(secTime, nanoTime);
+            	
+            	rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevatorMessage);
+            	(new Thread(rabbitSender)).start();
                 
             	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             	break;
@@ -88,6 +129,7 @@ public class SchedulerMessageHandler extends MessageHandler{
             	log.info(imStuckMessage);
             	
             	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
+            	break;
             case 12:
             	UnStuckMessage unStuckMessage = (UnStuckMessage)message;
  
@@ -95,6 +137,7 @@ public class SchedulerMessageHandler extends MessageHandler{
             	log.info(unStuckMessage);
             	
             	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
+            	break;
             default:
                 // TODO what happens when you get an invalid upcode
         }
