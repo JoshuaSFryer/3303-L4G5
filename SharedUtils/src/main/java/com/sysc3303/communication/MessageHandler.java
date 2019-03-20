@@ -16,6 +16,10 @@ public abstract class MessageHandler{
         this.communicationHandler = new CommunicationHandler(receivePort, this);
     }
 
+    // Message handler with no receive port
+    public MessageHandler(){
+    }
+
     /**
      * Called by Communication handler when a message is received
      * Add in the actions that the module should take on package receive
