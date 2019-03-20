@@ -70,7 +70,7 @@ public class MovementHandler implements Runnable {
 					context.updateUI();
 					lastHeight = context.getCurrentHeight();
 					// Reset the watchdog timer.
-					System.out.println("Elevator "+elevatorId+": Refreshing watchdog");
+					System.out.println("Elevator "+ elevatorId +": Refreshing watchdog");
 					startTime = currentTimeMillis();
 				}
 				
