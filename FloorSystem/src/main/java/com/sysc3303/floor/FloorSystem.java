@@ -105,6 +105,7 @@ public class FloorSystem {
 	 */
 
 	public void buttonPress(int requestFloor, Direction buttonDirection) {
+		long pressedTime = System.nanoTime();
 		System.out.println(buttonDirection + " button pressed on floor " + requestFloor);
 		//FIXME Check for index out of bounds
 		Floor arriveFloor = floorList.get(requestFloor);
@@ -115,7 +116,7 @@ public class FloorSystem {
 			arriveFloor.getButtons().setDownButtonLight(true);
 		}
 		//send floor button request
-		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection);
+		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection, pressedTime);
 
 		// Update the UI with the updated states of the buttons on this floor.
 		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
