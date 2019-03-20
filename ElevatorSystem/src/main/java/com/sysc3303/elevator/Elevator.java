@@ -271,6 +271,8 @@ public class Elevator {
 	 * @param num	The floor number of the button to press.
 	 */
 	public void pressButton(int num) {
+		long pressedTime = System.nanoTime();
+		
 		if (!shutDown) {
 			if (num > this.buttons.size() || num < 0) {
 				//TODO: Throw an exception here?
@@ -279,7 +281,7 @@ public class Elevator {
 			}
 			this.buttons.get(num).press();
 			// Notify the scheduler that a
-			messageHandler.sendElevatorButton(num, this.elevatorID);
+			messageHandler.sendElevatorButton(num, this.elevatorID, pressedTime);
 		} else {
 			shutDownError(elevatorID);
 		}

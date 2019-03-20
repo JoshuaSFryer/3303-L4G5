@@ -14,14 +14,16 @@ public class ElevatorButtonMessage extends Message{
     private final int destinationFloor;
     private final int elevatorId;
     private final Date time;
+    private final long pressedTime;
 
     @JsonCreator
-    public ElevatorButtonMessage(@JsonProperty("destinationFloor") int destinationFloor, @JsonProperty("elevatorId") int elevatorId, @JsonProperty("time") Date time) {
+    public ElevatorButtonMessage(@JsonProperty("destinationFloor") int destinationFloor, @JsonProperty("elevatorId") int elevatorId, @JsonProperty("time") Date time, long pressedTime) {
         // the opcode for this message type is 5
         super(OpCodes.ELEVATOR_BUTTON.getOpCode());
         this.destinationFloor = destinationFloor;
         this.elevatorId = elevatorId;
         this.time = time;
+        this.pressedTime = pressedTime;
     }
 
     @Override
@@ -46,5 +48,9 @@ public class ElevatorButtonMessage extends Message{
 
     public Date getTime() {
         return time;
+    }
+    
+    public long getPressedTime() {
+    	return pressedTime;
     }
 }
