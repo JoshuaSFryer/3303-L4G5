@@ -21,7 +21,10 @@ public class RabbitSender implements Runnable{
     public void run() {
         ConnectionFactory factory = new ConnectionFactory();
         String hostname;
-        if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
+        if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("rabbitCloud"))){
+          hostname = ConfigProperties.getInstance().getProperty("rabbitCloudAddress");
+        }
+        else if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
             hostname = "localhost";
         }
         else {
