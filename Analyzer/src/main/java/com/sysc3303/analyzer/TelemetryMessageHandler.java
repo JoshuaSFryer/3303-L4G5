@@ -7,6 +7,7 @@ import com.sysc3303.communication.TelemetryMessage;
 public class TelemetryMessageHandler extends MessageHandler {
     private static TelemetryMessageHandler instance;
     private TelemetryMessageList messageList;
+    private TelemetryMath math;
 
     public static TelemetryMessageHandler getInstance(){
         if (instance == null){
