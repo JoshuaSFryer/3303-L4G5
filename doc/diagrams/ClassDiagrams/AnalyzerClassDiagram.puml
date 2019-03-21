@@ -1,0 +1,39 @@
+@startuml
+
+
+class TelemetryReceiver{
+  + {static} main(String[]): void
+}
+
+class TelemetryMessageHandler{
+  - {static} instance: TelemetryHandler
+  + {static} getInstance(): TelemetryHandler
+  - messageList: TelemetryHandler
+  + received(Message): void
+}
+
+class TelemetryMessageList{
+  - elevatorButtonTimeList: List<Long>
+  - floorButtonTimeList: List<Long>
+  - arrivalTimeList: List<Long>
+
+  + addArrivalTime(long): void
+  + addFloorButtonTime(long): void
+  + addElevatorButtonTime(long): void
+  - printAnalysis(String, List<long>): void
+}
+
+class TelemetryMath{
+  + {static} getInstance(): TelemetryMath
+  + getMean(List<Long>): long
+  + getVariance(List<Long>): long
+  + getVariance(List<Long>, long mean): long
+}
+
+TelemetryMessageList o- TelemetryMath
+TelemetryMessageHandler <.. TelemetryReceiver
+TelemetryMessageHandler -o TelemetryMessageList
+TelemetryReceiver ..> RabbitReceiver
+MessageHandler <|-- TelemetryMessageHandler
+
+@enduml
