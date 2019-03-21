@@ -19,8 +19,8 @@ public class TelemetryMessageList {
     public void addArrivalTime(long time){
         System.out.println(time + " added to arrival time list");
         arrivalTimeList.add(time);
-        long avg = math.getMean(arrivalTimeList);
-        long var = math.getVariance(arrivalTimeList, avg);
+        long mean = math.getMean(arrivalTimeList);
+        long var = math.getVariance(arrivalTimeList, mean);
         printAnalysis("Arrival response", arrivalTimeList);
     }
 
@@ -37,10 +37,10 @@ public class TelemetryMessageList {
     }
 
     private void printAnalysis(String name, List<Long> list){
-        long avg = math.getMean(list);
-        long var = math.getVariance(list, avg);
+        long mean = math.getMean(list);
+        long var = math.getVariance(list, mean);
         System.out.println(name + ":");
-        System.out.println("\tMean: " + avg + "ns");
+        System.out.println("\tMean: " + mean + "ns");
         System.out.println("\tVariance: " + var + "ns");
     }
 
