@@ -81,7 +81,7 @@ public class FloorMessageHandlerMock extends MessageHandler {
     }
 
     public void sendFloorButton(int floor, Direction direction){
-        FloorButtonMessage floorButtonMessage = new FloorButtonMessage(floor, direction, new Date());
+        FloorButtonMessage floorButtonMessage = new FloorButtonMessage(floor, direction, new Date(), 1000);
         send(floorButtonMessage, schedulerAddress, schedulerPort);
     }
 
