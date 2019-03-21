@@ -18,15 +18,15 @@ public class TelemetryMath {
     }
 
     public long getVariance(List<Long> list){
-        long avg = getMean(list);
-        return getVariance(list, avg);
+        long mean = getMean(list);
+        return getVariance(list, mean);
     }
 
-    public long getVariance(List<Long> list, long avg){
+    public long getVariance(List<Long> list, long mean){
         long var = 0;
         long size = list.size();
         for (Long num: list){
-            var += (num-avg)*(num-avg);
+            var += (num-mean)*(num-mean);
         }
         return var/size;
     }
