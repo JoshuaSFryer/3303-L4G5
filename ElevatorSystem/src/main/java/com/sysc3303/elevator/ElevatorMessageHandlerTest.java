@@ -29,7 +29,7 @@ class ElevatorMessageHandlerTest {
 		} catch (Exception e) {
 			fail("Unexpected exception");
 		}*/
-		FloorButtonMessage badMsg = new FloorButtonMessage(0, null, null);
+		FloorButtonMessage badMsg = new FloorButtonMessage(0, null, null, 1000);
 		
 		try {
 			e.getMessageHandler().received(badMsg);

@@ -77,7 +77,7 @@ public class FloorButtonTestInputSender {
 		    	   direction = Direction.DOWN;
 		       }
 		       
-		       FloorButtonMessage  message = new FloorButtonMessage(floor, direction, time);
+		       FloorButtonMessage  message = new FloorButtonMessage(floor, direction, time, 1000);
 		       messageArr.add(message);
 		    }
 		}
