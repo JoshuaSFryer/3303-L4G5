@@ -37,12 +37,22 @@ package "Scheduler"{
 
 }
 
+together {
+package "GUI"{
+  component GUI as guii
+}
+package "Analyzer"{
+  component Analyzer as anal
+}
+}
+
 
 
 package "RabbitMQ"{
   queue "ElevatorQueue"
   queue "FloorQueue"
   queue "GUIQueue"
+  queue "TelemetryQueue"
 
   FloorQueue -[hidden]> ElevatorQueue
 
@@ -57,13 +67,18 @@ sim --> PFl
 sim --> PEl
 el -> PSi
 
+SchedulerSystem --> TelemetryQueue: pub
+el --> TelemetryQueue: pub
+
+TelemetryQueue --> anal: sub
+
 el --> GUIQueue: pub
 el <-- ElevatorQueue: sub
 fl --> GUIQueue : pub
 fl <-- FloorQueue : sub
-GUIQueue --> GUI : sub
-FloorQueue <-- GUI : pub
-ElevatorQueue <-- GUI: pub
+GUIQueue --> guii : sub
+FloorQueue <-- guii : pub
+ElevatorQueue <-- guii: pub
 
 
 
