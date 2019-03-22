@@ -54,6 +54,15 @@ services:
       app_net:
         ipv4_address: 172.16.200.6
 
+  analyzer:
+    build: ./Analyzer
+    hostname: analyzer
+    volumes:
+      - ./Analyzer:/tmp
+    networks:
+      app_net:
+        ipv4_address: 172.16.200.7
+
 networks:
   app_net:
     driver: bridge
