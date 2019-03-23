@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
+import com.sysc3303.constants.Constants;
 
 import static com.sysc3303.floor.FloorMessageHandler.floorPort;
 
@@ -105,7 +106,7 @@ public class FloorSystem {
 	 */
 
 	public void buttonPress(int requestFloor, Direction buttonDirection) {
-		long pressedTime = System.nanoTime();
+		long pressedTime  = System.currentTimeMillis() * Constants.NANO_PER_MILLI;
 		System.out.println(buttonDirection + " button pressed on floor " + requestFloor);
 		//FIXME Check for index out of bounds
 		Floor arriveFloor = floorList.get(requestFloor);
