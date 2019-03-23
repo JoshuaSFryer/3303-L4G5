@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
+import com.sysc3303.communication.TelemetryElevatorMessage;
+import com.sysc3303.communication.RabbitSender;
 import com.sysc3303.constants.Constants;
 
 /**
@@ -44,6 +46,9 @@ public class Elevator {
 	private ElevatorSystem				parentSystem;
 
 	private boolean						shutDown = false;
+
+	private long 						telemetryStartTime = 0;
+	private long 						telemetryStopTime = 0;
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -118,6 +123,8 @@ public class Elevator {
 		System.out.println("Interrupting movement handler...");
 		try {
 			this.mover.interrupt();
+			telemetryStopTime = System.nanoTime();
+			sendTelemetryMetric();
 		} catch (NullPointerException e ) {
 			System.out.println("No movement thread to interrupt!");
 		}
@@ -339,5 +346,21 @@ public class Elevator {
 
 	private void shutDownError(int elevatorID) {
 		System.out.println("ERROR: Elevator "+elevatorID+ "is shut down and should not be used.");
+	}
+
+	public void startTelemetryTimer() {
+		telemetryStartTime = System.nanoTime();
+	}
+
+	private void sendTelemetryMetric() {
+		if (telemetryStartTime != 0 && telemetryStopTime != 0) {
+			System.out.println("Sending telemetry message....");
+			long diffTime = telemetryStopTime - telemetryStartTime;
+			TelemetryElevatorMessage msg = new TelemetryElevatorMessage(0, diffTime);
+			Thread messager = new Thread(new RabbitSender("telemetry", msg));
+			messager.start();
+		} else {
+			System.out.println("ERROR: Invalid telemetry times.");
+		}
 	}
 }
