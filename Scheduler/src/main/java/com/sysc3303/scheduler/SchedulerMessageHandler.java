@@ -2,6 +2,8 @@ package com.sysc3303.scheduler;
 
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.*;
+import com.sysc3303.constants.Constants;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.apache.log4j.Logger;
@@ -17,8 +19,6 @@ public class SchedulerMessageHandler extends MessageHandler{
     private InetAddress     floorAddress;
     private SchedulerSystem schedulerSystem;
     private Logger          log = Logger.getLogger(SchedulerMessageHandler.class);
-    private Timer           floorButtonTimer    = new Timer("Floor Button");
-    private Timer           elevatorButtonTimer = new Timer("Elevator Button");
     
     /**
      * The schedulerMessageHandler's constructer
@@ -67,15 +67,9 @@ public class SchedulerMessageHandler extends MessageHandler{
                 // What happens when you receive FloorButton
             	FloorButtonMessage floorButtonMessage = (FloorButtonMessage)message;
             	buttonPressedTime = floorButtonMessage.getPressedTime(); 
-            	messageArriveTime = System.nanoTime();
+            	messageArriveTime = System.currentTimeMillis() * Constants.NANO_PER_MILLI;
             	nanoTime          = messageArriveTime - buttonPressedTime;
-            	secTime           = (int)(nanoTime / 1000000000);           
-            	
-            	floorButtonTimer.insert(buttonPressedTime, messageArriveTime);
-            	
-            	log.info("\n---------------");
-            	log.info(floorButtonTimer);
-            	log.info("\n---------------");
+            	secTime           = (int)(nanoTime / Constants.NANO_PER_SEC);           
             	
             	log.info("Received FloorButtonMessage from floor");
             	log.info(floorButtonMessage);
@@ -99,18 +93,10 @@ public class SchedulerMessageHandler extends MessageHandler{
             case 4:
                 // What happens when you receive ElevatorButton
             	ElevatorButtonMessage elevatorButtonMessage = (ElevatorButtonMessage)message;
-            	
             	buttonPressedTime = elevatorButtonMessage.getPressedTime(); 
-            	messageArriveTime = System.nanoTime();
+            	messageArriveTime = System.currentTimeMillis() * Constants.NANO_PER_MILLI;
             	nanoTime          = messageArriveTime - buttonPressedTime;
-            	secTime           = (int)(nanoTime / 1000000000);           
-            	
-            	elevatorButtonTimer.insert(buttonPressedTime, messageArriveTime);
-            	
-            	
-            	log.info("\n---------------");
-            	log.info(elevatorButtonTimer);
-            	log.info("\n---------------");
+            	secTime           = (int)(nanoTime / Constants.NANO_PER_SEC);           
             	
             	log.info("Received ElevatorButtonMessage from elevator");
             	log.info(elevatorButtonMessage);

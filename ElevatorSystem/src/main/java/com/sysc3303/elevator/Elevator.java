@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
+import com.sysc3303.constants.Constants;
 
 /**
  * Elevator represents a physical elevator within the system. It is directed
@@ -271,7 +272,7 @@ public class Elevator {
 	 * @param num	The floor number of the button to press.
 	 */
 	public void pressButton(int num) {
-		long pressedTime = System.nanoTime();
+		long pressedTime  = System.currentTimeMillis() * Constants.NANO_PER_MILLI;
 		
 		if (!shutDown) {
 			if (num > this.buttons.size() || num < 0) {
