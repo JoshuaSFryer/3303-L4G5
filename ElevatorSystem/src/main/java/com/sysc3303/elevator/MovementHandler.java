@@ -55,6 +55,7 @@ public class MovementHandler implements Runnable {
 				
 				// Check whether the elevator has arrived at a floor.
 				if(sensor.isAtFloor() && lastHeight != context.getCurrentHeight()) { //TODO: Have floor sensor interrupt this in some way instead of polling the sensor
+					context.startTelemetryTimer();
 					floor = sensor.getFloor();
 					System.out.println("Elevator " + context.elevatorID + ": Arrived at floor: " + floor);
 					// If the current floor is the target floor, set the
