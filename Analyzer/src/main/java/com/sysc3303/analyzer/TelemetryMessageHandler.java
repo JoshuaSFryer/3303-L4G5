@@ -1,5 +1,8 @@
 package com.sysc3303.analyzer;
 
+import com.sysc3303.commons.ConfigUpdateHandler;
+import com.sysc3303.commons.ConfigUpdater;
+import com.sysc3303.communication.ConfigUpdateMessage;
 import com.sysc3303.communication.Message;
 import com.sysc3303.communication.MessageHandler;
 import com.sysc3303.communication.TelemetryMessage;
@@ -50,6 +53,8 @@ public class TelemetryMessageHandler extends MessageHandler {
             case 15:
                 messageList.addArrivalTime(((TelemetryMessage) message).getNanoSecondTime());
                 break;
+            case 16:
+                (new Thread(new ConfigUpdateHandler((ConfigUpdateMessage) message))).start();
         }
     }
 

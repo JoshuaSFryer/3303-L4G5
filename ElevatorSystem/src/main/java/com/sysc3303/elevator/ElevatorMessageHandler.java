@@ -62,7 +62,7 @@ public class ElevatorMessageHandler extends MessageHandler {
             e.printStackTrace();
         }
         RabbitReceiver rabbitReceiver = new RabbitReceiver(this, elevatorQueueName);
-        new Thread(rabbitReceiver, "elevator queue receiver").start();
+        (new Thread(rabbitReceiver, "elevator queue receiver")).start();
     }
 
     @Override
