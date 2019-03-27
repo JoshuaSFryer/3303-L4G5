@@ -1,7 +1,6 @@
-package com.sysc3303.gui;
+package com.sysc3303;
 
 import java.util.Random;
-import com.sysc3303.communication.*;
 
 /**
  * Class to send test messages to the GUI message handler.

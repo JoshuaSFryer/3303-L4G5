@@ -198,6 +198,8 @@ public class Elevator {
 
 	public void stickDoors(int secondsStuck) {
 		messageHandler.sendElevatorStuck(elevatorID);
+
+
 		door.stick();
 		try {
 			Thread.sleep(secondsStuck*1000);
@@ -215,10 +217,10 @@ public class Elevator {
 
 	public void terminateStuckElevator() {
 		shutDown = true;
+
 		messageHandler.sendElevatorStuck(elevatorID);
 
 	}
-
 	/**
 	 * Update this elevator's direction.
 	 * @param dir	The new Direction. IDLE if the elevator is not moving.

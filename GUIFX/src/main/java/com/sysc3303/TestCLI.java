@@ -1,20 +1,18 @@
-package com.sysc3303.gui;
+package com.sysc3303;
 
 
 
-import com.sysc3303.communication.*;
-import org.junit.Test;
-
-import java.util.ArrayList;
+import com.sysc3303.communication.GUIElevatorMoveMessage;
+import com.sysc3303.communication.GUIFloorMessage;
 
 /**
  * TestCLI is a console-output mock for the GUI. It is meant to act as a
  * bare-bones implementation of the methods for testing purposes, without any
  * reference to Swing. Use it while the GUI is still in development.
  */
-public class TestCLI implements com.sysc3303.gui.UserInterface {
+public class TestCLI implements UserInterface {
 
-    private com.sysc3303.gui.GUIMessageHandler handler;
+    private com.sysc3303.GUIMessageHandler handler;
     private static TestCLI instance;
 
     private TestCLI() {
