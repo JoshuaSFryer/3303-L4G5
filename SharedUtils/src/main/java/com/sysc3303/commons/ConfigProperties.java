@@ -51,4 +51,8 @@ public class ConfigProperties {
     public String getProperty(String str){
         return properties.getProperty(str);
     }
+
+    public void setProperty(String key, String value){
+        properties.setProperty(key, value);
+    }
 }
