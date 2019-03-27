@@ -60,6 +60,8 @@ public class ElevatorSystem {
         int      port     = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
         int     num_floors = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors"));
         int num_elevators = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators"));
+        String telemetryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");
+        // TODO: Pass this to the system somehow
         ElevatorSystem elevatorSystem = new ElevatorSystem(num_elevators, num_floors, port);
       
         System.out.println("Starting Elevator System, with " + num_elevators +

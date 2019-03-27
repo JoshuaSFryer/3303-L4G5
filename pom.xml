@@ -14,10 +14,10 @@
         <module>ElevatorSystem</module>
         <module>FloorSystem</module>
         <module>Simulator</module>
-        <module>SharedUtils</module>
-        
+        <module>SharedUtils</module>        
         <module>GUIFX</module>
-  </modules>
+        <module>Analyzer</module>
+    </modules>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

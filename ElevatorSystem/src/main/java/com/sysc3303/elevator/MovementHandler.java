@@ -55,6 +55,7 @@ public class MovementHandler implements Runnable {
 				
 				// Check whether the elevator has arrived at a floor.
 				if(sensor.isAtFloor() && lastHeight != context.getCurrentHeight()) { //TODO: Have floor sensor interrupt this in some way instead of polling the sensor
+					context.startTelemetryTimer();
 					floor = sensor.getFloor();
 					System.out.println("Elevator " + context.elevatorID + ": Arrived at floor: " + floor);
 					// If the current floor is the target floor, set the
@@ -70,7 +71,7 @@ public class MovementHandler implements Runnable {
 					context.updateUI();
 					lastHeight = context.getCurrentHeight();
 					// Reset the watchdog timer.
-					System.out.println("Elevator "+elevatorId+": Refreshing watchdog");
+					System.out.println("Elevator "+ elevatorId +": Refreshing watchdog");
 					startTime = currentTimeMillis();
 				}
 				
@@ -100,6 +101,7 @@ public class MovementHandler implements Runnable {
 					}
 				}
 				if (( currentTimeMillis() - startTime) >= WATCHDOGTIME) {
+					this.targetFloor = 0;
 					System.out.println("I'VE FALLEN AND I CAN'T GET UP!\n "
 					+ "Killing Elevator " +elevatorId);
 					context.terminateStuckElevator();
@@ -126,6 +128,10 @@ public class MovementHandler implements Runnable {
 	public void moveDown() {
 		motor.moveDown();
 		System.out.println("Elevator " +context.elevatorID+ ": Height: " + context.getCurrentHeight() + " cm");
+	}
+
+	public int getTargetFloor() {
+		return targetFloor;
 	}
 
 	/**
