@@ -101,6 +101,7 @@ public class MovementHandler implements Runnable {
 					}
 				}
 				if (( currentTimeMillis() - startTime) >= WATCHDOGTIME) {
+					this.targetFloor = 0;
 					System.out.println("I'VE FALLEN AND I CAN'T GET UP!\n "
 					+ "Killing Elevator " +elevatorId);
 					context.terminateStuckElevator();
@@ -127,6 +128,10 @@ public class MovementHandler implements Runnable {
 	public void moveDown() {
 		motor.moveDown();
 		System.out.println("Elevator " +context.elevatorID+ ": Height: " + context.getCurrentHeight() + " cm");
+	}
+
+	public int getTargetFloor() {
+		return targetFloor;
 	}
 
 	/**

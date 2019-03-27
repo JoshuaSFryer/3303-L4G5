@@ -209,6 +209,7 @@ public class Elevator {
 	}
 
 	public void stickElevator() {
+
 		motor.stick();
 	}
 
