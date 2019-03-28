@@ -31,7 +31,8 @@ public class Main extends Application {
         //TODO change the screen size dynamically
         int windowHeight = 800;
         int windowWidth = 900;
-        int floorNumber = 5;
+        int floorNumber = 20;
+        int numberOfElevators = 5;
 
         //Main Container
         BorderPane bPane = new BorderPane();
