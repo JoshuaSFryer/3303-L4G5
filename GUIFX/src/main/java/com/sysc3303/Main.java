@@ -14,6 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -31,7 +32,8 @@ public class Main extends Application {
         //TODO change the screen size dynamically
         int windowHeight = 800;
         int windowWidth = 900;
-        int floorNumber = 5;
+        int floorNumber = 22;
+        int numberOfElevators = 4;
 
         //Main Container
         BorderPane bPane = new BorderPane();
@@ -39,24 +41,93 @@ public class Main extends Application {
 
 
         //VBOX under the main container
-        VBox vBox = new VBox();
-        vBox.setSpacing(10);
-        for (int i = floorNumber; i > 0 ; i--) {
+//        VBox vBox = new VBox();
+//        vBox.setSpacing(10);
+//        vBox.setBackground(Background.EMPTY);
+//        String style = "-fx-background-color: rgba(140, 255, 140, 0.5);";
+//        vBox.setStyle(style);
 
-            Label floorLabel = new Label("Floor " + i );
-            CustomButton downButton = CustomButton.create(i,  Direction.UP);
-            CustomButton upButton = CustomButton.create(i,  Direction.DOWN);
-            vBox.getChildren().addAll(floorLabel, downButton, upButton);
+//        for (int i = floorNumber; i > 0 ; i--) {
+//
+//            Label floorLabel = new Label("Floor " + i );
+//            CustomButton downButton = CustomButton.create(i,  Direction.UP);
+//            CustomButton upButton = CustomButton.create(i,  Direction.DOWN);
+//            vBox.getChildren().addAll(floorLabel, downButton, upButton);
+//
+//
+//        }
 
+        //Creating the "elevators"
+        GridPane gPane = new GridPane();
+        gPane.setMinSize(700,600);
+        gPane.setHgap(5);
+        gPane.setVgap(5);
+        //gPane.setAlignment(Pos.CENTER);
+        gPane.setPadding(new Insets(25,25,25,25));
+        //gPane.setRowSpan(vBox, floorNumber);
+        //gPane.add(vBox, 0,0 );
+
+
+
+        Text test = new Text ("Testing gPane");
+
+        for (int n = 0 ; n < floorNumber; n++){
+            for (int m = 1; m <numberOfElevators+1 ; m++){
+
+                    //Create the Rectangle
+                    Rectangle square = new Rectangle();
+
+                    //Set the area properties
+                    square.setWidth(40);
+                    square.setHeight(40);
+                    //Fill in colours
+                    square.setFill(Color.BLACK);
+                    //Add to the Pane
+                    gPane.add(square, m, floorNumber-n-1);
+
+
+                }
+             HBox hBox = new HBox();
+             hBox.setSpacing(5);
+
+            Label floorLabel = new Label("Floor " + n );
+            CustomButton downButton = CustomButton.create(n,  Direction.UP);
+            CustomButton upButton = CustomButton.create(n,  Direction.DOWN);
+
+            hBox.getChildren().addAll(floorLabel, upButton, downButton);
+            gPane.add(hBox, 0, floorNumber-n-1);
+
+//            gPane.add(upButton, 0, n);
+//            gPane.add(downButton,0, n);
 
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        gPane.setPadding(new Insets(25,25,25,25));
+
+        //gPane.getChildren().addAll(elevator);
+
+
 
         //Adding Elements to Container: Border Pane
         //TODO
         bPane.setTop(new Text("Top"));
         bPane.setRight(new Text("Right"));
-        bPane.setLeft(vBox);
-        bPane.setCenter(new Text("Center"));
+        //bPane.setLeft(vBox);
+        bPane.setCenter(gPane);
+
+
         bPane.setBottom(new Text("Bottom"));
 
 
