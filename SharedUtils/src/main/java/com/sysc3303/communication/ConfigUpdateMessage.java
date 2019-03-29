@@ -3,22 +3,21 @@ package com.sysc3303.communication;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Properties;
+
 public class ConfigUpdateMessage extends Message {
-    private String[][] configChanges;
+    private Properties properties;
 
     @JsonCreator
-    public ConfigUpdateMessage(@JsonProperty("configChanges") String[][] configChanges) {
+    public ConfigUpdateMessage(@JsonProperty("properties") Properties properties) {
         // the opcode for this message type is 5
         super(OpCodes.CONFIG.getOpCode());
-        this.configChanges = configChanges;
+        this.properties = properties;
     }
 
     @Override
     public String toString() {
-        String str = "Config Changes";
-        for (int i = 0; i < configChanges.length; i++) {
-            str += "\n\t[" + configChanges[i][0] + ", " + configChanges[i][1] + "]";
-        }
+        String str = "Configuration Changes";
         return str;
     }
 
@@ -27,7 +26,7 @@ public class ConfigUpdateMessage extends Message {
         return "ConfigChanges";
     }
 
-    public String[][] getConfigChanges() {
-        return configChanges;
+    public Properties getProperties() {
+        return properties;
     }
 }

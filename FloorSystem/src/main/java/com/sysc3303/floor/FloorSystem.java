@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.sysc3303.commons.ConfigListener;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.constants.Constants;
@@ -58,6 +59,11 @@ public class FloorSystem {
 	
 	//Main method Not is use right Now. Left for Future testing
     public static void main(String[] args){
+		if(args.length > 0){
+			if(args[0] .equals("config")){
+				new ConfigListener().run();
+			}
+		}
         FloorSystem floorSystem = new FloorSystem();
         while(true){
         }

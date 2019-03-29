@@ -1,7 +1,6 @@
 package com.sysc3303.elevator;
 
 import com.sysc3303.commons.ConfigProperties;
-import com.sysc3303.commons.ConfigUpdateHandler;
 import com.sysc3303.commons.ElevatorVector;
 import com.sysc3303.communication.*;
 
@@ -69,8 +68,6 @@ public class ElevatorMessageHandlerMock extends MessageHandler {
                 System.out.println("Received Elevator Button Simulation Message");
                 System.out.println(elevatorClickSimulationMessage);
                 break;
-            case 16:
-                (new Thread(new ConfigUpdateHandler((ConfigUpdateMessage) message))).start();
             default:
                 // TODO what happens when you get an invalid upcode
         }

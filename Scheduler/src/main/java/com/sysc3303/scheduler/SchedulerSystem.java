@@ -2,6 +2,7 @@ package com.sysc3303.scheduler;
 
 import java.net.UnknownHostException;
 
+import com.sysc3303.commons.ConfigListener;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
@@ -42,6 +43,12 @@ public class SchedulerSystem {
 	}
 	
 	public static void main(String[] args) throws UnknownHostException {
+		if(args.length > 0){
+			if(args[0] .equals("config")){
+				new ConfigListener().run();
+			}
+		}
+
 		int             port            = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
 		SchedulerSystem schedulerSystem = new SchedulerSystem(port);
 		

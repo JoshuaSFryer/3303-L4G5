@@ -29,6 +29,10 @@ public class TestMessageHandler extends MessageHandler{
     public void received(Message message) {
         System.out.println("Received message\n" + message);
         callCount++;
+
+        if (message.getOpcode() == 16){
+            System.out.println("Received Properties File message");
+        }
     }
 
     public void sendFloorArrivalMessage(int floor, Direction direction, int elevatorId){

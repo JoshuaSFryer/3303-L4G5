@@ -1,10 +1,12 @@
 package com.sysc3303.commons;
 
 import com.sysc3303.communication.ConfigUpdateMessage;
+import com.sysc3303.communication.RabbitPublisher;
 import com.sysc3303.communication.RabbitSender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Allows for the dynamic updating of configurations in a multinodal system
@@ -13,45 +15,23 @@ import java.util.List;
 
 public class ConfigUpdater {
 
-    private static final String[] queueNameProperties = {
-            "floorQueueName",
-            "elevatorQueueName",
-            "schedulerQueueName",
-            "simulatorQueueName",
-            "guiQueueName",
-            "analyzerQueueName"
-    };
-    private static ConfigUpdater instance;
-    /**
-     * The list of queues that need to have the message sent to them
-     */
-    private static List<String> queueNames;
-    // method that updates the configuration based on values
-
     /**
      * get a new instance of the config updater
      * @return
      */
-    public static ConfigUpdater getInstance() {
-        if(instance == null){
-            instance = new ConfigUpdater();
-            queueNames = new ArrayList<>();
-            for(int i=0; i<queueNameProperties.length; i++){
-                queueNames.add(ConfigProperties.getInstance().getProperty(queueNameProperties[i]));
-            }
-        }
-        return instance;
+    public static ConfigUpdater getNewInstance() {
+        return new ConfigUpdater();
     }
 
     /**
      * Sends an update to each of the queues defined in list
-     * @param configChanges the array containing the properties and their values that the nodes should change
+     * @param properties the properties object that should be distributed to replace the one in the files
+     * @param exchangeName the name of the exchange to publish the properties to
      */
-    public void updateConfigs(String[][] configChanges){
-        ConfigUpdateMessage message = new ConfigUpdateMessage(configChanges);
-        for (String name: queueNames){
-            (new Thread(new RabbitSender(name, message))).start();
-        }
+    public void updateConfigs(Properties properties, String exchangeName){
+        ConfigUpdateMessage message = new ConfigUpdateMessage(properties);
+
+        (new Thread(new RabbitPublisher(exchangeName, message))).start();
     }
 
     private ConfigUpdater(){

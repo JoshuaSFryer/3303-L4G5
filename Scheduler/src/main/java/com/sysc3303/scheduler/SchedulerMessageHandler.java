@@ -1,7 +1,6 @@
 package com.sysc3303.scheduler;
 
 import com.sysc3303.commons.ConfigProperties;
-import com.sysc3303.commons.ConfigUpdateHandler;
 import com.sysc3303.communication.*;
 import com.sysc3303.constants.Constants;
 
@@ -125,8 +124,6 @@ public class SchedulerMessageHandler extends MessageHandler{
             	
             	schedulerSystem.getScheduler().startElevatorMessageHandler(message);
             	break;
-            case 16:
-                (new Thread(new ConfigUpdateHandler((ConfigUpdateMessage) message))).start();
             default:
                 // TODO what happens when you get an invalid upcode
         }

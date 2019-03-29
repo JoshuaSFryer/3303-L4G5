@@ -72,8 +72,6 @@ public class FloorMessageHandler extends MessageHandler {
                 FloorClickSimulationMessage floorClickSimulationMessage = (FloorClickSimulationMessage) message;
                 floorSystem.buttonPress(floorClickSimulationMessage.getFloor(), floorClickSimulationMessage.getDirection());
                 break;
-            case 16:
-                (new Thread(new ConfigUpdateHandler((ConfigUpdateMessage) message))).start();
             default:
                 // TODO what happens when you get an invalid opcode
         }
