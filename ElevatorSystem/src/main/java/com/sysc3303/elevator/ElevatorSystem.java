@@ -1,5 +1,6 @@
 package com.sysc3303.elevator;
 
+import com.sysc3303.commons.ConfigListener;
 import com.sysc3303.commons.ConfigProperties;
 
 import java.io.IOException;
@@ -54,6 +55,11 @@ public class ElevatorSystem {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        if(args.length > 0){
+            if(args[0] .equals("config")){
+                new ConfigListener().run();
+            }
+        }
         boolean                    running           = true;
 
         // Create a new Elevator instance.

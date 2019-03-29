@@ -1,7 +1,5 @@
 package com.sysc3303.communication;
 
-import com.sysc3303.commons.ConfigUpdateHandler;
-
 public class TestConfigUpdateMessageHandler extends TestMessageHandler{
 
     public TestConfigUpdateMessageHandler(int port){
@@ -12,7 +10,7 @@ public class TestConfigUpdateMessageHandler extends TestMessageHandler{
         System.out.println("ReceivedMessage");
         switch(message.getOpcode()){
             case 16:
-                (new Thread(new ConfigUpdateHandler((ConfigUpdateMessage) message))).start();
+//                (new Thread(new ConfigUpdateHandler((ConfigUpdateMessage) message))).start();
                 break;
             default:
                 System.out.println("Not the Config Update Opcode");

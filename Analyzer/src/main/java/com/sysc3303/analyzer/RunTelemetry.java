@@ -1,5 +1,6 @@
 package com.sysc3303.analyzer;
 
+import com.sysc3303.commons.ConfigListener;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.RabbitReceiver;
 
@@ -8,9 +9,14 @@ import com.sysc3303.communication.RabbitReceiver;
  * Run to receive telemetry data from RabbitMQ
  * Current version will print the time and also compute the mean and variance of times
  */
-public class TelemetryReceiver {
+public class RunTelemetry {
 
     public static void main(String[] args){
+        if(args.length > 0){
+            if(args[0] .equals("config")){
+                new ConfigListener().run();
+            }
+        }
         String telemetryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");
         // Create a telemetry message handler
         TelemetryMessageHandler messageHandler = TelemetryMessageHandler.getInstance();

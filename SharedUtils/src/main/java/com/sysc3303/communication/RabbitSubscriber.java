@@ -7,20 +7,22 @@ import com.rabbitmq.client.DeliverCallback;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.SerializationUtilJSON;
 
-public class RabbitReceiver implements Runnable {
+import java.util.Properties;
+
+public class RabbitSubscriber implements Runnable{
 
     private final static boolean AUTO_ACK = true;
     private MessageHandler messageHandler;
     private SerializationUtilJSON<Message> serializationUtil;
-    private String queueName;
+    private String exchangeName;
 
-    public RabbitReceiver(MessageHandler messageHandler, String queueName){
+    public RabbitSubscriber(MessageHandler messageHandler, String exchangeName) {
         this.messageHandler = messageHandler;
-        this.queueName = queueName;
+        this.exchangeName = exchangeName;
         serializationUtil = new SerializationUtilJSON<>();
     }
-
     public void run(){
+        // create a new queue with a randomly generated name
         ConnectionFactory factory = new ConnectionFactory();
         String hostname;
         if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("rabbitCloud"))){
@@ -36,14 +38,17 @@ public class RabbitReceiver implements Runnable {
         try{
             Connection connection = factory.newConnection();
             Channel channel = connection.createChannel();
+            channel.exchangeDeclare(exchangeName, "fanout");
+            String queueName = channel.queueDeclare().getQueue();
+            channel.queueBind(queueName, exchangeName, "");
 
-            channel.queueDeclare(queueName, false, false, false, null);
-            System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
+            System.out.println(" [*] Waiting to receive configuration ");
 
-            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            DeliverCallback deliverCallback = (consumerTag, delivery) ->{
+
                 Message message = serializationUtil.deserialize(delivery.getBody(), Message.class);
 
-                System.out.println(" [x] Received '" + message + "'");
+                System.out.println(" [x] Recieved '" + message + "'");
 
                 try {
                     receive(message);
@@ -51,13 +56,16 @@ public class RabbitReceiver implements Runnable {
                     System.out.println(" [x] Done");
                 }
             };
-            channel.basicConsume(queueName, AUTO_ACK, deliverCallback, consumerTag -> {});
+            channel.basicConsume(queueName, true, deliverCallback, consumerTag -> {});
+
+
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    private void receive(Message message) {
+    private void receive(Message message){
         messageHandler.received(message);
     }
 }
+
