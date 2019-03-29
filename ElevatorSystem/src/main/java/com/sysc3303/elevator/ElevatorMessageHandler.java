@@ -62,7 +62,7 @@ public class ElevatorMessageHandler extends MessageHandler {
             e.printStackTrace();
         }
         RabbitReceiver rabbitReceiver = new RabbitReceiver(this, elevatorQueueName);
-        new Thread(rabbitReceiver, "elevator queue receiver").start();
+        (new Thread(rabbitReceiver, "elevator queue receiver")).start();
     }
 
     @Override
@@ -138,11 +138,11 @@ public class ElevatorMessageHandler extends MessageHandler {
      * @param destinationFloor  The floor to go to.
      * @param elevatorId        The ID of the elevator in question.
      */
-    public void sendElevatorButton(int destinationFloor, int elevatorId){
+    public void sendElevatorButton(int destinationFloor, int elevatorId, long pressedTime){
     	System.out.println("Elevator button pressed, notifying scheduler");
     	log.info("Sending ElevatorButtonMessage to scheduler");
      
-        ElevatorButtonMessage elevatorButtonMessage = new ElevatorButtonMessage(destinationFloor, elevatorId, new Date());
+        ElevatorButtonMessage elevatorButtonMessage = new ElevatorButtonMessage(destinationFloor, elevatorId, new Date(), pressedTime);
         
         log.info(elevatorButtonMessage);
         send(elevatorButtonMessage, schedulerAddress, schedulerPort);

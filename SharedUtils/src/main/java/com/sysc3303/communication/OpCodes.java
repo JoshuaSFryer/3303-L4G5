@@ -17,8 +17,8 @@ public enum OpCodes {
     UNSTUCK((byte)12),
     TEL_ELEVATOR((byte)13),
     TEL_FLOOR((byte)14),
-    TEL_ARRIVAL((byte)15)
-
+    TEL_ARRIVAL((byte)15),
+    CONFIG((byte)16)
     ;
 
     private final byte opCode;

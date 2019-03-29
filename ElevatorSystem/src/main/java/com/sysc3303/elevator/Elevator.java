@@ -9,6 +9,9 @@ import org.apache.log4j.Logger;
 
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
+import com.sysc3303.communication.TelemetryElevatorMessage;
+import com.sysc3303.communication.RabbitSender;
+import com.sysc3303.constants.Constants;
 
 /**
  * Elevator represents a physical elevator within the system. It is directed
@@ -44,7 +47,11 @@ public class Elevator {
 
 	private boolean						shutDown = false;
 
+
   private Logger          log = Logger.getLogger(Elevator.class);
+
+	private long 						telemetryStartTime = 0;
+	private long 						telemetryStopTime = 0;
 
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
@@ -120,6 +127,8 @@ public class Elevator {
 		System.out.println("Interrupting movement handler...");
 		try {
 			this.mover.interrupt();
+			telemetryStopTime = System.nanoTime();
+			sendTelemetryMetric();
 		} catch (NullPointerException e ) {
 			System.out.println("No movement thread to interrupt!");
 		}
@@ -205,6 +214,7 @@ public class Elevator {
 	}
 
 	public void stickElevator() {
+
 		motor.stick();
 	}
 
@@ -279,6 +289,8 @@ public class Elevator {
 	 * @param num	The floor number of the button to press.
 	 */
 	public void pressButton(int num) {
+		long pressedTime  = System.currentTimeMillis() * Constants.NANO_PER_MILLI;
+		
 		if (!shutDown) {
 			if (num > this.buttons.size() || num < 0) {
 				//TODO: Throw an exception here?
@@ -287,7 +299,7 @@ public class Elevator {
 			}
 			this.buttons.get(num).press();
 			// Notify the scheduler that a
-			messageHandler.sendElevatorButton(num, this.elevatorID);
+			messageHandler.sendElevatorButton(num, this.elevatorID, pressedTime);
 		} else {
 			shutDownError(elevatorID);
 		}
@@ -344,5 +356,21 @@ public class Elevator {
 
 	private void shutDownError(int elevatorID) {
 		System.out.println("ERROR: Elevator "+elevatorID+ "is shut down and should not be used.");
+	}
+
+	public void startTelemetryTimer() {
+		telemetryStartTime = System.nanoTime();
+	}
+
+	private void sendTelemetryMetric() {
+		if (telemetryStartTime != 0 && telemetryStopTime != 0) {
+			System.out.println("Sending telemetry message....");
+			long diffTime = telemetryStopTime - telemetryStartTime;
+			TelemetryElevatorMessage msg = new TelemetryElevatorMessage(0, diffTime);
+			Thread messager = new Thread(new RabbitSender("telemetry", msg));
+			messager.start();
+		} else {
+			System.out.println("ERROR: Invalid telemetry times.");
+		}
 	}
 }

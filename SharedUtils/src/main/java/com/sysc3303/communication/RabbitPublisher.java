@@ -6,29 +6,28 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.SerializationUtilJSON;
 
-public class RabbitSender implements Runnable{
+public class RabbitPublisher implements Runnable{
 
     private SerializationUtilJSON<Message> serializationUtil;
-    private String queueName;
+    private String exchangeName;
     private Message message;
 
-    public RabbitSender(String queueName, Message message){
-        this.queueName = queueName;
+    public RabbitPublisher(String exchangeName, Message message){
+        this.exchangeName = exchangeName;
         this.message = message;
         serializationUtil = new SerializationUtilJSON<>();
     }
-    public void run() {
+
+    public void run(){
         ConnectionFactory factory = new ConnectionFactory();
         String hostname;
-
         if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("rabbitCloud"))){
-          hostname = ConfigProperties.getInstance().getProperty("rabbitCloudAddress");
+            hostname = ConfigProperties.getInstance().getProperty("rabbitCloudAddress");
         }
         else if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
-
             hostname = "localhost";
         }
-        else  {
+        else {
             hostname = ConfigProperties.getInstance().getProperty("rabbitAddress");
         }
         factory.setHost(hostname);
@@ -36,12 +35,13 @@ public class RabbitSender implements Runnable{
         try(Connection connection = factory.newConnection();
             Channel channel = connection.createChannel()){
 
-            channel.queueDeclare(queueName, false, false, false, null);
+            channel.exchangeDeclare(exchangeName, "fanout");
 
             byte[] data = serializationUtil.serialize(message);
-            channel.basicPublish("", queueName, null, data);
+            channel.basicPublish(exchangeName, "", null, data);
             System.out.println(" [x] Sent '" + message + "'");
         } catch (Exception e){
         }
     }
+    // get a random Queue
 }

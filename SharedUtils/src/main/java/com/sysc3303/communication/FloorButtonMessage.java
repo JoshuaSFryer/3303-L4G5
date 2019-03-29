@@ -19,14 +19,16 @@ public class FloorButtonMessage extends Message{
     private final int floor;
     private final Direction direction;
     private final Date time;
+    private final long pressedTime;
 
     @JsonCreator
-    public FloorButtonMessage(@JsonProperty("floor") int floor,@JsonProperty("direction") Direction direction,@JsonProperty("time") Date time) {
+    public FloorButtonMessage(@JsonProperty("floor") int floor,@JsonProperty("direction") Direction direction,@JsonProperty("time") Date time, long pressedTime) {
         // Opcode for this message is 0
         super(OpCodes.FLOOR_BUTTON.getOpCode());
         this.floor = floor;
         this.direction = direction;
         this.time = time;
+        this.pressedTime = pressedTime;
     }
 
     @Override
@@ -51,5 +53,9 @@ public class FloorButtonMessage extends Message{
 
     public Date getTime() {
         return time;
+    }
+    
+    public long getPressedTime() {
+    	return pressedTime;
     }
 }

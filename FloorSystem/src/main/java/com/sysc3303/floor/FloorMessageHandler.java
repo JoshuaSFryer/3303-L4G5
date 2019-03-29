@@ -45,7 +45,7 @@ public class FloorMessageHandler extends MessageHandler {
             e.printStackTrace();
         }
         RabbitReceiver rabbitReceiver = new RabbitReceiver(this, floorQueueName);
-        new Thread(rabbitReceiver, "elevator queue receiver").start();
+        (new Thread(rabbitReceiver, "elevator queue receiver")).start();
     }
 
     @Override
@@ -77,10 +77,10 @@ public class FloorMessageHandler extends MessageHandler {
         }
     }
 
-    public void sendFloorButton(int floor, Direction direction){
+    public void sendFloorButton(int floor, Direction direction, long pressedTime){
         System.out.println("\nSending floor button press to " +
                 "scheduler \n\tFloor: " + floor + "\n\tDirection: "+direction);
-        FloorButtonMessage floorButtonMessage = new FloorButtonMessage(floor, direction, new Date());
+        FloorButtonMessage floorButtonMessage = new FloorButtonMessage(floor, direction, new Date(), pressedTime);
         send(floorButtonMessage, schedulerAddress, schedulerPort);
         try {
 			Thread.sleep(2000);

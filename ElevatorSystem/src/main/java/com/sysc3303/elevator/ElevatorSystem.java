@@ -1,5 +1,6 @@
 package com.sysc3303.elevator;
 
+import com.sysc3303.commons.ConfigListener;
 import com.sysc3303.commons.ConfigProperties;
 
 import java.io.IOException;
@@ -54,12 +55,19 @@ public class ElevatorSystem {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        if(args.length > 0){
+            if(args[0] .equals("config")){
+                new ConfigListener().run();
+            }
+        }
         boolean                    running           = true;
 
         // Create a new Elevator instance.
         int      port     = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
         int     num_floors = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors"));
         int num_elevators = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators"));
+        String telemetryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");
+        // TODO: Pass this to the system somehow
         ElevatorSystem elevatorSystem = new ElevatorSystem(num_elevators, num_floors, port);
       
         System.out.println("Starting Elevator System, with " + num_elevators +

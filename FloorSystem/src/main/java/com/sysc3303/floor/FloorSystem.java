@@ -13,8 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.sysc3303.commons.ConfigListener;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
+import com.sysc3303.constants.Constants;
 
 import static com.sysc3303.floor.FloorMessageHandler.floorPort;
 
@@ -57,6 +59,11 @@ public class FloorSystem {
 	
 	//Main method Not is use right Now. Left for Future testing
     public static void main(String[] args){
+		if(args.length > 0){
+			if(args[0] .equals("config")){
+				new ConfigListener().run();
+			}
+		}
         FloorSystem floorSystem = new FloorSystem();
         while(true){
         }
@@ -105,6 +112,7 @@ public class FloorSystem {
 	 */
 
 	public void buttonPress(int requestFloor, Direction buttonDirection) {
+		long pressedTime  = System.currentTimeMillis() * Constants.NANO_PER_MILLI;
 		System.out.println(buttonDirection + " button pressed on floor " + requestFloor);
 		//FIXME Check for index out of bounds
 		Floor arriveFloor = floorList.get(requestFloor);
@@ -115,7 +123,7 @@ public class FloorSystem {
 			arriveFloor.getButtons().setDownButtonLight(true);
 		}
 		//send floor button request
-		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection);
+		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection, pressedTime);
 
 		// Update the UI with the updated states of the buttons on this floor.
 		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),

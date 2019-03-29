@@ -2,7 +2,6 @@ package com.sysc3303.communication;
 
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
-import com.sysc3303.communication.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -30,6 +29,10 @@ public class TestMessageHandler extends MessageHandler{
     public void received(Message message) {
         System.out.println("Received message\n" + message);
         callCount++;
+
+        if (message.getOpcode() == 16){
+            System.out.println("Received Properties File message");
+        }
     }
 
     public void sendFloorArrivalMessage(int floor, Direction direction, int elevatorId){
@@ -38,7 +41,7 @@ public class TestMessageHandler extends MessageHandler{
     }
 
     public void sendFloorButtonMessage(int floor, Direction direction, Date time){
-        FloorButtonMessage message = new FloorButtonMessage(floor, direction, time);
+        FloorButtonMessage message = new FloorButtonMessage(floor, direction, time, 1000);
         send(message, this.address, schedulerPort);
     }
 
@@ -53,7 +56,7 @@ public class TestMessageHandler extends MessageHandler{
     }
 
     public void sendElevatorButtonMessage(int destinationFloor, int elevatorId, Date time){
-        ElevatorButtonMessage message = new ElevatorButtonMessage(destinationFloor, elevatorId, time);
+        ElevatorButtonMessage message = new ElevatorButtonMessage(destinationFloor, elevatorId, time, 1000);
         send(message, this.address, schedulerPort);
     }
 }

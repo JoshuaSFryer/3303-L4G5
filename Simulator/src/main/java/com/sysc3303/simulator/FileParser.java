@@ -47,16 +47,21 @@ public class FileParser {
      * @param filePath the path to the input file
      * @throws IOException thrown by the filereader and buffered reader
      */
-    public void parse(String filePath) throws IOException, ParseException{
+    public void parse(String filePath) throws IOException, ParseException, IllegalArgumentException{
         parsed.clear();
-        InputStreamReader isr = new InputStreamReader((getClass().getResourceAsStream(filePath)));
-        BufferedReader br = new BufferedReader(isr);
+        try{
+            InputStreamReader isr = new InputStreamReader((getClass().getResourceAsStream(filePath)));
 
-        String line = br.readLine();
-        while(line != null){
-            String[] parsedLine = parseLine(line);
-            parsed.add(parsedLine);
-            line = br.readLine();
+            BufferedReader br = new BufferedReader(isr);
+
+            String line = br.readLine();
+            while(line != null){
+                String[] parsedLine = parseLine(line);
+                parsed.add(parsedLine);
+                line = br.readLine();
+            }
+        } catch (NullPointerException e){
+            throw new IllegalArgumentException("The filename you specified does not exist. Ensure that the file is located in the resources folder, and that the argument is of the form /<filename>.txt");
         }
     }
 
