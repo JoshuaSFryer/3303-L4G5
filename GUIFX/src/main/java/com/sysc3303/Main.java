@@ -166,7 +166,9 @@ public class Main extends Application {
                         @Override
                         public void run() {
 
-                            moveElevator(2, q);
+                                //This line of code will basically take the information for which elevator to move
+                                moveElevator(2, q);
+
                             System.out.println("2. Platform is working!!");
                         }
                         //moveElevator(2, floorNumber - 5);
@@ -184,7 +186,7 @@ public class Main extends Application {
 
     } //End of start()
 
-    public void moveElevator(int elevatorID, int newFloor) {
+    public void moveElevator  (int elevatorID, int newFloor) {
 
         GUIElevator e = elevators.get(elevatorID);
 
