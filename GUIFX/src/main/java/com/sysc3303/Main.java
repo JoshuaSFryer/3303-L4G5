@@ -132,6 +132,7 @@ public class Main extends Application {
 
 
 
+        //Adding the elements to BorderPane
         Scene scene = new Scene(bPane, windowWidth, windowHeight);
         scene.getStylesheets().
                 add(Main.class.getResource("styleSheet.css").toExternalForm());
