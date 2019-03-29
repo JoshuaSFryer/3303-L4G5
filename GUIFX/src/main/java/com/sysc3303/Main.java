@@ -1,5 +1,6 @@
 package com.sysc3303;
 
+
 import com.sysc3303.commons.Direction;
 import javafx.application.Application;
 import javafx.application.Platform;

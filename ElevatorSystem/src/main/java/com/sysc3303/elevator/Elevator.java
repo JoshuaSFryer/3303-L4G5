@@ -43,6 +43,9 @@ public class Elevator {
 	private ElevatorSystem				parentSystem;
 
 	private boolean						shutDown = false;
+
+  private Logger          log = Logger.getLogger(Elevator.class);
+
 	/*
 	private ElevatorState[] states = {new Idle(), new MovingUp(), 
 			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
@@ -191,7 +194,6 @@ public class Elevator {
 	public void stickDoors(int secondsStuck) {
 		messageHandler.sendElevatorStuck(elevatorID);
 
-
 		door.stick();
 		try {
 			Thread.sleep(secondsStuck*1000);
@@ -209,9 +211,13 @@ public class Elevator {
 	public void terminateStuckElevator() {
 		shutDown = true;
 
+
 		messageHandler.sendElevatorStuck(elevatorID);
 
 	}
+
+
+
 	/**
 	 * Update this elevator's direction.
 	 * @param dir	The new Direction. IDLE if the elevator is not moving.

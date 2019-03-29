@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 10 request 2 Down 1
 20 stick_door 0 10
 21 request 1 Down 1
@@ -12,3 +12,4 @@
 71 request 2 Down 1
 79 request 1 Down 1
 92 request 3 Up 2
+

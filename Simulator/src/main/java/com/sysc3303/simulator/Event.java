@@ -25,12 +25,14 @@ public abstract class Event {
         this.type = eventStringArray[1];
     }
 
+
     public Event(int timeDelay, String type){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.SECOND, timeDelay);
         this.timestamp = calendar.getTime();
         this.type = type;
     }
+
 
     public Date getTimestamp() {
         return timestamp;
