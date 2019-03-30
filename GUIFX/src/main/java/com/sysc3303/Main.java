@@ -2,6 +2,8 @@ package com.sysc3303;
 
 
 import com.sysc3303.commons.Direction;
+import com.sysc3303.communication.GUIElevatorMoveMessage;
+import com.sysc3303.communication.GUIFloorMessage;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -27,7 +29,7 @@ import javafx.concurrent.*;
 
 import static java.lang.Thread.sleep;
 
-public class Main extends Application {
+public class Main extends Application implements UserInterface {
     public static void main(String[] args) {
 
         //Thread mythread = new Thread(new TestThread(ma), "TEST");
@@ -53,7 +55,7 @@ public class Main extends Application {
         //TODO change the screen size dynamically
         int windowHeight = 800;
         int windowWidth = 900;
-        
+
 
         //Main Container
         BorderPane bPane = new BorderPane();
@@ -141,50 +143,11 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        GUIMessageHandler handler = GUIMessageHandler.getInstance(this);
 
 
-        Task<Void>task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-//                for (int p = 0; p < 5; p++){
-//                    moveElevator(2, floorNumber-p);
-//                }
-//                for(int y=0; y < numberOfElevators; y++) {
-//                    final int z = y;
-//                    Platform.runLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            moveElevator(z, 7);
-//                            System.out.println("2. Platform is working!!");
-//                        }
-//                        //moveElevator(2, floorNumber - 5);
-//                    });
-//                }
-                sleep(1000);
-                System.out.println("1. Task is working!!");
-                for (int p = 0; p <= 5; p++) {
-                    final int q = p;
-                    Platform.runLater(new Runnable() {
-                        @Override
-                        public void run() {
 
-                                //This line of code will basically take the information for which elevator to move
-                                moveElevator(2, q);
 
-                            System.out.println("2. Platform is working!!");
-                        }
-                        //moveElevator(2, floorNumber - 5);
-                    });
-                    sleep(1000);
-                }
-                return null;
-            }
-
-        };
-
-        Thread taskThread = new Thread (task);
-        taskThread.setDaemon(true);
-        taskThread.start();
 
     } //End of start()
 
@@ -199,5 +162,49 @@ public class Main extends Application {
         r.setFill(Color.BLACK);
         gPane.add(r, elevatorID+1, floorNumber-1-e.currentFloor);
         e.currentFloor = newFloor;
+    }
+
+    public void moveElevator(GUIElevatorMoveMessage msg) {
+        final int target = msg.currentFloor;
+        final int elevator = msg.ID;
+
+        Task<Void>task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+
+                //sleep(1000);
+                //System.out.println("1. Task is working!!");
+                //for (int p = 0; p <= 5; p++) {
+                //    final int q = p;
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            //This line of code will basically take the information for which elevator to move
+                            moveElevator(elevator, target);
+
+                            System.out.println("2. Platform is working!!");
+                        }
+                        //moveElevator(2, floorNumber - 5);
+                    });
+                 //   sleep(1000);
+               // }
+                return null;
+          }
+
+        }; // End Task declaration
+
+        Thread taskThread = new Thread (task);
+        taskThread.setDaemon(true);
+        taskThread.start();
+
+    }
+
+    public void pressFloorButton(GUIFloorMessage msg) {
+
+    }
+
+    public void pressElevatorButton(int floor) {
+
     }
 }

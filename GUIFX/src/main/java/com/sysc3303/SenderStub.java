@@ -1,5 +1,7 @@
 package com.sysc3303;
 
+import com.sysc3303.commons.Direction;
+
 import java.util.Random;
 
 /**
@@ -11,17 +13,27 @@ public class SenderStub {
     private StubMessageHandler handler = StubMessageHandler.getInstance(6666);
     Random random  = new Random();
 
-    private void sendFloorMessage() {
+//    private void sendFloorMessage() {
+//        int randFloor = random.nextInt(7);
+//        boolean randUp = (Math.random() > 0.5);
+//        boolean randDown = (Math.random() > 0.5);
+//        handler.sendFloorUpdate(randDown, randUp, randFloor);
+//    }
+
+    private void sendElevatorMessage() {
         int randFloor = random.nextInt(7);
-        boolean randUp = (Math.random() > 0.5);
-        boolean randDown = (Math.random() > 0.5);
-        handler.sendFloorUpdate(randDown, randUp, randFloor);
+        Direction dir = Direction.UP;
+        boolean open = false;
+        int ID = random.nextInt(3);
+        handler.sendElevatorUpdate(randFloor, dir, open, ID);
     }
 
     public static void main(String[] args) {
         SenderStub stub = new SenderStub();
-        for(int i=0; i<10; i++) {
-            stub.sendFloorMessage();
+        for(int i=0; i<20; i++) {
+            //stub.sendFloorMessage();
+            stub.sendElevatorMessage();
+            System.out.println("Sending");
         }
     }
 }

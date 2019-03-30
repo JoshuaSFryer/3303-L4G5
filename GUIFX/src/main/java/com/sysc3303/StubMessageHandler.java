@@ -1,6 +1,8 @@
 package com.sysc3303;
 
 import com.sysc3303.commons.ConfigProperties;
+import com.sysc3303.commons.Direction;
+import com.sysc3303.communication.GUIElevatorMoveMessage;
 import com.sysc3303.communication.GUIFloorMessage;
 import com.sysc3303.communication.MessageHandler;
 
@@ -26,6 +28,21 @@ public class StubMessageHandler extends MessageHandler {
 
     public void sendFloorUpdate(boolean down, boolean up, int floor) {
         GUIFloorMessage msg = new GUIFloorMessage(down, up, floor);
+        try {
+            send(msg, InetAddress.getLocalHost(), guiPort);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendElevatorUpdate(int targetFloor, Direction dir, boolean open, int ID) {
+        GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(ID, targetFloor, dir, open);
         try {
             send(msg, InetAddress.getLocalHost(), guiPort);
         } catch (UnknownHostException e) {
