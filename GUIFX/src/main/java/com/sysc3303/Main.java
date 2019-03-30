@@ -25,9 +25,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import javafx.concurrent.*;
 
+import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 
 public class Main extends Application {
+
+
     public static void main(String[] args) {
 
         //Thread mythread = new Thread(new TestThread(ma), "TEST");
@@ -39,8 +42,10 @@ public class Main extends Application {
     }
 
 
-    int floorNumber = 15;
+    int floorNumber = 10;
     int numberOfElevators = 4;
+    int messageAddressee;
+    int targetFloor;
 
     GridPane gPane;
 
@@ -48,13 +53,16 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-
+        //Communication Part
+        //GUIMessageHandler msg = GUIMessageHandler.getInstance(this);
 
         //TODO change the screen size dynamically
         int windowHeight = 800;
         int windowWidth = 900;
-        int floorNumber = 20;
-        int numberOfElevators = 5;
+
+        //We might need these variables
+        int goToFloor;
+
 
         //Main Container
         BorderPane bPane = new BorderPane();
@@ -100,8 +108,8 @@ public class Main extends Application {
 
              //This Label is to Label the Floor numbers
             Label floorLabel = new Label("Floor " + n );
-            CustomButton downButton = CustomButton.create(n,  Direction.UP);
-            CustomButton upButton = CustomButton.create(n,  Direction.DOWN);
+            CustomButton downButton = CustomButton.create(n,  Direction.UP, this);
+            CustomButton upButton = CustomButton.create(n,  Direction.DOWN, this);
 
             hBox.getChildren().addAll(floorLabel, upButton, downButton);
             gPane.add(hBox, 0, floorNumber-n-1);
@@ -130,10 +138,6 @@ public class Main extends Application {
         bPane.setBottom(new Text("Bottom"));
 
 
-
-
-
-
         //Adding the elements to BorderPane
         Scene scene = new Scene(bPane, windowWidth, windowHeight);
         scene.getStylesheets().
@@ -143,51 +147,73 @@ public class Main extends Application {
         primaryStage.show();
 
 
+        //Task 1
+        //in this block, the parameters are
 
-        Task<Void>task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-//                for (int p = 0; p < 5; p++){
-//                    moveElevator(2, floorNumber-p);
-//                }
-//                for(int y=0; y < numberOfElevators; y++) {
-//                    final int z = y;
-//                    Platform.runLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            moveElevator(z, 7);
-//                            System.out.println("2. Platform is working!!");
-//                        }
-//                        //moveElevator(2, floorNumber - 5);
-//                    });
-//                }
-                sleep(1000);
-                System.out.println("1. Task is working!!");
-                for (int p = 0; p <= 5; p++) {
-                    final int q = p;
+        for( int ID = 0; ID < numberOfElevators; ID++) {
+            final int d = ID;
+            Task<Void> task = new Task<Void>() {
+                int taskID = d;
+                @Override
+                protected synchronized Void call() throws Exception {
+                    sleep(1000);
+                    System.out.println("Elevator Move command received. ");
+                    //TODO define int currentFloor number Here
+
                     Platform.runLater(new Runnable() {
                         @Override
-                        public void run() {
-
-                                //This line of code will basically take the information for which elevator to move
-                                moveElevator(2, q);
-
-                            System.out.println("2. Platform is working!!");
+                        public synchronized void run() {
+//                            while(true) { // While
+//                                try {
+//                                    wait(); // Wait until a message is received.
+//                                    // Check to see if the message is meant for this thread.
+//                                    if (getMessageAddressee() == d) {
+//                                        // This message is meant for this thread.
+//                                        System.out.println("Message processed by task " + taskID);
+//                                    }
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+                            //while(true) {
+                                if(messageAddressee >= 0) {
+                                    if (messageAddressee == taskID) {
+                                        // Message was meant for this thread.
+                                        System.out.println("Message handled by thread" + taskID);
+                                        moveElevator(taskID, targetFloor);
+                                        messageAddressee = -1; // ints cannot be null, so neg values instead.
+                                    } else {
+                                        System.out.println("Ignoring message");
+                                    }
+                                }
+                                try {
+                                    sleep(500);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            //}
                         }
-                        //moveElevator(2, floorNumber - 5);
-                    });
-                    sleep(1000);
-                }
-                return null;
-            }
 
-        };
+                    }); // End of runLater
+                        sleep(1000);
 
-        Thread taskThread = new Thread (task);
-        taskThread.setDaemon(true);
-        taskThread.start();
+                    return null;
+                } // End of call()
+
+            }; //End of Task
+
+            Thread taskThread = new Thread (task);
+            taskThread.setDaemon(true);
+            taskThread.start();
+
+        }
+
+        messageAddressee = 2;
 
     } //End of start()
+
+    //This method moves The rectangle from one place to another
+    //This simulates that the elevator is moving
 
     public void moveElevator  (int elevatorID, int newFloor) {
 
@@ -200,5 +226,9 @@ public class Main extends Application {
         r.setFill(Color.BLACK);
         gPane.add(r, elevatorID+1, floorNumber-1-e.currentFloor);
         e.currentFloor = newFloor;
+    }
+
+    private int getMessageAddressee() {
+        return this.messageAddressee;
     }
 }

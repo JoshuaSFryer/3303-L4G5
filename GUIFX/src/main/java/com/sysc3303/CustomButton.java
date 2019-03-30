@@ -11,14 +11,16 @@ import static com.sysc3303.commons.Direction.DOWN;
 public class CustomButton extends Button {
     int floorNumber;
     Direction dir;
+    Main context;
     static String floorQueueName = ConfigProperties.getInstance().getProperty("floorQueueName");
 
-     CustomButton(int floorNumber, Direction dir, String str){
+     CustomButton(int floorNumber, Direction dir, String str, Main parent){
 
          super(str);
 
         this.floorNumber = floorNumber;
         this.dir = dir;
+        this.context = parent;
 
         this.setOnAction((event) -> {
             sendFloorClick(floorNumber, this.dir);
@@ -27,14 +29,14 @@ public class CustomButton extends Button {
 
     }
     //This method creates the 
-    public static CustomButton create(int floorNumber, Direction dir){
+    public static CustomButton create(int floorNumber, Direction dir, Main parent){
 
         if (dir==UP){
-            return new CustomButton(floorNumber, dir, "UP");
+            return new CustomButton(floorNumber, dir, "UP", parent);
 
         }
         else if (dir == DOWN){
-            return new CustomButton(floorNumber, dir, "DOWN");
+            return new CustomButton(floorNumber, dir, "DOWN", parent);
         }
 
         else { // invalid case
@@ -48,6 +50,14 @@ public class CustomButton extends Button {
          FloorClickSimulationMessage message = new FloorClickSimulationMessage(floorNumber, direction);
          RabbitSender sender = new RabbitSender(floorQueueName, message);
          new Thread(sender).start();
+         // TODO: GET RID OF THIS SHIT
+        int elev;
+        if (direction == Direction.UP) {
+            elev = 0;
+        } else {
+            elev = 1;
+        }
+        this.context.moveElevator(elev, floorNumber);
     }
 
     public int getFloorNumber() {
