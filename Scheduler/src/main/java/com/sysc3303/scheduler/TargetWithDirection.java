@@ -18,4 +18,9 @@ public class TargetWithDirection {
 	public Direction getTargetDirection() {
 		return targetDirection;
 	}
+	
+	public String toString() {
+		return "\n TargetFloor: " + targetFloor + 
+			   "\n TargetDirection: " + targetDirection;
+	}
 }
