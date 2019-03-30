@@ -32,11 +32,9 @@ import static java.lang.Thread.sleep;
 public class Main extends Application implements UserInterface {
     public static void main(String[] args) {
 
-        //Thread mythread = new Thread(new TestThread(ma), "TEST");
+
        // mythread.start();
         launch(args);
-
-
 
     }
 
@@ -102,7 +100,12 @@ public class Main extends Application implements UserInterface {
              //This Label is to Label the Floor numbers
             Label floorLabel = new Label("Floor " + n );
             CustomButton downButton = CustomButton.create(n,  Direction.UP);
+            //Thread downThread = new Thread(downButton);
             CustomButton upButton = CustomButton.create(n,  Direction.DOWN);
+            //Thread upThread = new Thread (upButton);
+
+           // downThread.start();
+            //upThread.start();
 
             hBox.getChildren().addAll(floorLabel, upButton, downButton);
             gPane.add(hBox, 0, floorNumber-n-1);
@@ -128,10 +131,30 @@ public class Main extends Application implements UserInterface {
         bPane.setCenter(gPane);
 
 
-        bPane.setBottom(new Text("Bottom"));
+        //Stuffs for Bottom Panel
+        HBox boxBottom = new HBox();
+        Button errorButton1 = new Button("Stuck Elevator");
+        Button errorButton2 = new Button("Stuck Door");
+        boxBottom.setSpacing(10);
+
+        errorButton1.setOnAction((event) -> {
+            //TODO use the method to send message to scheduler
+            System.out.println("Elevator Stuck");
+        });
+
+        errorButton2.setOnAction((event) -> {
+            //TODO use the method to send message to scheduler
+            System.out.println("Door Stuck");
+        });
 
 
+        boxBottom.getChildren().addAll(errorButton1, errorButton2);
 
+
+        bPane.setBottom(boxBottom);
+
+
+        GUIMessageHandler handler = GUIMessageHandler.getInstance(this);
 
 
 
@@ -143,7 +166,7 @@ public class Main extends Application implements UserInterface {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        GUIMessageHandler handler = GUIMessageHandler.getInstance(this);
+
 
 
 
@@ -167,6 +190,7 @@ public class Main extends Application implements UserInterface {
     public void moveElevator(GUIElevatorMoveMessage msg) {
         final int target = msg.currentFloor;
         final int elevator = msg.ID;
+        final boolean open = msg.doorOpen;
 
         Task<Void>task = new Task<Void>() {
             @Override
@@ -182,6 +206,11 @@ public class Main extends Application implements UserInterface {
 
                             //This line of code will basically take the information for which elevator to move
                             moveElevator(elevator, target);
+                            if (open) {
+                                openDoor(elevator);
+                            } else {
+                                closeDoor(elevator);
+                            }
 
                             System.out.println("2. Platform is working!!");
                         }
@@ -198,6 +227,8 @@ public class Main extends Application implements UserInterface {
         taskThread.setDaemon(true);
         taskThread.start();
 
+
+
     }
 
     public void pressFloorButton(GUIFloorMessage msg) {
@@ -206,5 +237,13 @@ public class Main extends Application implements UserInterface {
 
     public void pressElevatorButton(int floor) {
 
+    }
+
+    public void openDoor(int ID) {
+        elevators.get(ID).setFill(Color.MEDIUMTURQUOISE);
+    }
+
+    public void closeDoor(int ID){
+        elevators.get(ID).setFill(Color.YELLOW);
     }
 }

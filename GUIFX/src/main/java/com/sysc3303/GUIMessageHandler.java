@@ -55,4 +55,8 @@ public class GUIMessageHandler extends MessageHandler {
     public void sendElevatorCarPress(GUIElevatorCarMessage message) {
 
     }
+
+    public void sendErrorToScheduler(GUIElevatorMoveMessage message){
+
+    }
 }

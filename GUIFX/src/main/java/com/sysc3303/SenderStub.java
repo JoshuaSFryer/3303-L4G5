@@ -23,14 +23,21 @@ public class SenderStub {
     private void sendElevatorMessage() {
         int randFloor = random.nextInt(7);
         Direction dir = Direction.UP;
-        boolean open = false;
+        int r = random.nextInt(2);
+        boolean open;
+        if (r == 0) {
+            open = false;
+        } else {
+            open = true;
+        }
+
         int ID = random.nextInt(3);
         handler.sendElevatorUpdate(randFloor, dir, open, ID);
     }
 
     public static void main(String[] args) {
         SenderStub stub = new SenderStub();
-        for(int i=0; i<20; i++) {
+        for(int i=0; i<5; i++) {
             //stub.sendFloorMessage();
             stub.sendElevatorMessage();
             System.out.println("Sending");
