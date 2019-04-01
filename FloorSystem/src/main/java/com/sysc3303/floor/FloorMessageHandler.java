@@ -105,6 +105,8 @@ public class FloorMessageHandler extends MessageHandler {
 
     public void updateUI(boolean downState, boolean upState, int floor) {
         GUIFloorMessage msg = new GUIFloorMessage(downState, upState, floor);
-        send(msg, guiAddress, guiPort);
+        String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
+        RabbitSender sender = new RabbitSender(guiQueueName, msg);
+        new Thread(sender).start();
     }
 }

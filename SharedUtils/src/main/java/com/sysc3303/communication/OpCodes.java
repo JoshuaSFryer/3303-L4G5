@@ -13,7 +13,6 @@ public enum OpCodes {
     DOOR_STICK((byte)9),
     ELEVATOR_STICK((byte)10),
     STUCK((byte)11),
-
     UNSTUCK((byte)12),
     TEL_ELEVATOR((byte)13),
     TEL_FLOOR((byte)14),

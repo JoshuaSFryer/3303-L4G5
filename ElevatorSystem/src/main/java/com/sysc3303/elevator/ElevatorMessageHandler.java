@@ -157,17 +157,25 @@ public class ElevatorMessageHandler extends MessageHandler {
      */
     public void updateUI(int elevatorID, int currentFloor, Direction dir, boolean open) {
         GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, dir, open);
-        send(msg, uiAddress, uiPort);
+        String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
+        RabbitSender sender = new RabbitSender(guiQueueName, msg);
+        new Thread(sender).start();
     }
 
     public void sendElevatorStuck(int elevatorID) {
         StuckMessage msg = new StuckMessage(elevatorID);
         send(msg, schedulerAddress, schedulerPort);
+        String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
+        RabbitSender sender = new RabbitSender(schedulerQueueName, msg);
+        new Thread(sender).start();
     }
 
     public void sendElevatorUnstuck(int elevatorID) {
         UnStuckMessage msg = new UnStuckMessage(elevatorID);
         send(msg, schedulerAddress, schedulerPort);
+        String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
+        RabbitSender sender = new RabbitSender(schedulerQueueName, msg);
+        new Thread(sender).start();
     }
 }
 
