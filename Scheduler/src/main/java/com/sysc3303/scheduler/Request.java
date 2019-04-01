@@ -31,6 +31,7 @@ public class Request {
 			
 			for(int i = 0; i < floorButtonMessages.size(); i++) {
 				output += floorButtonMessages.get(i).getFloor();
+				output += " " + floorButtonMessages.get(i).getDirection();
 				
 				if(i != floorButtonMessages.size()-1) {
 					output += ",";
@@ -47,15 +48,15 @@ public class Request {
 			for(int i = 0; i < elevatorStatusArray.size(); i++) {
 				ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr = elevatorStatusArray.get(i).getElevatorButtonMessageArr();
 				output += "\t Elevator " + i + ": [";
-				
 				for(int j = 0; j < elevatorButtonMessageArr.size(); j++) {
 					output += elevatorButtonMessageArr.get(j).getDestinationFloor();
-					
 					if(j != elevatorButtonMessageArr.size()-1) {
 						output += ",";
 					}
 				}
-				output += "]\n";
+				output += "]";
+				output += " going to = " + elevatorStatusArray.get(i).getElevatorVector().targetFloor +
+				          " stuck = " + elevatorStatusArray.get(i).elevatorIsStuck() + "\n";
 			}
 			
 			System.out.println(output);
