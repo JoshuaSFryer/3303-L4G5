@@ -3,6 +3,10 @@ package com.sysc3303.analyzer;
 import com.sysc3303.communication.ConfigUpdateMessage;
 import com.sysc3303.communication.Message;
 import com.sysc3303.communication.MessageHandler;
+import com.sysc3303.communication.TelemetryElevatorArrivalMessage;
+import com.sysc3303.communication.TelemetryElevatorButtonMessage;
+import com.sysc3303.communication.TelemetryFloorArrivalMessage;
+import com.sysc3303.communication.TelemetryFloorButtonMessage;
 import com.sysc3303.communication.TelemetryMessage;
 
 /**
@@ -13,6 +17,7 @@ import com.sysc3303.communication.TelemetryMessage;
 public class TelemetryMessageHandler extends MessageHandler {
     private static TelemetryMessageHandler instance;
     private TelemetryMessageList messageList;
+    private TelemetryArrivalMap  telemetryArrivalMap;
     private TelemetryMath math;
 
     /**
@@ -32,6 +37,7 @@ public class TelemetryMessageHandler extends MessageHandler {
     private TelemetryMessageHandler(){
         super();
         messageList = new TelemetryMessageList();
+        telemetryArrivalMap = new TelemetryArrivalMap();
     }
 
 
@@ -51,6 +57,31 @@ public class TelemetryMessageHandler extends MessageHandler {
             case 15:
                 messageList.addArrivalTime(((TelemetryMessage) message).getNanoSecondTime());
                 break;
+            case 17:
+            	TelemetryFloorButtonMessage telemetryFloorButtonMessage = (TelemetryFloorButtonMessage)message;
+            	telemetryArrivalMap.addFloorBtnPressTime(telemetryFloorButtonMessage.getDirection(), 
+            											 telemetryFloorButtonMessage.getFloor(), 
+            											 telemetryFloorButtonMessage.getNanoSecondTime());
+            	break;
+            case 18:
+            	TelemetryFloorArrivalMessage telemetryFloorArrivalMessage = (TelemetryFloorArrivalMessage)message;
+            	telemetryArrivalMap.addFloorArrivalTime(telemetryFloorArrivalMessage.getDirection(), 
+            											telemetryFloorArrivalMessage.getFloor(),
+            											telemetryFloorArrivalMessage.getNanoSecondTime());
+            	break;
+            case 19:
+            	TelemetryElevatorButtonMessage telemetryElevBtnMsg = (TelemetryElevatorButtonMessage)message;
+            	System.out.println("Recieved temetry elevator button message");
+              	telemetryArrivalMap.addElevatorButnPressTime(telemetryElevBtnMsg.getElevatorId(), 
+            												 telemetryElevBtnMsg.getFloor(), 
+            												 telemetryElevBtnMsg.getNanoSecondTime());
+            	break;
+            case 20:
+            	TelemetryElevatorArrivalMessage telemetryElevArvMsg = (TelemetryElevatorArrivalMessage)message;
+            	telemetryArrivalMap.addElevatorArrivalTime(telemetryElevArvMsg.getElevatorId(), 
+            											   telemetryElevArvMsg.getFloor(), 
+            											   telemetryElevArvMsg.getNanoSecondTime());
+            	break;
         }
     }
 

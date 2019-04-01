@@ -17,7 +17,11 @@ public enum OpCodes {
     TEL_ELEVATOR((byte)13),
     TEL_FLOOR((byte)14),
     TEL_ARRIVAL((byte)15),
-    CONFIG((byte)16)
+    CONFIG((byte)16),
+    TEL_FLOOR_BTN((byte)17),
+    TEL_FLOOR_ARV((byte)18),
+    TEL_ELEV_BTN((byte)19),
+    TEL_ELEV_ARV((byte)20)
     ;
 
     private final byte opCode;
