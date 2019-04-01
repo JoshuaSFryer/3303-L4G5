@@ -9,7 +9,7 @@ public class MovementHandler implements Runnable {
 	// How long to wait between calls of moveUp().
 	// Effectively, this is how long it takes the elevator to move one unit
 	// of distance up or down.
-	public static final int MOVEMENTDELAY = 1250;
+	public static final int MOVEMENTDELAY = 500;
 
 	// How long the elevator can take between floors before declaring itself to
 	// be stuck, and shutting down.
