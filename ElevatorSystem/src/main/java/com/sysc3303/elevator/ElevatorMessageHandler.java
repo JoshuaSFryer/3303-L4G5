@@ -159,7 +159,7 @@ public class ElevatorMessageHandler extends MessageHandler {
         GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, dir, open);
         String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
         RabbitSender sender = new RabbitSender(guiQueueName, msg);
-        new Thread(sender).start();
+        new Thread(sender).run();
     }
 
     public void sendElevatorStuck(int elevatorID) {

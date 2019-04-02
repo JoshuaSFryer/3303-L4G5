@@ -67,7 +67,7 @@ public class GUIMessageHandler extends MessageHandler {
     }
 
 
-    public void sendElevatorCarPress(GUIElevatorCarMessage message) {
+    public void sendElevatorCarPress(ElevatorClickSimulationMessage message) {
         String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
         RabbitSender sender = new RabbitSender(elevatorQueueName, message);
         new Thread(sender).start();

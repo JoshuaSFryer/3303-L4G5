@@ -142,6 +142,7 @@ public class Main extends Application implements UserInterface {
         }
 
         // Create the four squares representing the elevators.
+        // TODO: remove squares that are there first? Might resolve bug
         for (int i = 0; i < numberOfElevators; i++) {
             GUIElevator e = new GUIElevator(i, 0);
             gPane.add(e, i + 1, floorNumber - 1 - e.currentFloor);
@@ -186,10 +187,6 @@ public class Main extends Application implements UserInterface {
         primaryStage.setTitle("Elevator Control Panel");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-
-
-
 
     } //End of start()
 
@@ -269,7 +266,7 @@ public class Main extends Application implements UserInterface {
 
     public void openDoor(int ID) {
         elevators.get(ID).setFill(Color.MEDIUMTURQUOISE);
-        createNewScene();
+        createNewScene(ID);
     }
 
     public void closeDoor(int ID) {
@@ -278,13 +275,24 @@ public class Main extends Application implements UserInterface {
 
     }
 
-    public void createNewScene() {
+    public void createNewScene(int elevatorID) {
 
 
         //b.setOnAction(new EventHandler<ActionEvent>() {
          //   @Override public void handle(ActionEvent e) {
                 Stage stage = new Stage();
+                stage.setTitle("Choose a floor!");
+                ScrollPane sPane = new ScrollPane();
+                VBox v = new VBox();
                 //Fill stage with content
+                for (int i=0; i<floorNumber; i++) {
+                	ElevatorButton b = new ElevatorButton(Integer.toString(i), i, elevatorID);
+                	
+                	v.getChildren().add(b);
+                }
+                sPane.setContent(v);
+                Scene scene = new Scene(sPane, 400, 600);
+                stage.setScene(scene);
                 stage.show();
        //     }
        // });
