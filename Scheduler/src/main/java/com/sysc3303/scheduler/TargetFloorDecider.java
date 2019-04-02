@@ -2,8 +2,10 @@ package com.sysc3303.scheduler;
 
 import java.util.ArrayList;
 
+
 import com.sysc3303.communication.ElevatorButtonMessage;
 import com.sysc3303.communication.FloorButtonMessage;
+
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
@@ -34,7 +36,6 @@ public class TargetFloorDecider {
 		for(int i = 0; i < floorButtonMessages.size(); i++) {
 			addValidTargetFloor(numberOfElevator, request, targetFloorCandidates,floorButtonMessages.get(i));
 		}
-				
 	/*	for(int i = 0; i < downDirectionMessages.size(); i++) {
 			addValidTargetFloor(numberOfElevator, request, targetFloorCandidates,downDirectionMessages.get(i));
 		}
@@ -124,10 +125,8 @@ public class TargetFloorDecider {
  				}
  				targetFloors[duplicateElevatorId] = new TargetWithDirection(-1, Direction.IDLE);
 			}
-			
 			targetFloors[i] = nearestFloor;
 		}
-		
 		return targetFloors;
 	}
 	

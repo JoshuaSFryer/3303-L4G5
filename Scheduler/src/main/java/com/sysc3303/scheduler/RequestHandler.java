@@ -55,7 +55,7 @@ public abstract class RequestHandler {
 				int                 currentFloor           = request.getElevatorVector(i).currentFloor;
 				int                 targetFloor            = targetFloorDecider.getNearestFloor(targetFromFloorButton, 
 						                                                                         targetFloorsFromElevatorButtonMessages[i], currentFloor);
-				if(targetFloor != -1 && targetFloor != 0) {
+				if(targetFloor != -1) {
 					ElevatorVector curElevatorVector = request.getElevatorVector(i);
 					Direction      direction         = Direction.IDLE;
 					int            curFloor          = curElevatorVector.currentFloor;

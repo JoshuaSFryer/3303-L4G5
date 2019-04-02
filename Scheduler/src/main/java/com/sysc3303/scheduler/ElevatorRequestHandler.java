@@ -6,6 +6,7 @@ package com.sysc3303.scheduler;
 import com.sysc3303.communication.ElevatorButtonMessage;
 import com.sysc3303.communication.ElevatorStateMessage;
 import com.sysc3303.communication.FloorArrivalMessage;
+import com.sysc3303.communication.GoToFloorMessage;
 import com.sysc3303.communication.Message;
 import com.sysc3303.communication.StuckMessage;
 import com.sysc3303.communication.UnStuckMessage;
@@ -57,8 +58,10 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 				
 				log.info("Removed target floor");
 				log.info(request);
+				request.printElevatorButtonQueues();
+				request.printFloorButtonQueues();
 				
-				ElevatorVector      elevatorVectorResetTargetFloor = new ElevatorVector(currentFloor, Direction.IDLE, 0);
+				ElevatorVector      elevatorVectorResetTargetFloor = new ElevatorVector(currentFloor, Direction.IDLE, -1);
 				FloorArrivalMessage floorArrivalMessage            = new FloorArrivalMessage(destinationFloor, targetDirection, elevatorId);
 				
 				request.setElevatorVector(elevatorVectorResetTargetFloor, elevatorId);
@@ -104,6 +107,8 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		
 		log.info("Setting elevator button message");
 		log.info(request);
+		request.printElevatorButtonQueues();
+		request.printFloorButtonQueues();
 		
 		generateAndSendGoToFloorMessage();
 	}

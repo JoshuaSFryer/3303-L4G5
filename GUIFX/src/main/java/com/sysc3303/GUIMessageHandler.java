@@ -22,6 +22,9 @@ public class GUIMessageHandler extends MessageHandler {
         if (instance == null) {
             System.out.println("GUIHandler: Binding port" + guiPort);
             instance = new GUIMessageHandler(context);
+            String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
+            RabbitReceiver receiver = new RabbitReceiver(instance, guiQueueName);
+            new Thread(receiver).start();
         }
         return instance;
     }
@@ -52,7 +55,16 @@ public class GUIMessageHandler extends MessageHandler {
         }
     }
 
-    public void sendElevatorCarPress(GUIElevatorCarMessage message) {
 
+    public void sendElevatorCarPress(GUIElevatorCarMessage message) {
+        String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
+        RabbitSender sender = new RabbitSender(elevatorQueueName, message);
+        new Thread(sender).start();
+    }
+
+    public void sendErrorToScheduler(GUIElevatorMoveMessage message){
+        String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
+        RabbitSender sender = new RabbitSender(schedulerQueueName, message);
+        new Thread(sender).start();
     }
 }

@@ -1,6 +1,5 @@
-package com.sysc3303.communication;
+package com.sysc3303.remote_config;
 
-import com.sysc3303.commons.ConfigCLI;
 import org.junit.Test;
 
 import java.util.Scanner;

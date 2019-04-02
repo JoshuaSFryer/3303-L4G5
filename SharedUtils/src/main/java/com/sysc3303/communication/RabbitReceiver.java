@@ -21,22 +21,8 @@ public class RabbitReceiver implements Runnable {
     }
 
     public void run(){
-        ConnectionFactory factory = new ConnectionFactory();
-        String hostname;
-
-        if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("rabbitCloud"))){
-            hostname = ConfigProperties.getInstance().getProperty("rabbitCloudAddress");
-        }
-        else if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
-
-            hostname = "localhost";
-        }
-        else {
-            hostname = ConfigProperties.getInstance().getProperty("rabbitAddress");
-        }
-        factory.setHost(hostname);
         try{
-            Connection connection = factory.newConnection();
+            Connection connection = RabbitShared.connect();
             Channel channel = connection.createChannel();
 
             channel.queueDeclare(queueName, false, false, false, null);

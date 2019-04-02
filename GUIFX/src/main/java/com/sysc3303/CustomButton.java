@@ -8,7 +8,7 @@ import javafx.scene.control.Button;
 
 import static com.sysc3303.commons.Direction.UP;
 import static com.sysc3303.commons.Direction.DOWN;
-public class CustomButton extends Button {
+public class CustomButton extends Button  {
     int floorNumber;
     Direction dir;
     static String floorQueueName = ConfigProperties.getInstance().getProperty("floorQueueName");
@@ -57,4 +57,12 @@ public class CustomButton extends Button {
     public void setFloorNumber(int floorNumber) {
         this.floorNumber = floorNumber;
     }
+
+//    @Override
+//    public void run() {
+//        this.setOnAction((event) -> {
+//            sendFloorClick(floorNumber, this.dir);
+//            System.out.println("BUtton pressed!");
+//        });
+//    }
 }

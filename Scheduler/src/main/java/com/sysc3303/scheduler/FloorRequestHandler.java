@@ -27,6 +27,8 @@ public class FloorRequestHandler extends RequestHandler implements Runnable {
 		FloorButtonMessage message = (FloorButtonMessage)this.message;
 		
 		request.addFloorButtonMessage(message);
+		request.printElevatorButtonQueues();
+		request.printFloorButtonQueues();
 		generateAndSendGoToFloorMessage();
 	}
 }

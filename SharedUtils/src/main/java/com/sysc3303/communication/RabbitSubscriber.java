@@ -23,20 +23,8 @@ public class RabbitSubscriber implements Runnable{
     }
     public void run(){
         // create a new queue with a randomly generated name
-        ConnectionFactory factory = new ConnectionFactory();
-        String hostname;
-        if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("rabbitCloud"))){
-            hostname = ConfigProperties.getInstance().getProperty("rabbitCloudAddress");
-        }
-        else if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
-            hostname = "localhost";
-        }
-        else {
-            hostname = ConfigProperties.getInstance().getProperty("rabbitAddress");
-        }
-        factory.setHost(hostname);
         try{
-            Connection connection = factory.newConnection();
+            Connection connection = RabbitShared.connect();
             Channel channel = connection.createChannel();
             channel.exchangeDeclare(exchangeName, "fanout");
             String queueName = channel.queueDeclare().getQueue();

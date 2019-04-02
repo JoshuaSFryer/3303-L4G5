@@ -1,4 +1,7 @@
-package com.sysc3303.commons;
+package com.sysc3303.remote_config;
+
+import com.sysc3303.commons.ConfigProperties;
+import com.sysc3303.commons.ConfigUpdater;
 
 import java.util.Scanner;
 
@@ -44,5 +47,10 @@ public class ConfigCLI {
         }
 
         updater.updateConfigs(ConfigProperties.getInstance().getProperties(), configExchangeName);
+    }
+
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        new ConfigCLI().run(sc);
     }
 }

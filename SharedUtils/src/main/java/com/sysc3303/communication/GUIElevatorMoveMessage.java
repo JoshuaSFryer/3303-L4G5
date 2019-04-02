@@ -1,5 +1,7 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.OpCodes;
 
@@ -15,8 +17,9 @@ public class GUIElevatorMoveMessage extends Message {
     public final boolean doorOpen;
     public final int ID;
 
-    public GUIElevatorMoveMessage(int elevatorID, int floor,
-                                  Direction dir, boolean door) {
+    @JsonCreator
+    public GUIElevatorMoveMessage(@JsonProperty("elevatorID") int elevatorID, @JsonProperty("floor") int floor,
+                                  @JsonProperty("dir") Direction dir, @JsonProperty("door") boolean door) {
         super(ELEVATOR_UPDATE_GUI.getOpCode());
         this.currentFloor = floor;
         this.currentDirection = dir;

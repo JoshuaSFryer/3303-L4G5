@@ -4,13 +4,17 @@ package com.sysc3303.elevator;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.apache.log4j.Logger;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 import com.sysc3303.communication.TelemetryElevatorMessage;
 import com.sysc3303.communication.RabbitSender;
+import com.sysc3303.communication.TelemetryElevatorArrivalMessage;
+import com.sysc3303.communication.TelemetryElevatorButtonMessage;
 import com.sysc3303.constants.Constants;
 
 /**
@@ -52,6 +56,8 @@ public class Elevator {
 
 	private long 						telemetryStartTime = 0;
 	private long 						telemetryStopTime = 0;
+    private HashSet<Integer>            pressedButtonSet  = new HashSet<Integer>();
+	static String telemetaryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");            	
 
 	/**
 	 * Class constructor.
@@ -149,6 +155,12 @@ public class Elevator {
 	public void notifyArrival(int targetFloor) {
 		ElevatorVector v = new ElevatorVector(this.currentFloor, this.currentDirection, targetFloor);
 		messageHandler.sendElevatorState(v, this.elevatorID);
+		
+		if(pressedButtonSet.contains(targetFloor)) {
+	      	long arrivalTime  = System.currentTimeMillis() * Constants.NANO_PER_MILLI;
+	      	sendTelemetryArrivalMetric(this.elevatorID, targetFloor, arrivalTime);
+	      	pressedButtonSet.remove(targetFloor);
+		}
 	}
 
 	/**
@@ -290,6 +302,8 @@ public class Elevator {
 			this.buttons.get(num).press();
 			// Notify the scheduler that a
 			messageHandler.sendElevatorButton(num, this.elevatorID, pressedTime);
+			pressedButtonSet.add(num);
+		    sendTelemetryButtonMetric(this.elevatorID, num, pressedTime);
 		} else {
 			shutDownError(elevatorID);
 		}
@@ -371,5 +385,19 @@ public class Elevator {
 		} else {
 			System.out.println("ERROR: Invalid telemetry times.");
 		}
+	}
+	
+	private void sendTelemetryArrivalMetric(int elevatorId, int destinationFloor, long arrivalTime) {
+        TelemetryElevatorArrivalMessage telemetryElevArvMsg = new TelemetryElevatorArrivalMessage(elevatorId, destinationFloor, 0, arrivalTime);
+		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevArvMsg);
+        (new Thread(rabbitSender)).start();
+		
+	}
+
+	private void sendTelemetryButtonMetric(int elevatorId, int destinationFloor, long pressedTime) {
+        TelemetryElevatorButtonMessage telemetryElevBtnMsg = new TelemetryElevatorButtonMessage(elevatorId, destinationFloor, 0, pressedTime);
+		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevBtnMsg);
+        (new Thread(rabbitSender)).start();
+		
 	}
 }

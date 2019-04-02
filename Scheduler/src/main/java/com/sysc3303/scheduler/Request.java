@@ -26,6 +26,42 @@ public class Request {
 			initElevatorStatusArray();
 		}
 		
+		public void printFloorButtonQueues() {
+			String output = "FloorButtonQueues: [";
+			
+			for(int i = 0; i < floorButtonMessages.size(); i++) {
+				output += floorButtonMessages.get(i).getFloor();
+				output += " " + floorButtonMessages.get(i).getDirection();
+				
+				if(i != floorButtonMessages.size()-1) {
+					output += ",";
+				}
+			}
+			
+			output += "]";
+			System.out.println(output);
+		}
+		
+		public void printElevatorButtonQueues() {
+			String output = "ElevatorButtonQueues: \n";
+			
+			for(int i = 0; i < elevatorStatusArray.size(); i++) {
+				ArrayList<ElevatorButtonMessage> elevatorButtonMessageArr = elevatorStatusArray.get(i).getElevatorButtonMessageArr();
+				output += "\t Elevator " + i + ": [";
+				for(int j = 0; j < elevatorButtonMessageArr.size(); j++) {
+					output += elevatorButtonMessageArr.get(j).getDestinationFloor();
+					if(j != elevatorButtonMessageArr.size()-1) {
+						output += ",";
+					}
+				}
+				output += "]";
+				output += " going to = " + elevatorStatusArray.get(i).getElevatorVector().targetFloor +
+				          " stuck = " + elevatorStatusArray.get(i).elevatorIsStuck() + "\n";
+			}
+			
+			System.out.println(output);
+		}
+		
 		public synchronized void setElevatorIsStuck(int elevatorId) {
 			elevatorStatusArray.get(elevatorId).setElevatorIsStuck();
 		}
