@@ -7,6 +7,7 @@ import com.sysc3303.communication.GUIElevatorMoveMessage;
 import com.sysc3303.communication.GUIFloorMessage;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -44,13 +45,9 @@ public class Main extends Application implements UserInterface {
        // mythread.start();
         
         launch(args);
-
-
-
     }
 
     // Number of floors in the system.
-    
     int floorNumber = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors"));
     // Number of elevators in the system.
     int numberOfElevators = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators"));
@@ -128,7 +125,6 @@ public class Main extends Application implements UserInterface {
             CustomButton upButton = CustomButton.create(n, Direction.DOWN);
             //Thread upThread = new Thread (upButton);
             floorClicks[n][0] = upButton;
-
             floorClicks[n][1] = downButton;
 
 
@@ -138,12 +134,14 @@ public class Main extends Application implements UserInterface {
             hBox.getChildren().addAll(floorLabel, upButton, downButton);
             gPane.add(hBox, 0, floorNumber - n - 1);
 
-
         }
 
         // Create the four squares representing the elevators.
-        // TODO: remove squares that are there first? Might resolve bug
+        // Remove squares that are there first
         for (int i = 0; i < numberOfElevators; i++) {
+        	// Remove the squares where the elevators will go.
+        	removeNodeByCoordinates(i, floorNumber-1, gPane);
+        	// Create the elevator.
             GUIElevator e = new GUIElevator(i, 0);
             gPane.add(e, i + 1, floorNumber - 1 - e.currentFloor);
             elevators.add(e);
@@ -202,6 +200,16 @@ public class Main extends Application implements UserInterface {
         gPane.add(r, elevatorID + 1, floorNumber - 1 - e.currentFloor);
         e.currentFloor = newFloor;
     }
+    		
+    public void removeNodeByCoordinates(int row, int col, GridPane pane) {
+    	ObservableList<Node> list = pane.getChildren();
+    	for(Node n : list) {
+    		if (pane.getRowIndex(n) == row && pane.getColumnIndex(n) == col) {
+    			// We have found the target node.
+    			pane.getChildren().remove(n);
+    		}
+    	}
+    }
 
     public void moveElevator(GUIElevatorMoveMessage msg) {
         final int target = msg.currentFloor;
@@ -219,26 +227,18 @@ public class Main extends Application implements UserInterface {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-
                         //This line of code will basically take the information for which elevator to move
                         moveElevator(elevator, target);
                         if (open) {
-
                             System.out.println("Doors are open");
                             openDoor(elevator);
-                            //elevators.get(1).setFill(Color.MEDIUMTURQUOISE);
-
+                            //elevators.get(1).setFill(Color.MEDIUMTURQUOISE)
                             //elevatorArrived = true;
-
-
                         } else {
                             closeDoor(elevator);
-
                         }
-
                         System.out.println("2. Platform is working!!");
                     }
-
                 });
 
                 return null;
