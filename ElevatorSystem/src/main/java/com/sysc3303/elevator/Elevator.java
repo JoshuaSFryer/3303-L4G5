@@ -41,7 +41,7 @@ public class Elevator {
 	// Variables concerning the elevator's current status
 	private int 						currentFloor;
 	private int							currentHeight; // Current height in CM
-	private ElevatorState 				currentState;
+	//private ElevatorState 				currentState;
 	private Direction					currentDirection;
 	
 	private Thread 						mover;
@@ -73,7 +73,7 @@ public class Elevator {
 		motor         		= new Motor(this);
 		door          		= new Door(this);
 		currentFloor   		= Elevator.GROUND_FLOOR;
-		currentState		= new Idle(this);
+		//currentState		= new Idle(this);
 		currentHeight 		= GROUND_FLOOR;
 		currentDirection 	= Direction.IDLE;
 		parentSystem 		= system;
@@ -176,6 +176,7 @@ public class Elevator {
 	 */
 	public void openDoors() {
 		door.openDoors();
+		messageHandler.updateUI(elevatorID, currentFloor, this.currentDirection, true);
 	}
 	
 	/**
@@ -183,6 +184,8 @@ public class Elevator {
 	 */
 	public void closeDoors() {
 		door.closeDoors();
+		messageHandler.updateUI(elevatorID, currentFloor, this.currentDirection, false);
+
 	}
 
 	/**
