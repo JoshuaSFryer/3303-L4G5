@@ -5,7 +5,7 @@ import com.sysc3303.commons.ConfigListener;
 public class Runner {
     public static void main(String args[]) throws InterruptedException{
         if(args.length > 1){
-            if(args[1] .equals("config")){
+            if(args[1].equals("config")){
                 new ConfigListener().run();
             }
         }

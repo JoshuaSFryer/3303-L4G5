@@ -6,7 +6,6 @@
 38 request 1 Down 18
 32 request 2 Down 17
 42 stick_elevator 1 200
-
 49 request 13 Up 15
 58 request 2 Up 4
 71 request 14 Down 13
