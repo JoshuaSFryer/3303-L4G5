@@ -59,11 +59,6 @@ public class Elevator {
     private HashSet<Integer>            pressedButtonSet  = new HashSet<Integer>();
 	static String telemetaryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");            	
 
-	/*
-	private ElevatorState[] states = {new Idle(), new MovingUp(), 
-			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
-			new ClosingDoors()};
-			*/
 	/**
 	 * Class constructor.
 	 * @param numFloors		The number of floors in the system.
@@ -99,24 +94,6 @@ public class Elevator {
 	}
 	
 	/**
-	 * Get the current state. Currently unused until State pattern is
-	 * implemented.
-	 */
-	public ElevatorState getState() {
-		return this.currentState;
-	}
-	
-	/**
-	 * Change the current State.
-	 * Perform the exit action of the state being left, change the current
-	 * state to the new one, and perform the new state's entry action.
-	 * @param state	The ElevatorState to switch to.
-	 */
-	public void setState(ElevatorState state) {
-		this.currentState.changeState(state);
-	}
-	
-	/**
 	 * Handle a new instruction received from the scheduler.
 	 * Interrupt the old movement and start moving towards the new target floor.
 	 * @param targetFloor	The number of the new target floor
@@ -129,6 +106,9 @@ public class Elevator {
 		goToFloor(targetFloor);
 	}
 
+	/**
+	 * Stop this elevator's movement handler.
+	 */
 	private void stopMovementHandler() {
 		System.out.println("Interrupting movement handler...");
 		try {
@@ -212,7 +192,12 @@ public class Elevator {
 		stopMovementHandler();
 	}
 
+	/**
+	 * Force this elevator's doors to be stuck open for a given number of seconds.
+	 * @param secondsStuck	How long for the doors to stay open.
+	 */
 	public void stickDoors(int secondsStuck) {
+		// Notify the scheduler that this elevator is stuck.
 		messageHandler.sendElevatorStuck(elevatorID);
 
 		door.stick();
@@ -222,20 +207,25 @@ public class Elevator {
 			e.printStackTrace();
 		}
 		door.unstick();
+		// Let the scheduler know that this elevator is operational again.
 		messageHandler.sendElevatorUnstuck(elevatorID);
 	}
 
+	/**
+	 * Make this elevator's motor stick, freezing it in place.
+	 */
 	public void stickElevator() {
 
 		motor.stick();
 	}
 
+	/**
+	 * Notify the scheduler that an elevator is irreparably stuck and should
+	 * be shut down.
+	 */
 	public void terminateStuckElevator() {
 		shutDown = true;
-
-
 		messageHandler.sendElevatorStuck(elevatorID);
-
 	}
 
 
@@ -372,14 +362,23 @@ public class Elevator {
 		System.out.println("ERROR: Elevator "+elevatorID+ "is shut down and should not be used.");
 	}
 
+	/**
+	 * Get the time at the start of a telemetry measurement.
+	 */
 	public void startTelemetryTimer() {
 		telemetryStartTime = System.nanoTime();
 	}
 
+	/**
+	 * Send the measured telemetry time to the telemetry message queue.
+	 */
 	private void sendTelemetryMetric() {
+		// Ensure that both start and stop times have been measured.
 		if (telemetryStartTime != 0 && telemetryStopTime != 0) {
 			System.out.println("Sending telemetry message....");
 			long diffTime = telemetryStopTime - telemetryStartTime;
+			// Put the duration into a message and send it by launching a Rabbit
+			// message queue.
 			TelemetryElevatorMessage msg = new TelemetryElevatorMessage(0, diffTime);
 			Thread messager = new Thread(new RabbitSender("telemetry", msg));
 			messager.start();
