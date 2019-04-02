@@ -95,6 +95,9 @@ public class FloorMessageHandler extends MessageHandler {
                 "simulator \n\tFloor: " + floor + "\n\tDirection: "+direction +"\n\tElevator ID: " + elevatorId);
     	FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction, elevatorId);
     	send(floorArrivalMessage, simulatorAddress, simulatorPort);
+        String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
+        RabbitSender sender = new RabbitSender(guiQueueName, floorArrivalMessage);
+        new Thread(sender).start();
     	try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {

@@ -1,5 +1,6 @@
 package com.sysc3303.elevator;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 
 import static java.lang.System.currentTimeMillis;
@@ -9,12 +10,13 @@ public class MovementHandler implements Runnable {
 	// How long to wait between calls of moveUp().
 	// Effectively, this is how long it takes the elevator to move one unit
 	// of distance up or down.
-	public static final int MOVEMENTDELAY = 500;
+
+	private static int MOVEMENTDELAY;
 
 	// How long the elevator can take between floors before declaring itself to
 	// be stuck, and shutting down.
 	// For now, this time is twice the time that it would ordinarily take to reach the next floor.
-	public static final int WATCHDOGTIME = MOVEMENTDELAY * FloorSensor.FLOORHEIGHT * 2;
+	private static int WATCHDOGTIME;
 	//public static final int WATCHDOGTIME = MOVEMENTDELAY * 20;
 
 
@@ -34,6 +36,9 @@ public class MovementHandler implements Runnable {
 		this.context = context;
 		this.elevatorId = elevatorId;
 		this.atFloor = false;
+		int timeBetweenFloors = Integer.parseInt(ConfigProperties.getInstance().getProperty("timeBetweenFloors"));
+		MOVEMENTDELAY = timeBetweenFloors/FloorSensor.FLOORHEIGHT;
+		WATCHDOGTIME = timeBetweenFloors * 2;
 	}
 	
 	/**

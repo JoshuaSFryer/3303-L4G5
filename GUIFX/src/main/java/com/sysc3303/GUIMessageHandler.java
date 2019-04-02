@@ -1,6 +1,7 @@
 package com.sysc3303;
 
 import com.sysc3303.commons.ConfigProperties;
+import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.*;
 
 
@@ -15,10 +16,10 @@ import com.sysc3303.communication.*;
  */
 public class GUIMessageHandler extends MessageHandler {
     private static GUIMessageHandler instance;
-    private UserInterface context;
+    private Main context;
     static int guiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
 
-    public static GUIMessageHandler getInstance(UserInterface context) {
+    public static GUIMessageHandler getInstance(Main context) {
         if (instance == null) {
             System.out.println("GUIHandler: Binding port" + guiPort);
             instance = new GUIMessageHandler(context);
@@ -29,7 +30,7 @@ public class GUIMessageHandler extends MessageHandler {
         return instance;
     }
 
-    private GUIMessageHandler(UserInterface context) {
+    private GUIMessageHandler(Main context) {
         super(guiPort);
         this.context = context;
     }
@@ -37,7 +38,17 @@ public class GUIMessageHandler extends MessageHandler {
     @Override
     public void received(Message message) {
         switch(message.getOpcode()) {
+            case 1:
+                // the elevator has arrived at a floor
+                FloorArrivalMessage msg = (FloorArrivalMessage) message;
+                Direction dir = msg.getCurrentDirection();
+                int elevatorId = msg.getElevatorId();
+                int floor = msg.getFloor();
 
+
+
+                //TODO this is where actions to handle the arrival of the elevator at a floor would go
+                break;
             case 7: // elevator update
                 GUIElevatorMoveMessage moveMSG = (GUIElevatorMoveMessage) message;
                 // Have the GUI do a thing here.
