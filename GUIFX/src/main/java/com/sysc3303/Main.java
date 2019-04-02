@@ -27,8 +27,12 @@ import net.miginfocom.layout.Grid;
 import java.util.ArrayList;
 import java.util.Collection;
 import javafx.concurrent.*;
+import javafx.scene.control.ScrollPane;
 
 import static java.lang.Thread.sleep;
+
+import com.sysc3303.commons.ConfigProperties;
+
 
 public class Main extends Application implements UserInterface {
     public static void main(String[] args) {
@@ -46,9 +50,10 @@ public class Main extends Application implements UserInterface {
     }
 
     // Number of floors in the system.
-    int floorNumber = 9;
+    
+    int floorNumber = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors"));
     // Number of elevators in the system.
-    int numberOfElevators = 4;
+    int numberOfElevators = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators"));
     //boolean elevatorArrived = false;
 
     // A grid pane to hold/organize all the UI elements in.
@@ -66,10 +71,15 @@ public class Main extends Application implements UserInterface {
         int windowHeight = 800;
         int windowWidth = 900;
 
+        // Scrollable Container
+        ScrollPane sPane = new ScrollPane();
+        sPane.setPrefSize(windowWidth, windowHeight);
+       
+        
         //Main Container
         BorderPane bPane = new BorderPane();
         bPane.setPadding(new Insets(20, 20, 20, 20));
-
+        
 
         //Creating the "elevators", here elevators are represented as rectangles
         //Grid Pane is created to represent both the elevator and floor buttons.
@@ -81,6 +91,7 @@ public class Main extends Application implements UserInterface {
         //gPane.setAlignment(Pos.CENTER);                   //Uncomment this line if you want the grid pane to be in the center
         gPane.setPadding(new Insets(25, 25, 25, 25));
 
+        sPane.setContent(gPane);
 
         //Following two for loops are basically creating the rectangles and floor buttons
         //Rectangles are to represent the position of the elevator
@@ -146,7 +157,8 @@ public class Main extends Application implements UserInterface {
         bPane.setTop(new Text("Top"));
         bPane.setRight(new Text("Right"));
         //bPane.setLeft(vBox);
-        bPane.setCenter(gPane);
+        // Add the scroll pane to the left border.
+        bPane.setCenter(sPane);
 
 
         //Stuffs for Bottom Panel

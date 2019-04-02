@@ -19,7 +19,7 @@ public class ErrorButtons extends Button {
 
         this.setOnAction((event) -> {
             sendErrorClick(elevatorID);
-            System.out.println("Error Button Pressed! ");
+            System.out.println("Error Button Pressed! Assigned to Elevator " + this.elevatorID);
         });
         //System.out.println("Elevator Id" + );
     }
