@@ -34,7 +34,8 @@ import static java.lang.Thread.sleep;
 
 import com.sysc3303.commons.ConfigProperties;
 
-
+// TODO: Fix bug that results in elevators disappearing.
+// TODO: Fix bug that results in doors not holding open when selecting.
 public class Main extends Application implements UserInterface {
     public static void main(String[] args) {
         if(args.length > 0){
