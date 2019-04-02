@@ -18,23 +18,9 @@ public class RabbitSender implements Runnable{
         serializationUtil = new SerializationUtilJSON<>();
     }
     public void run() {
-        ConnectionFactory factory = new ConnectionFactory();
-        String hostname;
-
-        if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("rabbitCloud"))){
-          hostname = ConfigProperties.getInstance().getProperty("rabbitCloudAddress");
-        }
-        else if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
-
-            hostname = "localhost";
-        }
-        else  {
-            hostname = ConfigProperties.getInstance().getProperty("rabbitAddress");
-        }
-        factory.setHost(hostname);
-
-        try(Connection connection = factory.newConnection();
-            Channel channel = connection.createChannel()){
+        try{
+            Connection connection = RabbitShared.connect();
+            Channel channel = connection.createChannel();
 
             channel.queueDeclare(queueName, false, false, false, null);
 
