@@ -251,9 +251,6 @@ public class Main extends Application implements UserInterface {
 
         taskThread.setDaemon(true);
         taskThread.start();
-
-
-
     }
 
     public void pressFloorButton(GUIFloorMessage msg) {
@@ -270,35 +267,25 @@ public class Main extends Application implements UserInterface {
     }
 
     public void closeDoor(int ID) {
-
         elevators.get(ID).setFill(Color.YELLOW);
-
     }
 
     public void createNewScene(int elevatorID) {
-
-
-        //b.setOnAction(new EventHandler<ActionEvent>() {
-         //   @Override public void handle(ActionEvent e) {
-                Stage stage = new Stage();
-                stage.setTitle("Choose a floor!");
-                ScrollPane sPane = new ScrollPane();
-                VBox v = new VBox();
-                //Fill stage with content
-                for (int i=0; i<floorNumber; i++) {
-                	ElevatorButton b = new ElevatorButton(Integer.toString(i), i, elevatorID);
-                	
-                	v.getChildren().add(b);
-                }
-                sPane.setContent(v);
-                Scene scene = new Scene(sPane, 400, 600);
-                stage.setScene(scene);
-                stage.show();
-       //     }
-       // });
-
-
+        Stage stage = new Stage();
+        stage.setTitle("Choose a floor!");
+        ScrollPane sPane = new ScrollPane();
+        VBox v = new VBox();
+        Label title = new Label("Elevator " + elevatorID + " Control");
+        v.getChildren().add(title);
+        //Fill stage with content
+        for (int i=0; i<floorNumber; i++) {
+        	ElevatorButton b = new ElevatorButton(Integer.toString(i), i, elevatorID, stage);
+        	v.getChildren().add(b);
+        }
+        sPane.setContent(v);
+        Scene scene = new Scene(sPane, 400, 600);
+        stage.setScene(scene);
+        stage.show();
     }
-
 
 }

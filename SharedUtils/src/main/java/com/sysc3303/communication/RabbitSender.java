@@ -8,9 +8,9 @@ import com.sysc3303.commons.SerializationUtilJSON;
 
 public class RabbitSender implements Runnable{
 
-    private SerializationUtilJSON<Message> serializationUtil;
-    private String queueName;
-    private Message message;
+    protected SerializationUtilJSON<Message> serializationUtil;
+    protected String queueName;
+    protected Message message;
 
     public RabbitSender(String queueName, Message message){
         this.queueName = queueName;

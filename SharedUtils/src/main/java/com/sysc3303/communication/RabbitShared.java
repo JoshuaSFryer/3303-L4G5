@@ -5,6 +5,16 @@ import com.rabbitmq.client.ConnectionFactory;
 import com.sysc3303.commons.ConfigProperties;
 
 public class RabbitShared {
+	
+	private static Connection connection;
+	
+	public static Connection getConnection() throws Exception {
+		if (connection == null){
+			connection = connect();
+		}
+		return connection;
+			
+	}
 
     public static Connection connect() throws Exception{
         ConnectionFactory factory = new ConnectionFactory();
@@ -23,6 +33,7 @@ public class RabbitShared {
         }
         factory.setHost(hostname);
         Connection connection;
+        
         connection = factory.newConnection();
         //try {
         //    connection = factory.newConnection();
