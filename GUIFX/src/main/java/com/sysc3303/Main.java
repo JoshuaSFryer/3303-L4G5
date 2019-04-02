@@ -1,6 +1,7 @@
 package com.sysc3303;
 
 
+import com.sysc3303.commons.ConfigListener;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.GUIElevatorMoveMessage;
 import com.sysc3303.communication.GUIFloorMessage;
@@ -33,6 +34,11 @@ public class Main extends Application implements UserInterface {
     public static void main(String[] args) {
 
 
+        if(args.length > 0){
+            if(args[0] .equals("config")){
+                new ConfigListener().run();
+            }
+        }
        // mythread.start();
         launch(args);
 
