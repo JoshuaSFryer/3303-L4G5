@@ -38,12 +38,15 @@ public class Main extends Application {
 
     }
 
-
+    // Number of floors in the system.
     int floorNumber = 15;
+    // Number of elevators in the system.
     int numberOfElevators = 4;
 
+    // A grid pane to hold/organize all the UI elements in.
     GridPane gPane;
 
+    // Contains references to all the elevators.
     ArrayList<GUIElevator> elevators = new ArrayList<>();
     @Override
     public void start(Stage primaryStage) {
@@ -53,8 +56,6 @@ public class Main extends Application {
         //TODO change the screen size dynamically
         int windowHeight = 800;
         int windowWidth = 900;
-        int floorNumber = 20;
-        int numberOfElevators = 5;
 
         //Main Container
         BorderPane bPane = new BorderPane();
@@ -183,6 +184,7 @@ public class Main extends Application {
 
         };
 
+        // Create a thread to launch the task.
         Thread taskThread = new Thread (task);
         taskThread.setDaemon(true);
         taskThread.start();
