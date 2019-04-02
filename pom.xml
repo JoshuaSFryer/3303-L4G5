@@ -17,6 +17,7 @@
         <module>SharedUtils</module>        
         <module>GUIFX</module>
         <module>Analyzer</module>
+        <module>RemoteConfig</module>
     </modules>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
