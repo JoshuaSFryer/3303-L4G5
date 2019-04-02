@@ -8,7 +8,7 @@ public class RabbitShared {
 
     public static Connection connect() throws Exception{
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setConnectionTimeout(5000);
+        factory.setConnectionTimeout(10000);
         String hostname;
 
         if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("rabbitCloud"))){
@@ -23,15 +23,16 @@ public class RabbitShared {
         }
         factory.setHost(hostname);
         Connection connection;
-        try {
-            connection = factory.newConnection();
-        } catch (Exception e){
-            hostname = ConfigProperties.getInstance().getProperty("rabbitCloudBackup");
-            ConfigProperties.getInstance().setProperty("rabbitCloudAddress", hostname);
-            factory.setHost(hostname);
-            System.out.println("main rabbit server is offline connecting to backup");
-            connection = factory.newConnection();
-        }
+        connection = factory.newConnection();
+        //try {
+        //    connection = factory.newConnection();
+        //} catch (Exception e){
+        //    hostname = ConfigProperties.getInstance().getProperty("rabbitCloudBackup");
+        //    ConfigProperties.getInstance().setProperty("rabbitCloudAddress", hostname);
+        //    factory.setHost(hostname);
+        //    System.out.println("main rabbit server is offline connecting to backup");
+        //    connection = factory.newConnection();
+        //}
         return connection;
     }
 }
