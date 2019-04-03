@@ -35,9 +35,9 @@ public class ErrorButtons extends Button {
     }
 
     private void sendErrorClick(int floornumber){
-    StuckMessage message = new StuckMessage(elevatorID);
-    RabbitSender sender = new RabbitSender(errorQueue, message);
-    new Thread(sender).start();
+	    StuckMessage message = new StuckMessage(elevatorID);
+	    RabbitSender sender = new RabbitSender(errorQueue, message);
+	    new Thread(sender).start();
 
     }
 }

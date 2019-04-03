@@ -281,12 +281,12 @@ public class Main extends Application implements UserInterface {
     
     public void stickElevator(int ID) {
     	elevators.get(ID).setFill(Color.CRIMSON);
-    	t.appendText("Elevator " + ID + " fault! Stuck!");
+    	t.appendText("\nElevator " + ID + " fault! Stuck!");
     }
     
     public void unstickElevator(int ID) {
     	elevators.get(ID).setFill(Color.YELLOW);
-    	t.appendText("Elevator " + ID + " unstuck!");
+    	t.appendText("\nElevator " + ID + " unstuck!");
     }
 
     public void createNewScene(int elevatorID) {
