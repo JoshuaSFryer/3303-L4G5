@@ -174,8 +174,8 @@ public class Main extends Application implements UserInterface {
         boxBottom.setSpacing(10);
 
         for (int d = 0; d < numberOfElevators; d++) {
-            ErrorButtons errorButton1 = new ErrorButtons(d, "StickDoor");
-            ErrorButtons errorButton2 = new ErrorButtons(d, "StickElevator");
+            ErrorButtons errorButton1 = new ErrorButtons(d, "StickDoor " + d, "StickDoor");
+            ErrorButtons errorButton2 = new ErrorButtons(d, "StickElevator " + d, "StickElevator");
             boxBottom.getChildren().addAll(errorButton1, errorButton2);
         }
 
@@ -240,8 +240,7 @@ public class Main extends Application implements UserInterface {
                         if (open) {
                             System.out.println("Doors are open");
                             openDoor(elevator);
-                            //elevators.get(1).setFill(Color.MEDIUMTURQUOISE)
-                            //elevatorArrived = true;
+
                         } else {
                             closeDoor(elevator);
                         }
@@ -280,12 +279,12 @@ public class Main extends Application implements UserInterface {
     }
     
     public void stickElevator(int ID) {
-    	elevators.get(ID).setFill(Color.CRIMSON);
+    	elevators.get(ID).setFill(Color.RED);
     	t.appendText("Elevator " + ID + " fault! Stuck!");
     }
     
     public void unstickElevator(int ID) {
-    	elevators.get(ID).setFill(Color.YELLOW);
+    	elevators.get(ID).setFill(Color.RED);
     	t.appendText("Elevator " + ID + " unstuck!");
     }
 
