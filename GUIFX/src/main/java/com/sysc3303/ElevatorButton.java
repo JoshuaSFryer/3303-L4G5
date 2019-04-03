@@ -25,7 +25,7 @@ public class ElevatorButton extends Button {
             System.out.println("Pressed button " + floorNum + " in elevator " + elevatorID);
             parentStage.close();
         });
-		System.out.println("ACtion set");
+		//System.out.println("ACtion set");
 	}
 	
 	private void sendElevatorClick(int elevatorID, int floorNum) {

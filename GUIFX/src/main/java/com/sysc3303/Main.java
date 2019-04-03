@@ -18,6 +18,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -56,6 +57,9 @@ public class Main extends Application implements UserInterface {
 
     // A grid pane to hold/organize all the UI elements in.
     GridPane gPane;
+    
+    // A text area to print debug information to.
+    TextArea t;
 
     // Contains references to all the elevators.
     ArrayList<GUIElevator> elevators = new ArrayList<>();
@@ -71,7 +75,7 @@ public class Main extends Application implements UserInterface {
 
         // Scrollable Container
         ScrollPane sPane = new ScrollPane();
-        sPane.setPrefSize(windowWidth, windowHeight);
+        sPane.setPrefSize(windowWidth/1.5, windowHeight);
        
         
         //Main Container
@@ -83,7 +87,7 @@ public class Main extends Application implements UserInterface {
         //Grid Pane is created to represent both the elevator and floor buttons.
 
         gPane = new GridPane();
-        gPane.setMinSize(700, 600);
+        gPane.setMinSize(500, 600);
         gPane.setHgap(5);
         gPane.setVgap(5);
         //gPane.setAlignment(Pos.CENTER);                   //Uncomment this line if you want the grid pane to be in the center
@@ -152,10 +156,13 @@ public class Main extends Application implements UserInterface {
 
         //Adding stuffs for right pane
 
+        t = new TextArea();
+        t.setText("Test Message");
         //Adding Elements to Container: Border Pane
         //TODO
         bPane.setTop(new Text("Top"));
-        bPane.setRight(new Text("Right"));
+        //bPane.setRight(new Text("Right"));
+        bPane.setRight(t);
         //bPane.setLeft(vBox);
         // Add the scroll pane to the left border.
         bPane.setCenter(sPane);
@@ -264,11 +271,22 @@ public class Main extends Application implements UserInterface {
 
     public void openDoor(int ID) {
         elevators.get(ID).setFill(Color.MEDIUMTURQUOISE);
+        // Create a prompt to simulate a user pressing a button inside the elevator.
         createNewScene(ID);
     }
 
     public void closeDoor(int ID) {
         elevators.get(ID).setFill(Color.YELLOW);
+    }
+    
+    public void stickElevator(int ID) {
+    	elevators.get(ID).setFill(Color.CRIMSON);
+    	t.appendText("Elevator " + ID + " fault! Stuck!");
+    }
+    
+    public void unstickElevator(int ID) {
+    	elevators.get(ID).setFill(Color.YELLOW);
+    	t.appendText("Elevator " + ID + " unstuck!");
     }
 
     public void createNewScene(int elevatorID) {

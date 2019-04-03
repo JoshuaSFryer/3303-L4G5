@@ -163,19 +163,32 @@ public class ElevatorMessageHandler extends MessageHandler {
     }
 
     public void sendElevatorStuck(int elevatorID) {
+    	// Send stuck message to the Scheduler...
         StuckMessage msg = new StuckMessage(elevatorID);
         send(msg, schedulerAddress, schedulerPort);
         String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
         RabbitSender sender = new RabbitSender(schedulerQueueName, msg);
         new Thread(sender).start();
+        
+        // ...and the UI.
+        String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
+        RabbitSender guiSender = new SpecializedRabbitSender(guiQueueName, msg);
+        new Thread(guiSender).run();
     }
 
     public void sendElevatorUnstuck(int elevatorID) {
+    	// Send unstuck message to the Scheduler...
         UnStuckMessage msg = new UnStuckMessage(elevatorID);
         send(msg, schedulerAddress, schedulerPort);
         String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
         RabbitSender sender = new RabbitSender(schedulerQueueName, msg);
         new Thread(sender).start();
+        
+        // ...and the UI.
+        String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
+        RabbitSender guiSender = new SpecializedRabbitSender(guiQueueName, msg);
+        new Thread(guiSender).run();
+
     }
 }
 

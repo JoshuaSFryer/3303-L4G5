@@ -44,7 +44,7 @@ public class GUIMessageHandler extends MessageHandler {
                 Direction dir = msg.getCurrentDirection();
                 int elevatorId = msg.getElevatorId();
                 int floor = msg.getFloor();
-
+                
 
 
                 //TODO this is where actions to handle the arrival of the elevator at a floor would go
@@ -60,6 +60,14 @@ public class GUIMessageHandler extends MessageHandler {
                 // Have the GUI do a thing here.
                 context.pressFloorButton(floorMSG);
                 break;
+            case 11: // elevator is stuck.
+            	StuckMessage stuckMSG = (StuckMessage) message;
+            	context.stickElevator(stuckMSG.getElevatorId());
+            	break;
+            case 12: // elevator is unstuck.
+            	UnStuckMessage unstuckMSG = (UnStuckMessage) message;
+            	context.unstickElevator(unstuckMSG.getElevatorId());
+            	break;
 
             default:
                 System.out.println("This message type is not handled by this module!");
