@@ -10,7 +10,9 @@ import javafx.scene.control.Button;
 public class ErrorButtons extends Button {
     int elevatorID;
     String type;
-    static String errorQueue = ConfigProperties.getInstance().getProperty("schedulerQueueName");
+//    static String errorQueue = ConfigProperties.getInstance().getProperty("schedulerQueueName");
+    static String errorQueue = ConfigProperties.getInstance().getProperty("elevatorQueueName");
+
     int waitTime = Integer.parseInt(ConfigProperties.getInstance().getProperty("timeBetweenFloors"));
 
     ErrorButtons (int elevatorID, String str, String type){

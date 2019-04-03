@@ -279,16 +279,13 @@ public class Main extends Application implements UserInterface {
     }
     
     public void stickElevator(int ID) {
-
     	elevators.get(ID).setFill(Color.RED);
-    	t.appendText("Elevator " + ID + " fault! Stuck!");
+    	t.appendText("\nElevator " + ID + " fault! Stuck!");
     }
     
     public void unstickElevator(int ID) {
     	elevators.get(ID).setFill(Color.YELLOW);
-    	t.appendText("Elevator " + ID + " unstuck!");
-
-
+    	t.appendText("\nElevator " + ID + " unstuck!");
     }
     
 
@@ -299,7 +296,9 @@ public class Main extends Application implements UserInterface {
         ScrollPane sPane = new ScrollPane();
         VBox v = new VBox();
         Label title = new Label("Elevator " + elevatorID + " Control");
+        Label currentFloor = new Label("You are at floor: " + elevators.get(elevatorID).currentFloor);
         v.getChildren().add(title);
+        v.getChildren().add(currentFloor);
         //Fill stage with content
         for (int i=0; i<floorNumber; i++) {
         	ElevatorButton b = new ElevatorButton(Integer.toString(i), i, elevatorID, stage);
