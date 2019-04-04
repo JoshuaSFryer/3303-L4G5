@@ -15,7 +15,7 @@ import com.sysc3303.communication.Message;
 /**
  * Abstract class for request handlers
  * @author Yu Yamanaka
- *
+ * @author Xinrui Zhang
  */
 public abstract class RequestHandler {
 	protected final int               INVALID_FLOOR_1 = -1;
@@ -87,6 +87,13 @@ public abstract class RequestHandler {
 		request.setGeneratorOff();
 	}
 	
+	/**
+	 * This function returns true if the arr has only invalid floor,
+	 * reutrn false otherwise. Initial version.
+	 *
+	 * @para arr
+	 * @return boolean
+	 */
 	protected boolean hasOnlyInvalidFloor(int[] arr) {
 		for(int i = 0; i < arr.length; i++) {
 			if(arr[i] != INVALID_FLOOR_1) {
@@ -96,7 +103,14 @@ public abstract class RequestHandler {
 		return true;
 	}
 	
-	protected boolean hasOnlyInvalidFloor(TargetWithDirection[] arr) {
+	/**
+	 * This function returns true if the arr has only invalid floor,
+	 * reutrn false otherwise.
+	 *
+	 * @para arr
+	 * @return boolean
+	 */
+	protected boolean (TargetWithDirection[] arr) {
 		for(int i = 0; i < arr.length; i++) {
 			if(arr[i].getTargetFloor() != INVALID_FLOOR_1) {
 				return false;
