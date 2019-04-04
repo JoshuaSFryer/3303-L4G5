@@ -8,7 +8,7 @@ import com.sysc3303.communication.ElevatorButtonMessage;
 
 /**
  * Keeps status of each elevator
- * @author Yu Yamanaka
+ * @author Yu Yamanaka Xinrui Zhang
  *
  */
 public class ElevatorStatus {
@@ -18,6 +18,9 @@ public class ElevatorStatus {
 	private boolean                          isStuck;
 	private int                              stuckedTargetFloor;
 	
+	/**
+	 * Elevator status constructor
+	 */	
 	public ElevatorStatus() {
 		elevatorVector           = new ElevatorVector(0, Direction.IDLE, -1);
 		elevatorButtonMessageArr = new ArrayList<ElevatorButtonMessage>(); 
@@ -25,21 +28,37 @@ public class ElevatorStatus {
 		isStuck                  = false;
 	}
 	
+	/**
+	 * return true if the elevator is stuck
+	 * false otherwise
+	 * @return boolean
+	 */
 	public boolean elevatorIsStuck() {
 		return isStuck;
 	}
-		
+	
+	/**
+	 * sets elevator to stuck state
+	 */	
 	public void setElevatorIsStuck() {
 		isStuck = true;
 		stuckedTargetFloor = elevatorVector.targetFloor;
 		elevatorVector = new ElevatorVector(elevatorVector.currentFloor, elevatorVector.currentDirection, -1);
 	}
-
+	
+	/**
+	 * sets elevator to unstuck state
+	 */
 	public void setElevatorIsUnstuck() {
 		isStuck = false;
 		elevatorVector = new ElevatorVector(elevatorVector.currentFloor, elevatorVector.currentDirection, stuckedTargetFloor);
 	}
 	
+	/**
+	 * return true if the elevator button message array is empty
+	 * false otherwise
+	 * @return boolean
+	 */
 	public boolean elevatorButtonMessageIsEmpty() {
 		if(elevatorButtonMessageArr.size() == 0) {
 			return true;
@@ -47,18 +66,26 @@ public class ElevatorStatus {
 		return false;
 	}
 	
+	/**
+	 * sets target direction
+	 * @param direction
+	 */
 	public void setTargetDirection(Direction direction) {
 		this.targetDirection = direction;
 	}
 	
 	/**
 	 * gets elevator vector
-	 * @return
+	 * @return elevatorVector
 	 */
 	public ElevatorVector getElevatorVector() {
 		return elevatorVector;
 	}
 	
+	/**
+	 * get target direction
+	 * @return targetDirection
+	 */
 	public Direction getTargetDirection() {
 		return targetDirection;
 	}
@@ -73,7 +100,7 @@ public class ElevatorStatus {
 	
 	/**
 	 * gets array of elevator button message
-	 * @return
+	 * @return elevatorButtonMessageArr
 	 */
 	public ArrayList<ElevatorButtonMessage> getElevatorButtonMessageArr() {
 		return elevatorButtonMessageArr;
