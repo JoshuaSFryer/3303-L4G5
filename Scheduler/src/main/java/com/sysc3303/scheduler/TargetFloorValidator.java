@@ -7,7 +7,7 @@ import com.sysc3303.commons.ElevatorVector;
  * Validates if target floor is
  * valid floor for elevator
  * @author Yu Yamanaka
- *
+ * @author Xinrui Zhang
  */
 public class TargetFloorValidator {
 
