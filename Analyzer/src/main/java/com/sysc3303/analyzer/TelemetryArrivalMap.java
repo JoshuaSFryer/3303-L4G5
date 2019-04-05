@@ -167,11 +167,11 @@ public class TelemetryArrivalMap {
 	 */
 	private void printElevatorArrivalAnalysis(int elevatorId) {
 		List<Long> list = getElevatorTelemetryList(elevatorId);
-        long       mean = math.getMean(list);
-        long       var  = math.getVariance(list, mean);
+        long       mean = (long) math.getMean(list);
+        long       var  = (long) math.getVariance(list, mean);
         System.out.println("Elevator " + elevatorId + " Button Press to Floor Arrival:");
-        System.out.println("\tMean: " + mean + "ns");
-        System.out.println("\tVariance: " + var + "ns");
+        System.out.println("\tMean: " + mean + "ms");
+        System.out.println("\tVariance: " + var + "ms");
     }
 
 	/**
@@ -183,10 +183,10 @@ public class TelemetryArrivalMap {
 	 */
 	private void printFloorArrivalAnalysis(int floor, Direction direction) {
 		List<Long> list = getFloorTelemetryList(floor, direction);
-        long       mean = math.getMean(list);
-        long       var  = math.getVariance(list, mean);
+        long       mean = (long) math.getMean(list);
+        long       var  = (long) math.getVariance(list, mean);
         System.out.println("Floor " + floor + ", Direction " + direction + " Button Press to Floor Arrival:");
-        System.out.println("\tMean: " + mean + "ns");
-        System.out.println("\tVariance: " + var + "ns");
+		System.out.println("\tMean: " + mean + "ms");
+		System.out.println("\tVariance: " + var + "ms");
     }
 }
