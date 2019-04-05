@@ -21,7 +21,8 @@ public enum OpCodes {
     TEL_FLOOR_BTN((byte)17),
     TEL_FLOOR_ARV((byte)18),
     TEL_ELEV_BTN((byte)19),
-    TEL_ELEV_ARV((byte)20)
+    TEL_ELEV_ARV((byte)20),
+    SCHED_QUEUE((byte)21)
     ;
 
     private final byte opCode;

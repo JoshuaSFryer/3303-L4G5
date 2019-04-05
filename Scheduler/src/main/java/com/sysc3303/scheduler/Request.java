@@ -30,10 +30,10 @@ public class Request {
 		}
 		
 		/**
-		 * Print floor button queues
+		 * returns floor button queues
 		 * @return
 		 */
-		public void printFloorButtonQueues() {
+		public String getFloorBtnQueueStr() {
 			String output = "FloorButtonQueues: [";
 			
 			for(int i = 0; i < floorButtonMessages.size(); i++) {
@@ -44,16 +44,15 @@ public class Request {
 					output += ",";
 				}
 			}
-			
 			output += "]";
-			System.out.println(output);
+			return output;
 		}
-	
+		
 		/**
-		 * Print elevator button queues
+		 * returns elevator button queues
 		 * @return
 		 */
-		public void printElevatorButtonQueues() {
+		public String getElevatorBtnQueueStr() {
 			String output = "ElevatorButtonQueues: \n";
 			
 			for(int i = 0; i < elevatorStatusArray.size(); i++) {
@@ -69,10 +68,9 @@ public class Request {
 				output += " going to = " + elevatorStatusArray.get(i).getElevatorVector().targetFloor +
 				          " stuck = " + elevatorStatusArray.get(i).elevatorIsStuck() + "\n";
 			}
-			
-			System.out.println(output);
+			return output;
 		}
-		
+	
 		/**
 		 * Synchronized function to set the elevator with elevatorId to be stuck
 		 * @param elevatorId

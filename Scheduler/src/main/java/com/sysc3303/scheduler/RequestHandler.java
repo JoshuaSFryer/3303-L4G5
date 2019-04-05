@@ -75,10 +75,12 @@ public abstract class RequestHandler {
 					}
 					
 					schedulerMessageHandler.sendGoToFloor(new GoToFloorMessage(targetFloor, i));
+					printQueues();
+					sendQueuesToGUI();
 				}
 			}
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -148,5 +150,20 @@ public abstract class RequestHandler {
 		}
 		
 		floorRequestList.removeAll(Collections.singleton(null));
+	}
+	
+	/**
+	 * prints queue
+	 */
+	protected void printQueues() {
+		System.out.println(request.getFloorBtnQueueStr());
+		System.out.println(request.getElevatorBtnQueueStr());
+	}
+	
+	/**
+	 * sends queues to gui
+	 */
+	protected void sendQueuesToGUI() {
+		schedulerMessageHandler.sendQueuesToGUI(request.getFloorBtnQueueStr(), request.getElevatorBtnQueueStr());
 	}
 }
