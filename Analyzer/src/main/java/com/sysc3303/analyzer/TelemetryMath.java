@@ -50,7 +50,7 @@ public class TelemetryMath {
         long var = 0;
         long size = list.size();
         for (Long num: list){
-            var += (num-mean)*(num-mean);
+            var += Math.pow((num-mean), 2);
         }
         return var/size;
     }
