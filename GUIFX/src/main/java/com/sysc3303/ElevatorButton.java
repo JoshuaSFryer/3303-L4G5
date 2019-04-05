@@ -17,14 +17,15 @@ public class ElevatorButton extends Button {
 	int floorNum;
 	int elevatorID;
 	Stage parentStage;
+	private GUIMessageHandler messageHandler;
 	
-	public ElevatorButton(String label, int floor, int elevator, Stage stage) {
+	public ElevatorButton(String label, int floor, int elevator, Stage stage, GUIMessageHandler messageHandler) {
 		super(label);
 		this.floorNum = floor;
 		this.elevatorID = elevator;
 		this.parentStage = stage;
-
-		// Lambda function to assign an on-click action for this button.
+		this.messageHandler = messageHandler;
+        // Lambda function to assign an on-click action for this button.
 		this.setOnAction((event) -> {
             sendElevatorClick(elevatorID, floorNum);
             System.out.println("Pressed button " + floorNum + " in elevator " + elevatorID);
@@ -39,10 +40,7 @@ public class ElevatorButton extends Button {
      */
 	private void sendElevatorClick(int elevatorID, int floorNum) {
 		System.out.println("Sending click");
-		ElevatorClickSimulationMessage message = new ElevatorClickSimulationMessage(floorNum, elevatorID);
-		String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
-		RabbitSender sender = new RabbitSender(elevatorQueueName, message);
-		new Thread(sender).start();
-		}
-	
+		messageHandler.sendElevatorClick(elevatorID, floorNum);
+	}
+
 }

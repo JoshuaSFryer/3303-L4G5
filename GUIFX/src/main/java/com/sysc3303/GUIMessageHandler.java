@@ -109,4 +109,35 @@ public class GUIMessageHandler extends MessageHandler {
         RabbitSender sender = new RabbitSender(schedulerQueueName, message, connection);
         new Thread(sender).start();
     }
+
+    public void sendDoorStick(int elevatorID, int time){
+        String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
+        DoorStickMessage message = new DoorStickMessage(elevatorID, time);
+        RabbitSender sender = new RabbitSender(elevatorQueueName, message, connection);
+        new Thread(sender).start();
+    }
+
+    public void sendElevatorStick(int elevatorID, int time){
+        String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
+        ElevatorStickMessage message = new ElevatorStickMessage(elevatorID, time);
+        RabbitSender sender = new RabbitSender(elevatorQueueName, message, connection);
+        new Thread(sender).start();;
+
+    }
+
+    public void sendFloorClick(int floorNumber, Direction direction){
+        String floorQueueName = ConfigProperties.getInstance().getProperty("floorQueueName");
+        FloorClickSimulationMessage message = new FloorClickSimulationMessage(floorNumber, direction);
+        RabbitSender sender = new RabbitSender(floorQueueName, message, connection);
+        new Thread(sender).start();
+    }
+
+
+    public void sendElevatorClick(int elevatorID, int floorNum) {
+        String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
+        ElevatorClickSimulationMessage message = new ElevatorClickSimulationMessage(floorNum, elevatorID);
+        RabbitSender sender = new RabbitSender(elevatorQueueName, message, connection);
+        new Thread(sender).start();
+    }
+
 }

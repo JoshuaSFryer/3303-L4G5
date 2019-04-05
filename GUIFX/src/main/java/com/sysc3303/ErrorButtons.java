@@ -16,11 +16,11 @@ public class ErrorButtons extends Button {
     int elevatorID;
     String type;
 //    static String errorQueue = ConfigProperties.getInstance().getProperty("schedulerQueueName");
-    static String errorQueue = ConfigProperties.getInstance().getProperty("elevatorQueueName");
 
     int waitTime = Integer.parseInt(ConfigProperties.getInstance().getProperty("timeBetweenFloors"));
+    private GUIMessageHandler messageHandler;
 
-    private ErrorButtons (int elevatorID, String str, String type){
+    private ErrorButtons (int elevatorID, String str, String type, GUIMessageHandler messageHandler){
         super(str);
 
         // Differentiate between buttons that will cause the door to stick vs.
@@ -33,17 +33,19 @@ public class ErrorButtons extends Button {
         } else {
             System.out.println("INVALID");
         }
+        this.messageHandler = messageHandler;
 
         // Lambda function to assign an on-click action for this button.
         this.setOnAction((event) -> {
             String text = ((Button)event.getSource()).getText();
             if (this.type.equals("Door")){
-                sendDoorStick(elevatorID, waitTime );
+
+                sendDoorStick(elevatorID, 2 * waitTime + 1 );
                 System.out.println("StickDoor Pressed! Assigned to Elevator " + this.elevatorID);
             }
 
             else if (this.type.equals("Elevator")){
-                sendElevatorStick(elevatorID, waitTime);
+                sendElevatorStick(elevatorID, 2 * waitTime + 1);
                 System.out.println("Stick Elevator Pressed! Assigned to Elevator " + this.elevatorID);
             }
         }); // end lambda
@@ -59,12 +61,12 @@ public class ErrorButtons extends Button {
      * @param type          The type of button, either "Door" or "Elevator".
      * @return              An instance of ErrorButtons
      */
-    public static ErrorButtons create(int elevatorID, String str, String type){
+    public static ErrorButtons create(int elevatorID, String str, String type, GUIMessageHandler messageHandler){
         if (str.equals("StickDoor")){
-            return new ErrorButtons(elevatorID, "StickDoor", type);
+            return new ErrorButtons(elevatorID, "StickDoor", type, messageHandler);
         }
         else if (str.equals("StickElevator")){
-            return new ErrorButtons(elevatorID, "StickElevator", type);
+            return new ErrorButtons(elevatorID, "StickElevator", type, messageHandler);
         }
         else return null;
     }
@@ -81,9 +83,7 @@ public class ErrorButtons extends Button {
      * @param time          How long the elevator should keep its doors stuck.
      */
     private void sendDoorStick(int elevatorID, int time){
-        DoorStickMessage message = new DoorStickMessage(elevatorID, 2 * waitTime + 1 );
-        RabbitSender sender = new RabbitSender(errorQueue, message);
-        new Thread(sender).start();
+        messageHandler.sendDoorStick(elevatorID, time);
     }
 
     /**
@@ -92,8 +92,6 @@ public class ErrorButtons extends Button {
      * @param time          How long the elevator should stick.
      */
     private void sendElevatorStick(int elevatorID, int time){
-        ElevatorStickMessage message = new ElevatorStickMessage(elevatorID, waitTime);
-        RabbitSender sender = new RabbitSender(errorQueue, message);
-        new Thread(sender).start();
+        messageHandler.sendElevatorStick(elevatorID, time);
     }
 }

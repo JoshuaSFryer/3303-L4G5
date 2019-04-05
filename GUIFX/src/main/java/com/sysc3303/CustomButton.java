@@ -19,8 +19,11 @@ public class CustomButton extends Button  {
     Direction dir;
     static String floorQueueName = ConfigProperties.getInstance().getProperty("floorQueueName");
 
-     CustomButton(int floorNumber, Direction dir, String str){
-        super(str);
+    private GUIMessageHandler messageHandler;
+
+    CustomButton(int floorNumber, Direction dir, String str, GUIMessageHandler messageHandler){
+         super(str);
+         this.messageHandler = messageHandler;
 
         this.floorNumber = floorNumber;
         this.dir = dir;
@@ -44,14 +47,14 @@ public class CustomButton extends Button  {
      * @param dir           The direction this button is associated with.
      * @return              An instance of CustomButton.
      */
-    public static CustomButton create(int floorNumber, Direction dir){
+    public static CustomButton create(int floorNumber, Direction dir, GUIMessageHandler messageHandler){
 
         if (dir==UP){
-            return new CustomButton(floorNumber, dir, "UP");
+            return new CustomButton(floorNumber, dir, "UP", messageHandler);
 
         }
         else if (dir == DOWN){
-            return new CustomButton(floorNumber, dir, "DOWN");
+            return new CustomButton(floorNumber, dir, "DOWN", messageHandler);
         }
 
         else { // invalid case, but should never happen.
@@ -68,9 +71,7 @@ public class CustomButton extends Button  {
      * @param direction     The direction associated with the button.
      */
     private void sendFloorClick(int floorNumber, Direction direction){
-         FloorClickSimulationMessage message = new FloorClickSimulationMessage(floorNumber, direction);
-         RabbitSender sender = new RabbitSender(floorQueueName, message);
-         new Thread(sender).start();
+         messageHandler.sendFloorClick(floorNumber, direction);
     }
 
     /**

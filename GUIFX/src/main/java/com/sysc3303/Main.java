@@ -95,6 +95,9 @@ public class Main extends Application implements UserInterface {
 
         sPane.setContent(gPane);
 
+        // initialize message handler to deal with communication
+        GUIMessageHandler handler = GUIMessageHandler.getInstance(this);
+
         //Following two for loops are basically creating the rectangles and floor buttons
         //Rectangles are to represent the position of the elevator
         //Floor buttons are to represent the button press by the passenger
@@ -123,8 +126,9 @@ public class Main extends Application implements UserInterface {
 
             //This Label is to Label the Floor numbers
             Label floorLabel = new Label("Floor " + n);
-            CustomButton downButton = CustomButton.create(n, Direction.UP);
-            CustomButton upButton = CustomButton.create(n, Direction.DOWN);
+            CustomButton downButton = CustomButton.create(n, Direction.UP, handler);
+            CustomButton upButton = CustomButton.create(n, Direction.DOWN, handler);
+
             floorClicks[n][0] = upButton;
             floorClicks[n][1] = downButton;
 
@@ -164,10 +168,10 @@ public class Main extends Application implements UserInterface {
 
         boxBottom.setSpacing(10);
 
-        // Create a pair of buttons for each elevator which can be used to trigger faults.
+
         for (int d = 0; d < numberOfElevators; d++) {
-            ErrorButtons errorButton1 = new ErrorButtons(d, "StickDoor " + d, "StickDoor");
-            ErrorButtons errorButton2 = new ErrorButtons(d, "StickElevator " + d, "StickElevator");
+            ErrorButtons errorButton1 = new ErrorButtons(d, "StickDoor " + d, "StickDoor", handler);
+            ErrorButtons errorButton2 = new ErrorButtons(d, "StickElevator " + d, "StickElevator", handler);
             boxBottom.getChildren().addAll(errorButton1, errorButton2);
         }
 
@@ -175,7 +179,6 @@ public class Main extends Application implements UserInterface {
         bPane.setBottom(boxBottom);
 
 
-        GUIMessageHandler handler = GUIMessageHandler.getInstance(this);
 
 
         //Adding the elements to BorderPane
@@ -339,7 +342,7 @@ public class Main extends Application implements UserInterface {
      * @param elevatorID    The ID of the elevator.
      */
     public void createNewScene(int elevatorID) {
-        // Create a new Stage, i.e. window.
+        GUIMessageHandler handler = GUIMessageHandler.getInstance(this);
         Stage stage = new Stage();
         stage.setTitle("Choose a floor!");
         // Create a ScrollPane for the buttons.
@@ -351,7 +354,7 @@ public class Main extends Application implements UserInterface {
         v.getChildren().add(currentFloor);
         // Create buttons and add them to the VPane.
         for (int i=0; i<floorNumber; i++) {
-        	ElevatorButton b = new ElevatorButton(Integer.toString(i), i, elevatorID, stage);
+        	ElevatorButton b = new ElevatorButton(Integer.toString(i), i, elevatorID, stage, handler);
         	v.getChildren().add(b);
         }
         sPane.setContent(v);
