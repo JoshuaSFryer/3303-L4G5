@@ -29,6 +29,7 @@ public class SchedulerMessageHandler extends MessageHandler{
     static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
     static String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
     static String telemetaryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");            	
+    static String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");            	
     
     public SchedulerMessageHandler(int receivePort, SchedulerSystem schedulerSystem){
         super(receivePort);
@@ -145,5 +146,18 @@ public class SchedulerMessageHandler extends MessageHandler{
     	log.info("Sending FloorArrivalMessage to Floor");
     	log.info(floorArrivalMessage);
         send(floorArrivalMessage, floorAddress, floorPort);
+    }
+    
+    /**
+     * 
+     * sends queues to gui
+     * 
+     * @param floorQueues
+     * @param elevatorQueues
+     */
+    public void sendQueuesToGUI(String floorQueues, String elevatorQueues) {
+    	SchedulerQueueMessage queueMessage = new SchedulerQueueMessage(floorQueues, elevatorQueues);
+    	RabbitSender          sender       = new RabbitSender(guiQueueName, queueMessage);
+    	(new Thread(sender)).start();
     }
 }

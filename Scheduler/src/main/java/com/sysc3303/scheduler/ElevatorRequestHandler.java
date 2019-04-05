@@ -58,14 +58,14 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 				
 				log.info("Removed target floor");
 				log.info(request);
-				request.printElevatorButtonQueues();
-				request.printFloorButtonQueues();
 				
 				ElevatorVector      elevatorVectorResetTargetFloor = new ElevatorVector(currentFloor, Direction.IDLE, -1);
 				FloorArrivalMessage floorArrivalMessage            = new FloorArrivalMessage(destinationFloor, targetDirection, elevatorId);
 				
 				request.setElevatorVector(elevatorVectorResetTargetFloor, elevatorId);
 				schedulerMessageHandler.sendFloorArrival(floorArrivalMessage);
+				printQueues();
+				sendQueuesToGUI();
 			}	
 			
 			//generateAndSendGoToFloorMessage();
@@ -107,9 +107,8 @@ public class ElevatorRequestHandler extends RequestHandler implements Runnable {
 		
 		log.info("Setting elevator button message");
 		log.info(request);
-		request.printElevatorButtonQueues();
-		request.printFloorButtonQueues();
-		
+		printQueues();
+		sendQueuesToGUI();
 		generateAndSendGoToFloorMessage();
 	}
 }
