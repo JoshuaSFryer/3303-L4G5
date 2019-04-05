@@ -44,6 +44,9 @@ package "GUI"{
 package "Analyzer"{
   component Analyzer as anal
 }
+package "RemoteConfig"{
+  component RemoteConfig as rc
+}
 }
 
 
@@ -53,6 +56,7 @@ package "RabbitMQ"{
   queue "FloorQueue"
   queue "GUIQueue"
   queue "TelemetryQueue"
+  queue "ConfigQueue"
 
   FloorQueue -[hidden]> ElevatorQueue
 
@@ -79,6 +83,13 @@ fl <-- FloorQueue : sub
 GUIQueue --> guii : sub
 FloorQueue <-- guii : pub
 ElevatorQueue <-- guii: pub
+ConfigQueue <-- rc: pub
+guii <-- ConfigQueue: sub
+Analyzer <-- ConfigQueue: sub
+fl <-- ConfigQueue: sub
+el <-- ConfigQueue: sub
+sim <-- ConfigQueue: sub
+SchedulerSystem <-- ConfigQueue: sub
 
 
 
