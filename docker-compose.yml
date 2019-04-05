@@ -63,6 +63,24 @@ services:
       app_net:
         ipv4_address: 172.16.200.7
 
+  remote-config:
+    build: ./remote-config
+    hostname: remote-config
+    volumes:
+      - ./remote-config:/tmp
+    networks:
+      app_net:
+        ipv4_address: 172.16.200.8
+
+  gui:
+    build: ./GUIFX
+    hostname: gui
+    volumes:
+      - ./GUIFX:/tmp
+    networks:
+      app_net:
+        ipv4_address: 172.16.200.9
+
 networks:
   app_net:
     driver: bridge

@@ -1,4 +1,4 @@
-package com.sysc3303;
+package com.sysc3303.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

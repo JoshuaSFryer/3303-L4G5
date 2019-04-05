@@ -30,28 +30,37 @@
         <finalName>GUIFX</finalName>
 
         <plugins>
-
             <plugin>
-                <groupId>com.zenjava</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <version>8.1.5</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
                 <configuration>
-
-                    <mainClass>com.sysc3303.MainApp</mainClass>
-
-                    <!-- only required if signing the jar file -->
-                    <keyStoreAlias>example-user</keyStoreAlias>
-                    <keyStorePassword>example-password</keyStorePassword>
-                    <allPermissions>true</allPermissions>
-
+                    <release>11</release>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>dependency-jars/</classpathPrefix>
+                            <mainClass>com.sysc3303.gui.Main</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
 
     <dependencies>
+
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-controls</artifactId>
+          <version>11.0.2</version>
+        </dependency>
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-fxml</artifactId>
+          <version>11.0.2</version>
+        </dependency>
     
         <!-- MigLayout -->
 
@@ -96,8 +105,6 @@
             <artifactId>Shared-Utils</artifactId>
             <version>1.0</version>
         </dependency>
-
-
 
     </dependencies>
 

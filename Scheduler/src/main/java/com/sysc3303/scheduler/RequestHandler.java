@@ -110,7 +110,7 @@ public abstract class RequestHandler {
 	 * @para arr
 	 * @return boolean
 	 */
-	protected boolean (TargetWithDirection[] arr) {
+	protected boolean hasOnlyInvalidFloor(TargetWithDirection[] arr) {
 		for(int i = 0; i < arr.length; i++) {
 			if(arr[i].getTargetFloor() != INVALID_FLOOR_1) {
 				return false;

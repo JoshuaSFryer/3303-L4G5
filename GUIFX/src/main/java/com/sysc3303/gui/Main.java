@@ -1,4 +1,4 @@
-package com.sysc3303;
+package com.sysc3303.gui;
 
 
 import com.sysc3303.commons.ConfigListener;
@@ -24,10 +24,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import net.miginfocom.layout.Grid;
 
 import java.util.ArrayList;
-import java.util.Collection;
+
 import javafx.concurrent.*;
 import javafx.scene.control.ScrollPane;
 
