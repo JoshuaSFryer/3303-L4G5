@@ -1,5 +1,6 @@
 package com.sysc3303.floor;
 
+import com.rabbitmq.client.Connection;
 import com.sysc3303.commons.*;
 import com.sysc3303.communication.*;
 import java.net.InetAddress;
@@ -12,6 +13,7 @@ public class FloorMessageHandler extends MessageHandler {
     private InetAddress simulatorAddress;
     private InetAddress guiAddress;
     private FloorSystem floorSystem;
+    private Connection connection;
 
     static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
     static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
@@ -42,6 +44,11 @@ public class FloorMessageHandler extends MessageHandler {
                 guiAddress = InetAddress.getByName(ConfigProperties.getInstance().getProperty("GUIAddress"));
             }
         }catch(UnknownHostException e){
+            e.printStackTrace();
+        }
+        try {
+            connection = RabbitShared.connect();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         RabbitReceiver rabbitReceiver = new RabbitReceiver(this, floorQueueName);
@@ -96,7 +103,7 @@ public class FloorMessageHandler extends MessageHandler {
     	FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction, elevatorId);
     	send(floorArrivalMessage, simulatorAddress, simulatorPort);
         String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
-        RabbitSender sender = new RabbitSender(guiQueueName, floorArrivalMessage);
+        RabbitSender sender = new RabbitSender(guiQueueName, floorArrivalMessage, connection);
         new Thread(sender).start();
     	try {
 			Thread.sleep(2000);
@@ -109,7 +116,21 @@ public class FloorMessageHandler extends MessageHandler {
     public void updateUI(boolean downState, boolean upState, int floor) {
         GUIFloorMessage msg = new GUIFloorMessage(downState, upState, floor);
         String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
-        RabbitSender sender = new RabbitSender(guiQueueName, msg);
+        RabbitSender sender = new RabbitSender(guiQueueName, msg, connection);
         new Thread(sender).start();
+    }
+
+    public void sendButtonTelemetryMetric(int floor, Direction direction, long pressedTime) {
+        TelemetryFloorButtonMessage telemetryFloorBtnMsg = new TelemetryFloorButtonMessage(floor, direction, 0, pressedTime);
+        String telemetryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");
+        RabbitSender rabbitSender = new RabbitSender(telemetryQueueName, telemetryFloorBtnMsg, connection);
+        (new Thread(rabbitSender)).start();
+    }
+
+    public void sendArrivalTelemetryMetric(int floor, Direction direction, long pressedTime) {
+        TelemetryFloorArrivalMessage telemetryFloorArvMsg = new TelemetryFloorArrivalMessage(floor, direction, 0, pressedTime);
+        String telemetryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");
+        RabbitSender rabbitSender = new RabbitSender(telemetryQueueName, telemetryFloorArvMsg, connection);
+        (new Thread(rabbitSender)).start();
     }
 }

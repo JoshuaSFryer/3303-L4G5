@@ -1,5 +1,6 @@
 package com.sysc3303;
 
+import com.rabbitmq.client.Connection;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.*;
@@ -17,6 +18,7 @@ import com.sysc3303.communication.*;
 public class GUIMessageHandler extends MessageHandler {
     private static GUIMessageHandler instance;
     private Main context;
+    private Connection connection;
     static int guiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
 
     /**
@@ -39,6 +41,11 @@ public class GUIMessageHandler extends MessageHandler {
     private GUIMessageHandler(Main context) {
         super(guiPort);
         this.context = context;
+        try {
+            connection = RabbitShared.connect();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -89,7 +96,7 @@ public class GUIMessageHandler extends MessageHandler {
      */
     public void sendElevatorCarPress(ElevatorClickSimulationMessage message) {
         String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
-        RabbitSender sender = new RabbitSender(elevatorQueueName, message);
+        RabbitSender sender = new RabbitSender(elevatorQueueName, message, connection);
         new Thread(sender).start();
     }
 
@@ -99,7 +106,7 @@ public class GUIMessageHandler extends MessageHandler {
      */
     public void sendErrorToScheduler(GUIElevatorMoveMessage message){
         String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
-        RabbitSender sender = new RabbitSender(schedulerQueueName, message);
+        RabbitSender sender = new RabbitSender(schedulerQueueName, message, connection);
         new Thread(sender).start();
     }
 }

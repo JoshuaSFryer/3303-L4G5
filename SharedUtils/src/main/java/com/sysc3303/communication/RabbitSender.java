@@ -15,6 +15,7 @@ public class RabbitSender implements Runnable{
     protected SerializationUtilJSON<Message> serializationUtil;
     protected String queueName;
     protected Message message;
+    protected Connection connection;
 
     /**
      * Constructor
@@ -22,9 +23,19 @@ public class RabbitSender implements Runnable{
      * @param message the message to add the the queue
      */
     public RabbitSender(String queueName, Message message){
+        this(queueName, message, null);
+        try{
+            connection = RabbitShared.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public RabbitSender(String queueName, Message message, Connection connection){
         this.queueName = queueName;
         this.message = message;
         serializationUtil = new SerializationUtilJSON<>();
+        this.connection = connection;
     }
 
     /**
@@ -32,7 +43,6 @@ public class RabbitSender implements Runnable{
      */
     public void run() {
         try{
-            Connection connection = RabbitShared.connect();
             Channel channel = connection.createChannel();
 
             channel.queueDeclare(queueName, false, false, false, null);

@@ -1,5 +1,6 @@
 package com.sysc3303.scheduler;
 
+import com.rabbitmq.client.Connection;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.communication.*;
 import com.sysc3303.constants.Constants;
@@ -18,6 +19,7 @@ public class SchedulerMessageHandler extends MessageHandler{
     private InetAddress     elevatorAddress;
     private InetAddress     floorAddress;
     private SchedulerSystem schedulerSystem;
+    private Connection connection;
     private Logger          log = Logger.getLogger(SchedulerMessageHandler.class);
     
     /**
@@ -46,6 +48,12 @@ public class SchedulerMessageHandler extends MessageHandler{
         }catch(UnknownHostException e){
             e.printStackTrace();
         }
+        try{
+            connection = RabbitShared.connect();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         RabbitReceiver rabbitReceiver = new RabbitReceiver(this, schedulerQueueName);
         (new Thread(rabbitReceiver, "elevator queue receiver")).start();
     }
@@ -77,7 +85,7 @@ public class SchedulerMessageHandler extends MessageHandler{
             	
             	TelemetryFloorMessage telemetryFloorMessage = new TelemetryFloorMessage(secTime, nanoTime);
             	
-            	rabbitSender = new RabbitSender(telemetaryQueueName, telemetryFloorMessage);
+            	rabbitSender = new RabbitSender(telemetaryQueueName, telemetryFloorMessage, connection);
             	(new Thread(rabbitSender)).start();
             	
             	schedulerSystem.getScheduler().startFloorMessageHandler(message);
@@ -104,7 +112,7 @@ public class SchedulerMessageHandler extends MessageHandler{
             	
             	TelemetryElevatorMessage telemetryElevatorMessage = new TelemetryElevatorMessage(secTime, nanoTime);
             	
-            	rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevatorMessage);
+            	rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevatorMessage, connection);
             	(new Thread(rabbitSender)).start();
                 
             	schedulerSystem.getScheduler().startElevatorMessageHandler(message);

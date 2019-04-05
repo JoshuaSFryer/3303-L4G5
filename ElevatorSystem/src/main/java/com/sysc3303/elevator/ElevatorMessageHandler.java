@@ -1,5 +1,6 @@
 package com.sysc3303.elevator;
 
+import com.rabbitmq.client.Connection;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.ElevatorVector;
 import com.sysc3303.commons.Direction;
@@ -21,6 +22,8 @@ public class ElevatorMessageHandler extends MessageHandler {
     private InetAddress     uiAddress;
     private ElevatorSystem  context;
     private Logger          log = Logger.getLogger(ElevatorMessageHandler.class);
+    private Connection connection;
+
 
     // Read ports from the configuration file.
     static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
@@ -63,6 +66,12 @@ public class ElevatorMessageHandler extends MessageHandler {
         }
         RabbitReceiver rabbitReceiver = new RabbitReceiver(this, elevatorQueueName);
         (new Thread(rabbitReceiver, "elevator queue receiver")).start();
+        try{
+            connection = RabbitShared.connect();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -158,7 +167,7 @@ public class ElevatorMessageHandler extends MessageHandler {
     public void updateUI(int elevatorID, int currentFloor, Direction dir, boolean open) {
         GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, dir, open);
         String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
-        RabbitSender sender = new SpecializedRabbitSender(guiQueueName, msg);
+        RabbitSender sender = new RabbitSender(guiQueueName, msg, connection);
         new Thread(sender).run();
     }
 
@@ -173,7 +182,7 @@ public class ElevatorMessageHandler extends MessageHandler {
         send(msg, schedulerAddress, schedulerPort);
         // ...and the UI.
         String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
-        RabbitSender guiSender = new SpecializedRabbitSender(guiQueueName, msg);
+        RabbitSender guiSender = new RabbitSender(guiQueueName, msg, connection);
         new Thread(guiSender).start();
     }
 
@@ -188,7 +197,7 @@ public class ElevatorMessageHandler extends MessageHandler {
         send(msg, schedulerAddress, schedulerPort);
         // ...and the UI.
         String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
-        RabbitSender guiSender = new SpecializedRabbitSender(guiQueueName, msg);
+        RabbitSender guiSender = new RabbitSender(guiQueueName, msg, connection);
         new Thread(guiSender).start();
 
     }

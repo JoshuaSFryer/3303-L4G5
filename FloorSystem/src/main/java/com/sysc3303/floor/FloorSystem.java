@@ -29,10 +29,8 @@ public class FloorSystem {
 
 	String  inputFilePath = "./src/resource/inputFile.txt";
 	static Properties prop = new Properties();
-	static String telemetaryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");            	
 	private String propFileName = "config.properties";
 	private InputStream inputStream =getClass().getClassLoader().getResourceAsStream(propFileName);
-
 
 
 	private static int totalNumberofFloors=Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors"));
@@ -45,7 +43,7 @@ public class FloorSystem {
 	public FloorSystem(){
 		floorList = new ArrayList<>();
 		floorMessageHandler = FloorMessageHandler.getInstance(floorPort, this);
-		
+
 		for (int i=0; i< FloorSystem.totalNumberofFloors; i++) {
 			floorList.add(new Floor(i));
 		}
@@ -139,15 +137,11 @@ public class FloorSystem {
 	}
 	
 	private void sendButtonTelemetryMetric(int floor, Direction direction, long pressedTime) {
-		TelemetryFloorButtonMessage telemetryFloorBtnMsg = new TelemetryFloorButtonMessage(floor, direction, 0, pressedTime);
-		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryFloorBtnMsg);
-        (new Thread(rabbitSender)).start();
+	    floorMessageHandler.sendButtonTelemetryMetric(floor, direction, pressedTime);
 	}
 
 	private void sendArrivalTelemetryMetric(int floor, Direction direction, long pressedTime) {
-		TelemetryFloorArrivalMessage telemetryFloorArvMsg = new TelemetryFloorArrivalMessage(floor, direction, 0, pressedTime);
-		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryFloorArvMsg);
-        (new Thread(rabbitSender)).start();
+		floorMessageHandler.sendArrivalTelemetryMetric(floor, direction, pressedTime);
 	}
 }
 
