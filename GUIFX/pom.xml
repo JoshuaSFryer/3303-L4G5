@@ -3,17 +3,17 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-    <artifactId>3303-L4G5</artifactId>
-    <groupId>com.sysc3303</groupId>
-    <version>1.0</version>
-  </parent>
+        <artifactId>3303-L4G5</artifactId>
+        <groupId>com.sysc3303</groupId>
+        <version>1.0</version>
+    </parent>
 
     <groupId>com.sysc3303</groupId>
     <artifactId>GUIFX</artifactId>
     <name>GUIFX</name>
 
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     
     <organization>
         <!-- Used as the 'Vendor' for JNLP generation -->
@@ -26,16 +26,14 @@
     </properties>
 
     <build>
-
-        <finalName>GUIFX</finalName>
-
+        <defaultGoal>install</defaultGoal>
+        <finalName>${artifactId}-${version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.0</version>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
                 <configuration>
-                    <release>11</release>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
@@ -45,7 +43,35 @@
                     </archive>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <release>11</release>
+                </configuration>
+            </plugin>
+            <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>com.sysc3303.gui.Main</mainClass>
+        </configuration>
+      </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+            </resource>
+        </resources>
     </build>
 
 
@@ -54,14 +80,19 @@
         <dependency>
           <groupId>org.openjfx</groupId>
           <artifactId>javafx-controls</artifactId>
-          <version>11.0.2</version>
+          <version>11</version>
         </dependency>
         <dependency>
           <groupId>org.openjfx</groupId>
           <artifactId>javafx-fxml</artifactId>
-          <version>11.0.2</version>
+          <version>11</version>
         </dependency>
-    
+        <dependency>
+          <groupId>org.openjfx</groupId>
+          <artifactId>javafx-graphics</artifactId>
+          <version>11</version>
+          <classifier>linux</classifier>
+        </dependency>
         <!-- MigLayout -->
 
         <dependency>
@@ -105,7 +136,6 @@
             <artifactId>Shared-Utils</artifactId>
             <version>1.0</version>
         </dependency>
-
     </dependencies>
 
 </project>

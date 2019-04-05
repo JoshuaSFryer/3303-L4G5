@@ -25,6 +25,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javafx.concurrent.*;
@@ -44,7 +45,7 @@ public class Main extends Application implements UserInterface {
 //            }
 //        }
        // mythread.start();
-    	new ConfigListener().run();
+        new ConfigListener().run();
         launch(args);
     }
 
@@ -184,11 +185,15 @@ public class Main extends Application implements UserInterface {
 
         GUIMessageHandler handler = GUIMessageHandler.getInstance(this);
 
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("styles/styleSheet.css").getFile());
+        System.out.println(file.getAbsolutePath());
 
+        System.out.println();
         //Adding the elements to BorderPane
         Scene scene = new Scene(bPane, windowWidth, windowHeight);
         scene.getStylesheets().
-                add(Main.class.getResource("styleSheet.css").toExternalForm());
+                add(file.getAbsolutePath());
         primaryStage.setTitle("Elevator Control Panel");
         primaryStage.setScene(scene);
         primaryStage.show();
