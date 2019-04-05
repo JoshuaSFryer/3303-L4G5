@@ -386,8 +386,7 @@ public class Elevator {
 			// Put the duration into a message and send it by launching a Rabbit
 			// message queue.
 			TelemetryElevatorMessage msg = new TelemetryElevatorMessage(0, diffTime);
-			Thread messager = new Thread(new RabbitSender("telemetry", msg));
-			messager.start();
+			messageHandler.sendTelemetryElevatorMessage(msg);
 		} else {
 			System.out.println("ERROR: Invalid telemetry times.");
 		}
@@ -400,9 +399,7 @@ public class Elevator {
      * @param arrivalTime       The time at which the elevator arrived.
      */
 	private void sendTelemetryArrivalMetric(int elevatorId, int destinationFloor, long arrivalTime) {
-        TelemetryElevatorArrivalMessage telemetryElevArvMsg = new TelemetryElevatorArrivalMessage(elevatorId, destinationFloor, 0, arrivalTime);
-		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevArvMsg);
-        (new Thread(rabbitSender)).start();
+		messageHandler.sendTelemetryArrivalMetric(elevatorId, destinationFloor, arrivalTime);
 	}
 
     /**
@@ -412,8 +409,6 @@ public class Elevator {
      * @param pressedTime       The time at which the button was pressed.
      */
 	private void sendTelemetryButtonMetric(int elevatorId, int destinationFloor, long pressedTime) {
-        TelemetryElevatorButtonMessage telemetryElevBtnMsg = new TelemetryElevatorButtonMessage(elevatorId, destinationFloor, 0, pressedTime);
-		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevBtnMsg);
-        (new Thread(rabbitSender)).start();
+		messageHandler.sendTelemetryButtonMetric(elevatorId, destinationFloor, pressedTime);
 	}
 }

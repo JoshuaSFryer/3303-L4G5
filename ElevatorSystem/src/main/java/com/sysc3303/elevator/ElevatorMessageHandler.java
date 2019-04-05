@@ -201,5 +201,24 @@ public class ElevatorMessageHandler extends MessageHandler {
         new Thread(guiSender).start();
 
     }
+    public void sendTelemetryElevatorMessage(Message message){
+        Thread messager = new Thread(new RabbitSender("telemetry", message, connection));
+        messager.start();
+    }
+
+    public void sendTelemetryArrivalMetric(int elevatorId, int destinationFloor, long arrivalTime) {
+        String telemetryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");
+        TelemetryElevatorArrivalMessage telemetryElevArvMsg = new TelemetryElevatorArrivalMessage(elevatorId, destinationFloor, 0, arrivalTime);
+        RabbitSender rabbitSender = new RabbitSender(telemetryQueueName, telemetryElevArvMsg, connection);
+        (new Thread(rabbitSender)).start();
+
+    }
+
+    public void sendTelemetryButtonMetric(int elevatorId, int destinationFloor, long pressedTime) {
+        TelemetryElevatorButtonMessage telemetryElevBtnMsg = new TelemetryElevatorButtonMessage(elevatorId, destinationFloor, 0, pressedTime);
+        String telemetryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");
+        RabbitSender rabbitSender = new RabbitSender(telemetryQueueName, telemetryElevBtnMsg, connection);
+        (new Thread(rabbitSender)).start();
+    }
 }
 
