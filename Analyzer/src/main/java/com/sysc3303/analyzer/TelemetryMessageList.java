@@ -30,8 +30,6 @@ public class TelemetryMessageList {
     public void addArrivalTime(long time){
         System.out.println(time + " added to arrival time list");
         arrivalTimeList.add(time);
-        long mean = math.getMean(arrivalTimeList);
-        long var = math.getVariance(arrivalTimeList, mean);
         printAnalysis("Arrival response", arrivalTimeList);
     }
 
@@ -55,17 +53,18 @@ public class TelemetryMessageList {
         printAnalysis("Elevator Button Response", elevatorButtonTimeList);
     }
 
+
     /**
      * Helper method to print the mean and variance of a list
      * @param name The name to be printed beside the analysis
      * @param list the list for the analysis to be calculated
      */
     private void printAnalysis(String name, List<Long> list){
-        long mean = math.getMean(list);
-        long var = math.getVariance(list, mean);
+        long mean = (long) math.getMean(list);
+        long var = (long) math.getVariance(list, mean);
         System.out.println(name + ":");
-        System.out.println("\tMean: " + mean + "ns");
-        System.out.println("\tVariance: " + var + "ns");
+        System.out.println("\tMean: " + mean + "ms");
+        System.out.println("\tVariance: " + var + "ms");
     }
 
 }
