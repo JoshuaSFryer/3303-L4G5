@@ -44,19 +44,27 @@ public class Door {
 		return this.doorState;
 	}
 
+    /**
+     * Check whether these doors are stuck open.
+     * @return  True if the doors are stuck, false if they are not.
+     */
 	public boolean isStuckOpen() {
 		return stuckOpen;
 	}
 
+    /**
+     * Cause these doors to stick open.
+     */
 	public void stick() {
 		System.out.println("Elevator "+parent.elevatorID+": Doors are stuck open!");
 		stuckOpen = true;
 	}
 
+    /**
+     * Unstick these doors.
+     */
 	public void unstick() {
 		System.out.println("Elevator "+parent.elevatorID+": Doors no longer stuck!");
-
 		stuckOpen = false;
 	}
-
 }

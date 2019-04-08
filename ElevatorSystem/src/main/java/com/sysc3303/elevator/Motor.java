@@ -41,14 +41,19 @@ public class Motor {
 		}
 	}
 
+	/**
+	 * Cause this motor to stick, making it unable to move.
+	 */
 	public void stick() {
 		System.out.println("Sticking motor");
 		isStuck = true;
 	}
 
+    /**
+     * Cause this motor to unstick, allowing it to move again.
+     */
 	public void unstick() {
 		System.out.println("Unsticking motor");
-
 		isStuck = false;
 	}
 

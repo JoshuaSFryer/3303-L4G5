@@ -6,6 +6,10 @@ import com.sysc3303.commons.Direction;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.setOut;
 
+/**
+ * MovementHandler is used to control an elevator's movement. It runs as a
+ * thread, continuously moving its parent elevator towards its target floor.
+ */
 public class MovementHandler implements Runnable {
 	// How long to wait between calls of moveUp().
 	// Effectively, this is how long it takes the elevator to move one unit
@@ -135,6 +139,10 @@ public class MovementHandler implements Runnable {
 		System.out.println("Elevator " +context.elevatorID+ ": Height: " + context.getCurrentHeight() + " cm");
 	}
 
+    /**
+     * Return the current target floor.
+     * @return  The target floor's number.
+     */
 	public int getTargetFloor() {
 		return targetFloor;
 	}

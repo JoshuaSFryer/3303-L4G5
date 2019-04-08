@@ -231,8 +231,6 @@ public class Elevator {
 		messageHandler.sendElevatorStuck(elevatorID);
 	}
 
-
-
 	/**
 	 * Update this elevator's direction.
 	 * @param dir	The new Direction. IDLE if the elevator is not moving.
@@ -361,6 +359,11 @@ public class Elevator {
 				door.isOpen());
 	}
 
+	/**
+	 * Print out an error message stating that the scheduler has attempted to
+     * use an elevator that has been shut down and thus cannot be used.
+	 * @param elevatorID    The ID of the elevator.
+	 */
 	private void shutDownError(int elevatorID) {
 		System.out.println("ERROR: Elevator "+elevatorID+ "is shut down and should not be used.");
 	}
@@ -389,18 +392,28 @@ public class Elevator {
 			System.out.println("ERROR: Invalid telemetry times.");
 		}
 	}
-	
+
+    /**
+     * Notify the telemetry analyzer that an elevator has arrived.
+     * @param elevatorId        The ID of the relevant elevator.
+     * @param destinationFloor  The floor that the elevator arrived at.
+     * @param arrivalTime       The time at which the elevator arrived.
+     */
 	private void sendTelemetryArrivalMetric(int elevatorId, int destinationFloor, long arrivalTime) {
         TelemetryElevatorArrivalMessage telemetryElevArvMsg = new TelemetryElevatorArrivalMessage(elevatorId, destinationFloor, 0, arrivalTime);
 		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevArvMsg);
         (new Thread(rabbitSender)).start();
-		
 	}
 
+    /**
+     * Notify the telemetry analyzer that a button has been pressed.
+     * @param elevatorId        The ID of the relevant elevator.
+     * @param destinationFloor  The floor that the elevator arrived at.
+     * @param pressedTime       The time at which the button was pressed.
+     */
 	private void sendTelemetryButtonMetric(int elevatorId, int destinationFloor, long pressedTime) {
         TelemetryElevatorButtonMessage telemetryElevBtnMsg = new TelemetryElevatorButtonMessage(elevatorId, destinationFloor, 0, pressedTime);
 		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevBtnMsg);
         (new Thread(rabbitSender)).start();
-		
 	}
 }

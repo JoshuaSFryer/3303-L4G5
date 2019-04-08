@@ -162,6 +162,10 @@ public class ElevatorMessageHandler extends MessageHandler {
         new Thread(sender).run();
     }
 
+    /**
+     * Notify the scheduler that an elevator has gotten stuck.
+     * @param elevatorID    The ID of the elevator.
+     */
     public void sendElevatorStuck(int elevatorID) {
     	System.out.println("I'M STUCK I'M STUCK");
     	// Send stuck message to the Scheduler...
@@ -173,11 +177,15 @@ public class ElevatorMessageHandler extends MessageHandler {
         new Thread(guiSender).start();
     }
 
+    /**
+     * Notify the scheduler that an elevator is no longer stuck and can be
+     * used.
+     * @param elevatorID    The ID of the elevator.
+     */
     public void sendElevatorUnstuck(int elevatorID) {
     	// Send unstuck message to the Scheduler...
         UnStuckMessage msg = new UnStuckMessage(elevatorID);
         send(msg, schedulerAddress, schedulerPort);
-        
         // ...and the UI.
         String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
         RabbitSender guiSender = new SpecializedRabbitSender(guiQueueName, msg);
