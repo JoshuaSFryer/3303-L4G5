@@ -1,12 +1,23 @@
 package com.sysc3303.remote_config;
-
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.ConfigUpdater;
 
 import java.util.Scanner;
-
+/**
+ * Command line interface used to update the number of floors and elevators in the multinodal system.
+ * If you are using this ensure that all nodes are run with the program argument "config"
+ * This will ensure that they wait for the updated config to be posted before executing
+ *
+ * @authorm Mattias Lightstone
+ */
 public class ConfigCLI {
 
+    /**
+     * Run the cli.
+     * This will take inputs for floor and elevator numbers, then publish the new configuration including these options
+     * to the config exchange for the other nodes to consume.
+     * @param sc The scanner that should be used for taking input, left as a parameter to enable testing
+     */
     public void run(Scanner sc){
         String configExchangeName = ConfigProperties.getInstance().getProperty("configExchangeName");
         int num_elevators = 0;

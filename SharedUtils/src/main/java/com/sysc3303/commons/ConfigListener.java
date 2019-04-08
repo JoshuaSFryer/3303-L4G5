@@ -5,8 +5,17 @@ import com.sysc3303.communication.RabbitSubscriber;
 
 import static java.lang.Thread.sleep;
 
+/**
+ * Subscribes to the configuration exchange on the rabbitmq server and waits for a configuration to be published
+ * Once published it replaces the existing config with the new one and exits
+ */
 public class ConfigListener implements Runnable {
 
+    /**
+     * Runs the config listener.
+     * Run this before the main loop in a module to block the module running until it has received a config.
+     */
+    @Override
     public void run() {
         String exchangeName = ConfigProperties.getInstance().getProperty("configExchangeName");
         ConfigMessageHandler configMessageHandler = new ConfigMessageHandler();

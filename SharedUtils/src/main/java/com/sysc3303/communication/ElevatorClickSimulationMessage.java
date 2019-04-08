@@ -14,6 +14,11 @@ public class ElevatorClickSimulationMessage extends Message{
     private int floor;
     private int elevatorId;
 
+    /**
+     * Constructor
+     * @par the floor of the button to be pressed
+     * @param elevatorId the id in which to press the butotn
+     */
     @JsonCreator
     public ElevatorClickSimulationMessage(@JsonProperty("floor") int floor, @JsonProperty("elevatorId") int elevatorId) {
         // Opcode for this message is 6

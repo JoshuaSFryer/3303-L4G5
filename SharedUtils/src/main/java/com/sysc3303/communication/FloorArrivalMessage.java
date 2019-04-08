@@ -16,6 +16,12 @@ public class FloorArrivalMessage extends Message{
     private Direction currentDirection;
     private int elevatorId;
 
+    /**
+     * Constructor
+     * @param floor the floor at which the elevator has arrived
+     * @param currentDirection the direction that the elevator will travel after arrival
+     * @param elevatorId the id of the elevator which has arrived
+     */
     @JsonCreator
     public FloorArrivalMessage(@JsonProperty("floor") int floor, @JsonProperty("currentDirection") Direction currentDirection, @JsonProperty("elevatorId") int elevatorId) {
         // Opcode for this message is 1

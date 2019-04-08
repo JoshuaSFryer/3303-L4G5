@@ -4,6 +4,9 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.sysc3303.commons.ConfigProperties;
 
+/**
+ * Shared rabit utilities to avoid repeating code in Sender, Receiver, Publisher and Subscriber
+ */
 public class RabbitShared {
 	
 	private static Connection connection;

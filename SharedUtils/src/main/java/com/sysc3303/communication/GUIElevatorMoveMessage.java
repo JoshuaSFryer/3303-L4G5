@@ -17,6 +17,13 @@ public class GUIElevatorMoveMessage extends Message {
     public final boolean doorOpen;
     public final int ID;
 
+    /**
+     * Constructor
+     * @param elevatorID The id of the elevator that is moving
+     * @param floor the floor that the elevator is currently
+     * @param dir the direction that the elevator is currently moving
+     * @param door the status of the door false = closed, true = open
+     */
     @JsonCreator
     public GUIElevatorMoveMessage(@JsonProperty("elevatorID") int elevatorID, @JsonProperty("floor") int floor,
                                   @JsonProperty("dir") Direction dir, @JsonProperty("door") boolean door) {

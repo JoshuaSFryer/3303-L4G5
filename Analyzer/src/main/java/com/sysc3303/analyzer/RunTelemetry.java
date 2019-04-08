@@ -8,6 +8,8 @@ import com.sysc3303.communication.RabbitReceiver;
  * Simple analyzer for Telemetry data
  * Run to receive telemetry data from RabbitMQ
  * Current version will print the time and also compute the mean and variance of times
+ *
+ * @author Mattias Lightstone
  */
 public class RunTelemetry {
 

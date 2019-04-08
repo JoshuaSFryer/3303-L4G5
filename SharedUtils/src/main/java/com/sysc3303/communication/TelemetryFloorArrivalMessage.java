@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sysc3303.commons.Direction;
 
+/**
+ * A message indicating the amount of time it took for the elevator to the arrival sensor triggering
+ */
 public class TelemetryFloorArrivalMessage extends TelemetryFloorPressArrivalMessage {
 	
 	@JsonCreator

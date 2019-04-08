@@ -16,6 +16,11 @@ public class GoToFloorMessage extends Message{
     private final int destinationFloor;
     private final int elevatorId;
 
+    /**
+     * Constructor
+     * @param destinationFloor the floor that the elevator should go to
+     * @param elevatorId the elevator that should go to the destination floor
+     */
     @JsonCreator
     public GoToFloorMessage(@JsonProperty("destinationFloor") int destinationFloor,@JsonProperty("elevatorId") int elevatorId) {
         // Opcode for this message is 2
