@@ -31,7 +31,6 @@ public interface UserInterface {
 
 
     /**
-     * CURRENTLY UNUSED
      * Respond to a press on one of the buttons inside an elevator.
      * This is an interactive method, requiring input into the UI.
      * The UI should reflect that the button has been pressed, create a new

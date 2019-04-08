@@ -124,17 +124,9 @@ public class Main extends Application implements UserInterface {
             //This Label is to Label the Floor numbers
             Label floorLabel = new Label("Floor " + n);
             CustomButton downButton = CustomButton.create(n, Direction.UP);
-
-
-            //Thread downThread = new Thread(downButton);
             CustomButton upButton = CustomButton.create(n, Direction.DOWN);
-            //Thread upThread = new Thread (upButton);
             floorClicks[n][0] = upButton;
             floorClicks[n][1] = downButton;
-
-
-            // downThread.start();
-            //upThread.start();
 
             hBox.getChildren().addAll(floorLabel, upButton, downButton);
             gPane.add(hBox, 0, floorNumber - n - 1);
@@ -159,8 +151,7 @@ public class Main extends Application implements UserInterface {
         t = new TextArea();
         t.setText("Test Message");
         //Adding Elements to Container: Border Pane
-        //TODO
-        bPane.setTop(new Text("Top"));
+        //bPane.setTop(new Text("Top"));
         //bPane.setRight(new Text("Right"));
         bPane.setRight(t);
         //bPane.setLeft(vBox);
@@ -173,6 +164,7 @@ public class Main extends Application implements UserInterface {
 
         boxBottom.setSpacing(10);
 
+        // Create a pair of buttons for each elevator which can be used to trigger faults.
         for (int d = 0; d < numberOfElevators; d++) {
             ErrorButtons errorButton1 = new ErrorButtons(d, "StickDoor " + d, "StickDoor");
             ErrorButtons errorButton2 = new ErrorButtons(d, "StickElevator " + d, "StickElevator");
@@ -196,6 +188,12 @@ public class Main extends Application implements UserInterface {
 
     } //End of start()
 
+
+    /**
+     * Move the representation of an elevator in the GUI to a new position.
+     * @param elevatorID    The ID of the elevator to move.
+     * @param newFloor      The floor number to reposition the elevator to.
+     */
     public void moveElevator(int elevatorID, int newFloor) {
 
         GUIElevator e = elevators.get(elevatorID);
@@ -208,7 +206,14 @@ public class Main extends Application implements UserInterface {
         gPane.add(r, elevatorID + 1, floorNumber - 1 - e.currentFloor);
         e.currentFloor = newFloor;
     }
-    		
+
+
+    /**
+     * Remove a Node located at a specified coordinate from a GridPane.
+     * @param row   The row the Node is located at.
+     * @param col   The column the Node is located at.
+     * @param pane  The GridPane the Node is a child of.
+     */
     public void removeNodeByCoordinates(int row, int col, GridPane pane) {
     	ObservableList<Node> list = pane.getChildren();
     	for(Node n : list) {
@@ -219,19 +224,23 @@ public class Main extends Application implements UserInterface {
     	}
     }
 
+
+    /**
+     * Respond to a message instructing an elevator to move, opening its doors
+     * if required.
+     * This method has this name due to being an implementation of a method in
+     * UserInterface.
+     * @param msg   The message passed on from the MessageHandler.
+     */
     public void moveElevator(GUIElevatorMoveMessage msg) {
         final int target = msg.currentFloor;
         final int elevator = msg.ID;
         final boolean open = msg.doorOpen;
         final Direction dir = msg.currentDirection;
 
-
-
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-
-
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
@@ -247,59 +256,100 @@ public class Main extends Application implements UserInterface {
                         System.out.println("2. Platform is working!!");
                     }
                 });
-
                 return null;
             }
-
         }; // End Task declaration
 
         // Create a thread to launch the task.
         Thread taskThread = new Thread (task);
-
+        // Required code to launch the task thread.
         taskThread.setDaemon(true);
         taskThread.start();
     }
 
+
+    /**
+     * Empty function, only present because this class needs to implement
+     * UserInterface.
+     * @param msg   The message passed on from the MessageHandler.
+     */
     public void pressFloorButton(GUIFloorMessage msg) {
-
+        System.out.println("This function should never be called!");
     }
 
+
+    /**
+     * Empty function, only present because this class needs to implement
+     * UserInterface.
+     * @param floor The floor number of the pressed button.
+     */
     public void pressElevatorButton(int floor) {
-
+        System.out.println("This function should never be called!");
     }
 
+
+    /**
+     * Display the opening the specified elevator's doors.
+     * Additionally, create a new window that simulates the button panel on the
+     * elevator's interior, allowing the user to click a button and request a
+     * floor.
+     * @param ID    The ID of the elevator.
+     */
     public void openDoor(int ID) {
+        // Change the elevator's colour to blue
         elevators.get(ID).setFill(Color.MEDIUMTURQUOISE);
         // Create a prompt to simulate a user pressing a button inside the elevator.
         createNewScene(ID);
     }
 
+
+    /**
+     * Display the closing the elevator's doors, returning its colour back to
+     * normal.
+     * @param ID    The ID of the elevator.
+     */
     public void closeDoor(int ID) {
         elevators.get(ID).setFill(Color.YELLOW);
     }
-    
+
+    /**
+     * Display that an elevator is stuck, changing its colour and logging the
+     * fault.
+     * @param ID    The ID of the elevator.
+     */
     public void stickElevator(int ID) {
     	elevators.get(ID).setFill(Color.RED);
     	t.appendText("\nElevator " + ID + " fault! Stuck!");
     }
-    
+
+    /**
+     * Display that an elevator is no longer stuck, changing its colour back to
+     * normal.
+     * @param ID    The ID of the elevator.
+     */
     public void unstickElevator(int ID) {
     	elevators.get(ID).setFill(Color.YELLOW);
     	t.appendText("\nElevator " + ID + " unstuck!");
     }
-    
 
 
+    /**
+     * Create a new GUI window that simulates the button panel on the inside of
+     * an elevator.
+     * @param elevatorID    The ID of the elevator.
+     */
     public void createNewScene(int elevatorID) {
+        // Create a new Stage, i.e. window.
         Stage stage = new Stage();
         stage.setTitle("Choose a floor!");
+        // Create a ScrollPane for the buttons.
         ScrollPane sPane = new ScrollPane();
         VBox v = new VBox();
         Label title = new Label("Elevator " + elevatorID + " Control");
         Label currentFloor = new Label("You are at floor: " + elevators.get(elevatorID).currentFloor);
         v.getChildren().add(title);
         v.getChildren().add(currentFloor);
-        //Fill stage with content
+        // Create buttons and add them to the VPane.
         for (int i=0; i<floorNumber; i++) {
         	ElevatorButton b = new ElevatorButton(Integer.toString(i), i, elevatorID, stage);
         	v.getChildren().add(b);
@@ -309,5 +359,4 @@ public class Main extends Application implements UserInterface {
         stage.setScene(scene);
         stage.show();
     }
-
 }

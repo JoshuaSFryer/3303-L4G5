@@ -9,6 +9,11 @@ import com.sysc3303.communication.MessageHandler;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ *  UNUSED
+ *  StubMessageHandler is a message handler that receives messages and was used
+ *  in earlier iterations as a simple test handler.
+ */
 public class StubMessageHandler extends MessageHandler {
     private static StubMessageHandler instance;
     static int guiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));

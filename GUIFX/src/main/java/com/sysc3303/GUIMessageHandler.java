@@ -19,6 +19,12 @@ public class GUIMessageHandler extends MessageHandler {
     private Main context;
     static int guiPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("guiPort"));
 
+    /**
+     * Return an instance of this. This message handler follows the singleton
+     * pattern, so there should be only one.
+     * @param context   The parent GUI.
+     * @return          An instance of GUIMessageHandler.
+     */
     public static GUIMessageHandler getInstance(Main context) {
         if (instance == null) {
             System.out.println("GUIHandler: Binding port" + guiPort);
@@ -35,35 +41,36 @@ public class GUIMessageHandler extends MessageHandler {
         this.context = context;
     }
 
+    /**
+     * Handle a received message.
+     * @param message   The Message the handler received.
+     */
     @Override
     public void received(Message message) {
         switch(message.getOpcode()) {
-            case 1:
+            case 1: // Floor arrival
                 // the elevator has arrived at a floor
                 FloorArrivalMessage msg = (FloorArrivalMessage) message;
                 Direction dir = msg.getCurrentDirection();
                 int elevatorId = msg.getElevatorId();
                 int floor = msg.getFloor();
-                
-
-
-                //TODO this is where actions to handle the arrival of the elevator at a floor would go
                 break;
+
             case 7: // elevator update
                 GUIElevatorMoveMessage moveMSG = (GUIElevatorMoveMessage) message;
-                // Have the GUI do a thing here.
                 context.moveElevator(moveMSG);
                 break;
 
             case 8: // floor update
                 GUIFloorMessage floorMSG = (GUIFloorMessage) message;
-                // Have the GUI do a thing here.
                 context.pressFloorButton(floorMSG);
                 break;
+
             case 11: // elevator is stuck.
             	StuckMessage stuckMSG = (StuckMessage) message;
             	context.stickElevator(stuckMSG.getElevatorId());
             	break;
+
             case 12: // elevator is unstuck.
             	UnStuckMessage unstuckMSG = (UnStuckMessage) message;
             	context.unstickElevator(unstuckMSG.getElevatorId());
@@ -75,12 +82,21 @@ public class GUIMessageHandler extends MessageHandler {
     }
 
 
+    /**
+     * Send a message to the scheduler, notifying it that an elevator button
+     * has been pressed.
+     * @param message   The ElevatorClickSimulationMessage to send.
+     */
     public void sendElevatorCarPress(ElevatorClickSimulationMessage message) {
         String elevatorQueueName = ConfigProperties.getInstance().getProperty("elevatorQueueName");
         RabbitSender sender = new RabbitSender(elevatorQueueName, message);
         new Thread(sender).start();
     }
 
+    /**
+     * UNUSED.
+     * @param message
+     */
     public void sendErrorToScheduler(GUIElevatorMoveMessage message){
         String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
         RabbitSender sender = new RabbitSender(schedulerQueueName, message);

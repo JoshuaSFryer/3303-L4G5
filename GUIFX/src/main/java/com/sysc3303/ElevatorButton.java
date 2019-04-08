@@ -8,6 +8,10 @@ import com.sysc3303.communication.RabbitSender;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+/**
+ * ElevatorButton represents a button on the inside of an elevator. Pressing one
+ * will make a request for that elevator to travel to a certain floor.
+ */
 public class ElevatorButton extends Button {
 	
 	int floorNum;
@@ -19,15 +23,20 @@ public class ElevatorButton extends Button {
 		this.floorNum = floor;
 		this.elevatorID = elevator;
 		this.parentStage = stage;
-		
+
+		// Lambda function to assign an on-click action for this button.
 		this.setOnAction((event) -> {
             sendElevatorClick(elevatorID, floorNum);
             System.out.println("Pressed button " + floorNum + " in elevator " + elevatorID);
             parentStage.close();
         });
-		//System.out.println("ACtion set");
 	}
-	
+
+    /**
+     * Send a request message to the scheduler using RabbitMQ.
+     * @param elevatorID    The ID of the parent elevator.
+     * @param floorNum      The target floor.
+     */
 	private void sendElevatorClick(int elevatorID, int floorNum) {
 		System.out.println("Sending click");
 		ElevatorClickSimulationMessage message = new ElevatorClickSimulationMessage(floorNum, elevatorID);
