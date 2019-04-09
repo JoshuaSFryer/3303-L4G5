@@ -20,7 +20,7 @@ public class ErrorButtons extends Button {
 
     int waitTime = Integer.parseInt(ConfigProperties.getInstance().getProperty("timeBetweenFloors"));
 
-    private ErrorButtons (int elevatorID, String str, String type){
+    ErrorButtons (int elevatorID, String str, String type){
         super(str);
 
         // Differentiate between buttons that will cause the door to stick vs.
