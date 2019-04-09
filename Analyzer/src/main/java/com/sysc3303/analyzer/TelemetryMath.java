@@ -50,7 +50,7 @@ public class TelemetryMath {
         float var = 0;
         long size = list.size();
         for (Long num: list){
-            var += (num-mean)*(num-mean)/size;
+            var += (num/1000000-mean)*(num/1000000-mean)/size;
         }
         return var;
     }
