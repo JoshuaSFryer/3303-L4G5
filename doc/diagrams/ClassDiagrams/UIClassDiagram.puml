@@ -32,6 +32,7 @@ class Main {
     +stickElevator(int ID): void
     +unstickElevator(int ID): void
     +createNewScene(int elevatorID): void
+    +printToLog(String message): void
 }
 
 class ErrorButtons {
