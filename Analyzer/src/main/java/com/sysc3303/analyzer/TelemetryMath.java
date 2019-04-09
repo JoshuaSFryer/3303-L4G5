@@ -1,5 +1,6 @@
 package com.sysc3303.analyzer;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -53,6 +54,10 @@ public class TelemetryMath {
             var += (num/1000000-mean)*(num/1000000-mean)/size;
         }
         return var;
+    }
+
+    public float getMax(List<Long> list){
+        return (float) Collections.max(list)/1000000;
     }
 
 

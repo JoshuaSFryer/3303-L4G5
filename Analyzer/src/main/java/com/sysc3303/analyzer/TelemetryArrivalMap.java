@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 
 /**
@@ -138,7 +139,34 @@ public class TelemetryArrivalMap {
 		
 		return elevatorTelemetryList;
 	}
-	
+
+	private List<Long> getAllElevatorTelemetry(){
+		List<Long> elevatorTelemetryList = new ArrayList<>();
+	    int num_elevators = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfElevators"));
+	    for (int i = 0; i<num_elevators; i++){
+	        try{
+	        elevatorTelemetryList.addAll(getElevatorTelemetryList(i));
+            } catch (Exception e){
+            }
+		}
+	    return elevatorTelemetryList;
+	}
+
+	private List<Long> getAllFloorTelemetry(){
+		List<Long> floorTelemetryList = new ArrayList<>();
+		int num_floors = Integer.parseInt(ConfigProperties.getInstance().getProperty("numberOfFloors"));
+		for (int i = 0; i<num_floors; i++){
+		    try{
+				floorTelemetryList.addAll(getFloorTelemetryList(i, Direction.UP));
+			} catch (Exception e){
+			}
+		    try{
+				floorTelemetryList.addAll(getFloorTelemetryList(i, Direction.DOWN));
+			} catch (Exception e){
+			}
+		}
+		return floorTelemetryList;
+	}
 	/**
 	 * returns floor telemetry for specific floor
 	 * 
@@ -166,12 +194,16 @@ public class TelemetryArrivalMap {
 	 * @param elevatorId
 	 */
 	private void printElevatorArrivalAnalysis(int elevatorId) {
-		List<Long> list = getElevatorTelemetryList(elevatorId);
+		List<Long> list = getAllElevatorTelemetry();
         long       mean = (long) math.getMean(list);
         long       var  = (long) math.getVariance(list, mean);
+        long	   max  = (long) math.getMax(list);
+		System.out.println("\n");
         System.out.println("Elevator " + elevatorId + " Button Press to Floor Arrival:");
         System.out.println("\tMean: " + mean + "ms");
-        System.out.println("\tVariance: " + var + "ms");
+		System.out.println("\tVariance: " + var + "ms^2");
+		System.out.println("\tMax: " + max + "ms");
+		System.out.println("\n");
     }
 
 	/**
@@ -182,11 +214,15 @@ public class TelemetryArrivalMap {
 	 * @param direction
 	 */
 	private void printFloorArrivalAnalysis(int floor, Direction direction) {
-		List<Long> list = getFloorTelemetryList(floor, direction);
+		List<Long> list =  getAllFloorTelemetry();
         long       mean = (long) math.getMean(list);
         long       var  = (long) math.getVariance(list, mean);
+		long	   max  = (long) math.getMax(list);
+		System.out.println("\n");
         System.out.println("Floor " + floor + ", Direction " + direction + " Button Press to Floor Arrival:");
 		System.out.println("\tMean: " + mean + "ms");
-		System.out.println("\tVariance: " + var + "ms");
+		System.out.println("\tVariance: " + var + "ms^2");
+		System.out.println("\tMax: " + max + "ms");
+		System.out.println("\n");
     }
 }

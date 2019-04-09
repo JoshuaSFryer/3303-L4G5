@@ -28,7 +28,6 @@ public class TelemetryMessageList {
      * @param time the time to be added
      */
     public void addArrivalTime(long time){
-        System.out.println(time + " added to arrival time list");
         arrivalTimeList.add(time);
         printAnalysis("Arrival response", arrivalTimeList);
     }
@@ -38,7 +37,6 @@ public class TelemetryMessageList {
      * @param time the time to be added
      */
     public void addFloorButtonTime(long time){
-        System.out.println(time + " added to floor button list");
         floorButtonTimeList.add(time);
         printAnalysis("Floor Button Response", floorButtonTimeList);
     }
@@ -48,7 +46,6 @@ public class TelemetryMessageList {
      * @param time the time to be added
      */
     public void addElevatorButtonTime(long time){
-        System.out.println(time + " added to elevator button list");
         elevatorButtonTimeList.add(time);
         printAnalysis("Elevator Button Response", elevatorButtonTimeList);
     }
@@ -62,9 +59,13 @@ public class TelemetryMessageList {
     private void printAnalysis(String name, List<Long> list){
         long mean = (long) math.getMean(list);
         long var = (long) math.getVariance(list, mean);
+        long max  = (long) math.getMax(list);
+        System.out.println("\n");
         System.out.println(name + ":");
         System.out.println("\tMean: " + mean + "ms");
-        System.out.println("\tVariance: " + var + "ms");
+        System.out.println("\tVariance: " + var + "ms^2");
+        System.out.println("\tMax: " + max + "ms");
+        System.out.println("\n");
     }
 
 }

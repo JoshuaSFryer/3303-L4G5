@@ -51,7 +51,7 @@ public class RabbitReceiver implements Runnable {
                 try {
                     receive(message);
                 } finally {
-                    System.out.println(" [x] Done");
+                    System.out.println("\n");
                 }
             };
             channel.basicConsume(queueName, AUTO_ACK, deliverCallback, consumerTag -> {});
