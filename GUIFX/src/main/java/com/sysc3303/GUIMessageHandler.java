@@ -76,6 +76,12 @@ public class GUIMessageHandler extends MessageHandler {
             	context.unstickElevator(unstuckMSG.getElevatorId());
             	break;
 
+            case 21: // Scheduler queues status update.
+                SchedulerQueueMessage schedMsg = (SchedulerQueueMessage) message;
+                context.printToLog(schedMsg.getElevatorQueue());
+                context.printToLog(schedMsg.getFloorQueue());
+                break;
+
             default:
                 System.out.println("This message type is not handled by this module!");
         }

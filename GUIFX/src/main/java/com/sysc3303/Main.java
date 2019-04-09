@@ -45,7 +45,7 @@ public class Main extends Application implements UserInterface {
 //            }
 //        }
        // mythread.start();
-    	new ConfigListener().run();
+    	//new ConfigListener().run();
         launch(args);
     }
 
@@ -358,5 +358,9 @@ public class Main extends Application implements UserInterface {
         Scene scene = new Scene(sPane, 400, 600);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void printToLog(String message) {
+        t.appendText("\n" + message);
     }
 }
