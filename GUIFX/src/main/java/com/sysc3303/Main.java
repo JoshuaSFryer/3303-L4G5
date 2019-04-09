@@ -45,7 +45,7 @@ public class Main extends Application implements UserInterface {
 //            }
 //        }
        // mythread.start();
-    	new ConfigListener().run();
+    	//new ConfigListener().run();
         launch(args);
     }
 
