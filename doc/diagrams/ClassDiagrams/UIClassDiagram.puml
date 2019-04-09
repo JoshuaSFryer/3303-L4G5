@@ -1,5 +1,7 @@
 @startuml
 
+note "All private fields are implied to have getter and setter methods, as appropriate." as N1
+
 abstract class MessageHandler {
     +received(Message message)
     +send(Message message, Inetaddress address, int port)
@@ -13,11 +15,56 @@ class GUIMessageHandler {
     +received(Message message)
 }
 
-class TestCLI {
-    -{static} instance: TestCLI
+class Main {
+    -floorNumber: int
+    -numberOfElevators: int
+    -elevators: ArrayList<GUIElevator>
+    -floorClicks: CustomButton[][]
 
-    +{static} getInstance(): TestCLI
+    +start(): void
+    +moveElevator(int elevatorID, int newFloor): void
+    +moveElevator(GUIElevatorMoveMessage msg): void
+    +removeNodeByCoordinates(int row, int col, GridPane pane): void
+    +pressFloorButton(GUIFloorMessage msg):void
+    +pressElevatorButton(int floor): void 
+    +openDoor(int ID): void
+    +closeDoor(int ID): void
+    +stickElevator(int ID): void
+    +unstickElevator(int ID): void
+    +createNewScene(int elevatorID): void
 }
+
+class ErrorButtons {
+    -elevatorID: int
+    -type: String
+
+    -sendDoorStick(int elevatorID, int time)
+    -sendElevatorStick(int elevatorID, int time)
+}
+
+class CustomButton {
+    -floorNumber: int
+    -dir: Direction
+
+    + {static} create(int floorNumber, Direction dir): CustomButton
+    - sendFloorClick(int floorNumber, Direction direction): void
+    + clickButton(): void
+    + unClickButton(): void
+}
+
+class ElevatorButton {
+    -floorNum: int
+    -elevatorID: int
+    -parentStage: Stage
+
+    -sendElevatorClick(int elevatorID, int floorNum)
+}
+
+class GUIElevator {
+    -elevatorID: int
+    -currentFloor: int
+}
+GUIElevator -up-|> JavaFX.Rectangle
 
 interface UserInterface {
     +moveElevator(GUIElevatorMoveMessage msg)
@@ -26,6 +73,9 @@ interface UserInterface {
 
 MessageHandler <|.. GUIMessageHandler
 
-UserInterface <|.. TestCLI
+Main ..|> UserInterface
+Main "1" *-- "numberOfElevators" ErrorButtons
+Main "1" *-- "floorNumber" CustomButton
+Main --> GUIMessageHandler
 
 @enduml
