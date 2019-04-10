@@ -355,15 +355,34 @@ public class Main extends Application implements UserInterface {
     }
     
     public void unclick(int floor, Direction dir, int elevatorID ) {
-    	if (floor == this.elevatorTargets[elevatorID]) { // We are at a target floor.
-        	if (dir == Direction.UP) {
-        		// unclick up button
-        		floorClicks[floor][1].unClickButton();
-        	} else if (dir == Direction.DOWN) {
-        		// unclick down button
-        		floorClicks[floor][0].unClickButton();
-        	}
-        }
+    	final int target = elevatorTargets[elevatorID];
+    	Task<Void> unclickTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                    	if (floor == target) { // We are at a target floor.
+                        	if (dir == Direction.UP) {
+                        		// unclick up button
+                        		floorClicks[floor][1].unClickButton();
+                        	} else if (dir == Direction.DOWN) {
+                        		// unclick down button
+                        		floorClicks[floor][0].unClickButton();
+                        	}
+                        }
+                    }
+                });
+                return null;
+            }
+        }; // End Task declaration
+        
+        // Create a thread to launch the task.
+        Thread taskThread = new Thread (unclickTask);
+        // Required code to launch the task thread.
+        taskThread.setDaemon(true);
+        taskThread.start();
+    	
     }
 
     /**
