@@ -31,6 +31,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>dependency-jars/</classpathPrefix>
                             <mainClass>com.sysc3303.analyzer.RunTelemetry</mainClass>
+
                         </manifest>
                     </archive>
                 </configuration>

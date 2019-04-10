@@ -8,9 +8,7 @@ public abstract class StickEvent extends Event{
     protected int numSecondsStuck;
 
     public StickEvent(String[] eventStringArray) throws ParseException {
-
         super(Integer.parseInt(eventStringArray[0]), eventStringArray[1]);
-
         elevatorId = Integer.parseInt(eventStringArray[2]);
         numSecondsStuck = Integer.parseInt(eventStringArray[3]);
     }

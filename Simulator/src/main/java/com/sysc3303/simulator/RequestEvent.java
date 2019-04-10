@@ -15,10 +15,7 @@ public class RequestEvent extends Event{
      * @throws ParseException
      */
     public RequestEvent(String[] stringArray) throws ParseException{
-
         super(Integer.parseInt(stringArray[0]), stringArray[1]);
-
-
         this.floor = Integer.parseInt(stringArray[2]);
         this.direction = Direction.valueOf(stringArray[3].toUpperCase());
         this.elevatorButton = Integer.parseInt(stringArray[4]);

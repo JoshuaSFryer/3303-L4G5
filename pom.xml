@@ -14,7 +14,7 @@
         <module>ElevatorSystem</module>
         <module>FloorSystem</module>
         <module>Simulator</module>
-        <module>SharedUtils</module>        
+        <module>SharedUtils</module>
         <module>GUIFX</module>
         <module>Analyzer</module>
         <module>RemoteConfig</module>

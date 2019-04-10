@@ -12,7 +12,10 @@ import com.sysc3303.communication.TelemetryMessage;
 /**
  * Message handler for handling the reception of Telemetry data
  *
+<<<<<<< HEAD
  * @author Mattias Lightstone
+=======
+>>>>>>> master
  */
 
 public class TelemetryMessageHandler extends MessageHandler {

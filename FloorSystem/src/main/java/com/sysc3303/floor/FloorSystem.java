@@ -131,7 +131,6 @@ public class FloorSystem {
 		//send floor button request
 		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection, pressedTime);
 		sendButtonTelemetryMetric(requestFloor, buttonDirection, pressedTime);
-		
 		// Update the UI with the updated states of the buttons on this floor.
 //		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
 //				arriveFloor.getButtons().isUpButtonLight(),

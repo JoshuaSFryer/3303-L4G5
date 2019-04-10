@@ -19,7 +19,7 @@ public class Request {
 		private ArrayList<ElevatorStatus>     elevatorStatusArray;
 		private final int                     NUMBER_OF_ELEVATOR;
 		private boolean                       generatorIsOn;
-	
+
 	       /**
 	        * The Request's constructer
 	        */
@@ -127,7 +127,7 @@ public class Request {
 		/**
 		 * The function return floor button message array
 		 * @return ArrayList
-		 */		
+		 */
 		public ArrayList<FloorButtonMessage> getFloorButtonUpMessageArray() {
 			ArrayList<FloorButtonMessage> upMessage = new ArrayList<FloorButtonMessage>();
 			
@@ -144,7 +144,7 @@ public class Request {
 		/**
 		 * The function resets target direction to be idle
 		 * @return 
-		 */		
+		 */
 		public void resetTargetDirection() {
 			for(int i = 0; i < elevatorStatusArray.size(); i++) {
 				ElevatorStatus curStatus = elevatorStatusArray.get(i);
@@ -153,11 +153,11 @@ public class Request {
 				}
 			}
 		}
-	
+
 		/**
 		 * The function return floor button down message array
 		 * @return ArrayList
-		 */		
+		 */
 		public ArrayList<FloorButtonMessage> getFloorButtonDownMessageArray() {
 			ArrayList<FloorButtonMessage> downMessage = new ArrayList<FloorButtonMessage>();
 			
@@ -251,7 +251,7 @@ public class Request {
 			}
 			return false;
 		}
-	
+
 		/**
 		 * The function return true if all the elevators arrived
 		 * return false otherwise.

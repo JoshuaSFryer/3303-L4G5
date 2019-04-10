@@ -67,4 +67,5 @@ public class Door {
 		System.out.println("Elevator "+parent.elevatorID+": Doors no longer stuck!");
 		stuckOpen = false;
 	}
+
 }

@@ -50,16 +50,15 @@ public class TelemetryMessageList {
         printAnalysis("Elevator Button Response", elevatorButtonTimeList);
     }
 
-
     /**
      * Helper method to print the mean and variance of a list
      * @param name The name to be printed beside the analysis
      * @param list the list for the analysis to be calculated
      */
-    private void printAnalysis(String name, List<Long> list){
+    private void printAnalysis(String name, List<Long> list) {
         long mean = (long) math.getMean(list);
         long var = (long) math.getVariance(list, mean);
-        long max  = (long) math.getMax(list);
+        long max = (long) math.getMax(list);
         System.out.println("\n");
         System.out.println(name + ":");
         System.out.println("\tMean: " + mean + "ms");

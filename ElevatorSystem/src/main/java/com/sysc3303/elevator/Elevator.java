@@ -57,8 +57,7 @@ public class Elevator {
 	private long 						telemetryStartTime = 0;
 	private long 						telemetryStopTime = 0;
     private HashSet<Integer>            pressedButtonSet  = new HashSet<Integer>();
-	static String telemetaryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");            	
-
+	static String telemetaryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");
 	/**
 	 * Class constructor.
 	 * @param numFloors		The number of floors in the system.
@@ -218,7 +217,6 @@ public class Elevator {
 	 * Make this elevator's motor stick, freezing it in place.
 	 */
 	public void stickElevator() {
-
 		motor.stick();
 	}
 
@@ -415,5 +413,6 @@ public class Elevator {
         TelemetryElevatorButtonMessage telemetryElevBtnMsg = new TelemetryElevatorButtonMessage(elevatorId, destinationFloor, 0, pressedTime);
 		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevBtnMsg);
         (new Thread(rabbitSender)).start();
+
 	}
 }

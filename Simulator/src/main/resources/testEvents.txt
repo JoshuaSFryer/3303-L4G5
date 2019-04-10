@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
 10 request 2 Down 1
 21 request 1 Down 1
 25 request 3 Up 2
@@ -11,5 +14,8 @@
 79 request 1 Down 1
 92 request 3 Up 2
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> master

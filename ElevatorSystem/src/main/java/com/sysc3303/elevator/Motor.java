@@ -56,5 +56,4 @@ public class Motor {
 		System.out.println("Unsticking motor");
 		isStuck = false;
 	}
-
 }

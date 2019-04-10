@@ -29,7 +29,7 @@ public class SchedulerMessageHandler extends MessageHandler{
     static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
     static String schedulerQueueName = ConfigProperties.getInstance().getProperty("schedulerQueueName");
     static String telemetaryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");            	
-    static String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");            	
+    static String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
     
     public SchedulerMessageHandler(int receivePort, SchedulerSystem schedulerSystem){
         super(receivePort);

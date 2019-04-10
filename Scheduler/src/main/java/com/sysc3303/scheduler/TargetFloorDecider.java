@@ -38,7 +38,7 @@ public class TargetFloorDecider {
 		for(int i = 0; i < floorButtonMessages.size(); i++) {
 			addValidTargetFloor(numberOfElevator, request, targetFloorCandidates,floorButtonMessages.get(i));
 		}
-		
+
 		return targetFloorCandidates;
 	}
 	
