@@ -120,15 +120,27 @@ public class Main extends Application implements UserInterface {
             //This HBox is to hold the floor buttons
             HBox hBox = new HBox();
             hBox.setSpacing(5);
+            
 
             //This Label is to Label the Floor numbers
             Label floorLabel = new Label("Floor " + n);
-            CustomButton downButton = CustomButton.create(n, Direction.UP);
-            CustomButton upButton = CustomButton.create(n, Direction.DOWN);
-            floorClicks[n][0] = upButton;
-            floorClicks[n][1] = downButton;
+            hBox.getChildren().addAll(floorLabel);
+            
+            
+            if ( n != floorNumber -1) { // Create down button on all floors but the bottom floor.
+            	CustomButton downButton = CustomButton.create(n, Direction.DOWN);
+                floorClicks[n][1] = downButton;
+                hBox.getChildren().addAll(downButton);
+            }
+            if ( n != 0) { // Create up button on all floors but the top floor.
+            	CustomButton upButton = CustomButton.create(n, Direction.UP);
+            	floorClicks[n][0] = upButton;
+            	hBox.getChildren().addAll(upButton);
 
-            hBox.getChildren().addAll(floorLabel, upButton, downButton);
+            }
+           
+
+            
             gPane.add(hBox, 0, floorNumber - n - 1);
 
         }
@@ -328,9 +340,9 @@ public class Main extends Application implements UserInterface {
         elevators.get(ID).setFill(Color.MEDIUMTURQUOISE);
         int currentFloor = elevators.get(ID).currentFloor;
         if (dir == Direction.UP) { 
-        	floorClicks[currentFloor][1].unClickButton();
-        } else if (dir == Direction.DOWN) {
         	floorClicks[currentFloor][0].unClickButton();
+        } else if (dir == Direction.DOWN) {
+        	floorClicks[currentFloor][1].unClickButton();
         } else {
         	System.out.println("You get nothing, you lose, good DAY sir!");
         }
