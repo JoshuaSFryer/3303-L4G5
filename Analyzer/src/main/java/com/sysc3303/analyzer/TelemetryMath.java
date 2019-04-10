@@ -1,5 +1,6 @@
 package com.sysc3303.analyzer;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,10 +22,10 @@ public class TelemetryMath {
      * @param list the list with the elements in it
      * @return the mean of the elements in the list
      */
-    public long getMean(List<Long> list){
-        long sum = 0;
+    public float getMean(List<Long> list){
+        float sum = 0;
         for (Long num: list){
-            sum += (num / list.size());
+            sum += (num / list.size() / 1000000);
         }
         return sum;
     }
@@ -34,8 +35,8 @@ public class TelemetryMath {
      * @param list the list with the elements in it
      * @return the variance of the elements in the list
      */
-    public long getVariance(List<Long> list){
-        long mean = getMean(list);
+    public float getVariance(List<Long> list){
+        float mean = getMean(list);
         return getVariance(list, mean);
     }
 
@@ -46,13 +47,17 @@ public class TelemetryMath {
      * @param mean the mean of the elements in the list
      * @return the variance of the elements in the list
      */
-    public long getVariance(List<Long> list, long mean){
-        long var = 0;
+    public float getVariance(List<Long> list, float mean){
+        float var = 0;
         long size = list.size();
         for (Long num: list){
-            var += (num-mean)*(num-mean);
+            var += (num/1000000-mean)*(num/1000000-mean)/size;
         }
-        return var/size;
+        return var;
+    }
+
+    public float getMax(List<Long> list){
+        return (float) Collections.max(list)/1000000;
     }
 
 

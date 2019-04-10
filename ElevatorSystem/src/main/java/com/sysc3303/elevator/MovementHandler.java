@@ -1,20 +1,26 @@
 package com.sysc3303.elevator;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 
 import static java.lang.System.currentTimeMillis;
 import static java.lang.System.setOut;
 
+/**
+ * MovementHandler is used to control an elevator's movement. It runs as a
+ * thread, continuously moving its parent elevator towards its target floor.
+ */
 public class MovementHandler implements Runnable {
 	// How long to wait between calls of moveUp().
 	// Effectively, this is how long it takes the elevator to move one unit
 	// of distance up or down.
-	public static final int MOVEMENTDELAY = 1250;
+
+	private static int MOVEMENTDELAY;
 
 	// How long the elevator can take between floors before declaring itself to
 	// be stuck, and shutting down.
 	// For now, this time is twice the time that it would ordinarily take to reach the next floor.
-	public static final int WATCHDOGTIME = MOVEMENTDELAY * FloorSensor.FLOORHEIGHT * 2;
+	private static int WATCHDOGTIME;
 	//public static final int WATCHDOGTIME = MOVEMENTDELAY * 20;
 
 
@@ -34,6 +40,9 @@ public class MovementHandler implements Runnable {
 		this.context = context;
 		this.elevatorId = elevatorId;
 		this.atFloor = false;
+		int timeBetweenFloors = Integer.parseInt(ConfigProperties.getInstance().getProperty("timeBetweenFloors"));
+		MOVEMENTDELAY = timeBetweenFloors/FloorSensor.FLOORHEIGHT;
+		WATCHDOGTIME = timeBetweenFloors * 2;
 	}
 	
 	/**
@@ -68,7 +77,7 @@ public class MovementHandler implements Runnable {
 					// Update the elevator's current floor.
 					context.setCurrentFloor(floor);
 					// Update the UI.
-					context.updateUI();
+					context.updateUI(this.targetFloor);
 					lastHeight = context.getCurrentHeight();
 					// Reset the watchdog timer.
 					System.out.println("Elevator "+ elevatorId +": Refreshing watchdog");
@@ -101,6 +110,7 @@ public class MovementHandler implements Runnable {
 					}
 				}
 				if (( currentTimeMillis() - startTime) >= WATCHDOGTIME) {
+					this.targetFloor = 0;
 					System.out.println("I'VE FALLEN AND I CAN'T GET UP!\n "
 					+ "Killing Elevator " +elevatorId);
 					context.terminateStuckElevator();
@@ -127,6 +137,14 @@ public class MovementHandler implements Runnable {
 	public void moveDown() {
 		motor.moveDown();
 		System.out.println("Elevator " +context.elevatorID+ ": Height: " + context.getCurrentHeight() + " cm");
+	}
+
+    /**
+     * Return the current target floor.
+     * @return  The target floor's number.
+     */
+	public int getTargetFloor() {
+		return targetFloor;
 	}
 
 	/**

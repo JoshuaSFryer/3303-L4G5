@@ -4,13 +4,17 @@ package com.sysc3303.elevator;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.apache.log4j.Logger;
 
+import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 import com.sysc3303.communication.TelemetryElevatorMessage;
 import com.sysc3303.communication.RabbitSender;
+import com.sysc3303.communication.TelemetryElevatorArrivalMessage;
+import com.sysc3303.communication.TelemetryElevatorButtonMessage;
 import com.sysc3303.constants.Constants;
 
 /**
@@ -37,7 +41,7 @@ public class Elevator {
 	// Variables concerning the elevator's current status
 	private int 						currentFloor;
 	private int							currentHeight; // Current height in CM
-	private ElevatorState 				currentState;
+	//private ElevatorState 				currentState;
 	private Direction					currentDirection;
 	
 	private Thread 						mover;
@@ -47,13 +51,13 @@ public class Elevator {
 
 	private boolean						shutDown = false;
 
+
+  private Logger          log = Logger.getLogger(Elevator.class);
+
 	private long 						telemetryStartTime = 0;
 	private long 						telemetryStopTime = 0;
-	/*
-	private ElevatorState[] states = {new Idle(), new MovingUp(), 
-			new MovingDown(), new OpeningDoors(), new DoorsOpen(),
-			new ClosingDoors()};
-			*/
+    private HashSet<Integer>            pressedButtonSet  = new HashSet<Integer>();
+	static String telemetaryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");
 	/**
 	 * Class constructor.
 	 * @param numFloors		The number of floors in the system.
@@ -68,7 +72,7 @@ public class Elevator {
 		motor         		= new Motor(this);
 		door          		= new Door(this);
 		currentFloor   		= Elevator.GROUND_FLOOR;
-		currentState		= new Idle(this);
+		//currentState		= new Idle(this);
 		currentHeight 		= GROUND_FLOOR;
 		currentDirection 	= Direction.IDLE;
 		parentSystem 		= system;
@@ -89,24 +93,6 @@ public class Elevator {
 	}
 	
 	/**
-	 * Get the current state. Currently unused until State pattern is
-	 * implemented.
-	 */
-	public ElevatorState getState() {
-		return this.currentState;
-	}
-	
-	/**
-	 * Change the current State.
-	 * Perform the exit action of the state being left, change the current
-	 * state to the new one, and perform the new state's entry action.
-	 * @param state	The ElevatorState to switch to.
-	 */
-	public void setState(ElevatorState state) {
-		this.currentState.changeState(state);
-	}
-	
-	/**
 	 * Handle a new instruction received from the scheduler.
 	 * Interrupt the old movement and start moving towards the new target floor.
 	 * @param targetFloor	The number of the new target floor
@@ -119,6 +105,9 @@ public class Elevator {
 		goToFloor(targetFloor);
 	}
 
+	/**
+	 * Stop this elevator's movement handler.
+	 */
 	private void stopMovementHandler() {
 		System.out.println("Interrupting movement handler...");
 		try {
@@ -165,6 +154,12 @@ public class Elevator {
 	public void notifyArrival(int targetFloor) {
 		ElevatorVector v = new ElevatorVector(this.currentFloor, this.currentDirection, targetFloor);
 		messageHandler.sendElevatorState(v, this.elevatorID);
+		
+		if(pressedButtonSet.contains(targetFloor)) {
+	      	long arrivalTime  = System.currentTimeMillis() * Constants.NANO_PER_MILLI;
+	      	sendTelemetryArrivalMetric(this.elevatorID, targetFloor, arrivalTime);
+	      	pressedButtonSet.remove(targetFloor);
+		}
 	}
 
 	/**
@@ -180,6 +175,7 @@ public class Elevator {
 	 */
 	public void openDoors() {
 		door.openDoors();
+		messageHandler.updateUI(elevatorID, currentFloor, this.currentDirection, true, currentFloor);
 	}
 	
 	/**
@@ -187,6 +183,8 @@ public class Elevator {
 	 */
 	public void closeDoors() {
 		door.closeDoors();
+		messageHandler.updateUI(elevatorID, currentFloor, this.currentDirection, false, currentFloor);
+
 	}
 
 	/**
@@ -196,8 +194,14 @@ public class Elevator {
 		stopMovementHandler();
 	}
 
+	/**
+	 * Force this elevator's doors to be stuck open for a given number of seconds.
+	 * @param secondsStuck	How long for the doors to stay open.
+	 */
 	public void stickDoors(int secondsStuck) {
+		// Notify the scheduler that this elevator is stuck.
 		messageHandler.sendElevatorStuck(elevatorID);
+
 		door.stick();
 		try {
 			Thread.sleep(secondsStuck*1000);
@@ -205,17 +209,24 @@ public class Elevator {
 			e.printStackTrace();
 		}
 		door.unstick();
+		// Let the scheduler know that this elevator is operational again.
 		messageHandler.sendElevatorUnstuck(elevatorID);
 	}
 
+	/**
+	 * Make this elevator's motor stick, freezing it in place.
+	 */
 	public void stickElevator() {
 		motor.stick();
 	}
 
+	/**
+	 * Notify the scheduler that an elevator is irreparably stuck and should
+	 * be shut down.
+	 */
 	public void terminateStuckElevator() {
 		shutDown = true;
 		messageHandler.sendElevatorStuck(elevatorID);
-
 	}
 
 	/**
@@ -290,6 +301,8 @@ public class Elevator {
 			this.buttons.get(num).press();
 			// Notify the scheduler that a
 			messageHandler.sendElevatorButton(num, this.elevatorID, pressedTime);
+			pressedButtonSet.add(num);
+		    sendTelemetryButtonMetric(this.elevatorID, num, pressedTime);
 		} else {
 			shutDownError(elevatorID);
 		}
@@ -339,28 +352,67 @@ public class Elevator {
 	 * Instruct the MessageHandler to build an ElevatorMoveMessage and send it
 	 * to the UI to update it.
 	 */
-	public void updateUI() {
+	public void updateUI(int targetFloor) {
 		messageHandler.updateUI(elevatorID, currentFloor, currentDirection,
-				door.isOpen());
+				door.isOpen(), targetFloor);
 	}
 
+	/**
+	 * Print out an error message stating that the scheduler has attempted to
+     * use an elevator that has been shut down and thus cannot be used.
+	 * @param elevatorID    The ID of the elevator.
+	 */
 	private void shutDownError(int elevatorID) {
 		System.out.println("ERROR: Elevator "+elevatorID+ "is shut down and should not be used.");
 	}
 
+	/**
+	 * Get the time at the start of a telemetry measurement.
+	 */
 	public void startTelemetryTimer() {
 		telemetryStartTime = System.nanoTime();
 	}
 
+	/**
+	 * Send the measured telemetry time to the telemetry message queue.
+	 */
 	private void sendTelemetryMetric() {
+		// Ensure that both start and stop times have been measured.
 		if (telemetryStartTime != 0 && telemetryStopTime != 0) {
 			System.out.println("Sending telemetry message....");
 			long diffTime = telemetryStopTime - telemetryStartTime;
+			// Put the duration into a message and send it by launching a Rabbit
+			// message queue.
 			TelemetryElevatorMessage msg = new TelemetryElevatorMessage(0, diffTime);
 			Thread messager = new Thread(new RabbitSender("telemetry", msg));
 			messager.start();
 		} else {
 			System.out.println("ERROR: Invalid telemetry times.");
 		}
+	}
+
+    /**
+     * Notify the telemetry analyzer that an elevator has arrived.
+     * @param elevatorId        The ID of the relevant elevator.
+     * @param destinationFloor  The floor that the elevator arrived at.
+     * @param arrivalTime       The time at which the elevator arrived.
+     */
+	private void sendTelemetryArrivalMetric(int elevatorId, int destinationFloor, long arrivalTime) {
+        TelemetryElevatorArrivalMessage telemetryElevArvMsg = new TelemetryElevatorArrivalMessage(elevatorId, destinationFloor, 0, arrivalTime);
+		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevArvMsg);
+        (new Thread(rabbitSender)).start();
+	}
+
+    /**
+     * Notify the telemetry analyzer that a button has been pressed.
+     * @param elevatorId        The ID of the relevant elevator.
+     * @param destinationFloor  The floor that the elevator arrived at.
+     * @param pressedTime       The time at which the button was pressed.
+     */
+	private void sendTelemetryButtonMetric(int elevatorId, int destinationFloor, long pressedTime) {
+        TelemetryElevatorButtonMessage telemetryElevBtnMsg = new TelemetryElevatorButtonMessage(elevatorId, destinationFloor, 0, pressedTime);
+		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryElevBtnMsg);
+        (new Thread(rabbitSender)).start();
+
 	}
 }

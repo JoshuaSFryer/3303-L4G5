@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
 
+/**
+ * A message indicating the amount of time that processing an elevator button press took
+ */
 public class TelemetryElevatorMessage extends TelemetryMessage{
 
     @JsonCreator

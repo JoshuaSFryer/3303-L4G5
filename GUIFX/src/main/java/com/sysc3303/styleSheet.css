@@ -1,0 +1,18 @@
+.button {
+    -fx-text-fill:white;
+    -fx-font-family:"Arial Narrow";
+    -fx_font-weight:bold;
+    -fx-background-color:linear-gradient(#61a2b1, #2A5058);
+}
+
+
+.boxBottom {
+    -fx-background-color:linear-gradient(#61a2b1, #2A5058);
+}
+
+.buttonChanged {
+    -fx-text-fill:Black;
+    -fx-font-family:"Arial Narrow";
+    -fx_font-weight:bold;
+    -fx-background-color:linear-gradient(#61a2b1, #2A5058);
+}

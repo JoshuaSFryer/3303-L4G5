@@ -13,8 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import com.sysc3303.commons.ConfigListener;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.Direction;
+import com.sysc3303.communication.RabbitSender;
+import com.sysc3303.communication.TelemetryFloorArrivalMessage;
+import com.sysc3303.communication.TelemetryFloorButtonMessage;
 import com.sysc3303.constants.Constants;
 
 import static com.sysc3303.floor.FloorMessageHandler.floorPort;
@@ -25,6 +29,7 @@ public class FloorSystem {
 
 	String  inputFilePath = "./src/resource/inputFile.txt";
 	static Properties prop = new Properties();
+	static String telemetaryQueueName = ConfigProperties.getInstance().getProperty("telemetryQueueName");            	
 	private String propFileName = "config.properties";
 	private InputStream inputStream =getClass().getClassLoader().getResourceAsStream(propFileName);
 
@@ -58,6 +63,11 @@ public class FloorSystem {
 	
 	//Main method Not is use right Now. Left for Future testing
     public static void main(String[] args){
+		if(args.length > 0){
+			if(args[0] .equals("config")){
+				new ConfigListener().run();
+			}
+		}
         FloorSystem floorSystem = new FloorSystem();
         while(true){
         }
@@ -76,6 +86,7 @@ public class FloorSystem {
 		//If the Elevator has Arrived on the passenger floor where requested
 		//FIXME Check out of bounds
 		Floor arriveFloor = floorList.get(arrivalFloor);
+		long  arrivalTime = System.currentTimeMillis() * Constants.NANO_PER_MILLI;
 		
 		if (direction == Direction.UP) {
 			//turning uplight off
@@ -91,11 +102,12 @@ public class FloorSystem {
 		}
 
 		// Update the UI with the updated states of the buttons on this floor.
-		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
-				arriveFloor.getButtons().isUpButtonLight(),
-				arriveFloor.getFloorNum());
+//		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
+//				arriveFloor.getButtons().isUpButtonLight(),
+//				arriveFloor.getFloorNum());
 
 		floorMessageHandler.sendFloorArrival(arrivalFloor, direction, elevatorId);
+		sendArrivalTelemetryMetric(arrivalFloor, direction, arrivalTime);
 	}
 
 	/**
@@ -118,17 +130,24 @@ public class FloorSystem {
 		}
 		//send floor button request
 		floorMessageHandler.sendFloorButton(requestFloor, buttonDirection, pressedTime);
-
+		sendButtonTelemetryMetric(requestFloor, buttonDirection, pressedTime);
 		// Update the UI with the updated states of the buttons on this floor.
-		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
-				arriveFloor.getButtons().isUpButtonLight(),
-				arriveFloor.getFloorNum());
+//		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
+//				arriveFloor.getButtons().isUpButtonLight(),
+//				arriveFloor.getFloorNum());
+	}
+	
+	private void sendButtonTelemetryMetric(int floor, Direction direction, long pressedTime) {
+		TelemetryFloorButtonMessage telemetryFloorBtnMsg = new TelemetryFloorButtonMessage(floor, direction, 0, pressedTime);
+		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryFloorBtnMsg);
+        (new Thread(rabbitSender)).start();
 	}
 
-
-
-
-
+	private void sendArrivalTelemetryMetric(int floor, Direction direction, long pressedTime) {
+		TelemetryFloorArrivalMessage telemetryFloorArvMsg = new TelemetryFloorArrivalMessage(floor, direction, 0, pressedTime);
+		RabbitSender rabbitSender = new RabbitSender(telemetaryQueueName, telemetryFloorArvMsg);
+        (new Thread(rabbitSender)).start();
+	}
 }
 
 

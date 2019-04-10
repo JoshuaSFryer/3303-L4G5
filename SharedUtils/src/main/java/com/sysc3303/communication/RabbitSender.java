@@ -2,38 +2,38 @@ package com.sysc3303.communication;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.SerializationUtilJSON;
 
+/**
+ * A runnable producer that sends a Message to a a message queue on RabbitMQ
+ * To learn more about producers and RabbitMQ see https://www.rabbitmq.com/tutorials/tutorial-two-python.html
+ *
+ * @author Mattias Lightstone
+ */
 public class RabbitSender implements Runnable{
 
-    private final static String HOSTNAME = "localhost";
-    private SerializationUtilJSON<Message> serializationUtil;
-    private String queueName;
-    private Message message;
+    protected SerializationUtilJSON<Message> serializationUtil;
+    protected String queueName;
+    protected Message message;
 
+    /**
+     * Constructor
+     * @param queueName the name of the queue to produce to
+     * @param message the message to add the the queue
+     */
     public RabbitSender(String queueName, Message message){
         this.queueName = queueName;
         this.message = message;
         serializationUtil = new SerializationUtilJSON<>();
     }
-    public void run() {
-        ConnectionFactory factory = new ConnectionFactory();
-        String hostname;
-        if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("rabbitCloud"))){
-          hostname = ConfigProperties.getInstance().getProperty("rabbitCloudAddress");
-        }
-        else if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
-            hostname = "localhost";
-        }
-        else {
-            hostname = ConfigProperties.getInstance().getProperty("rabbitAddress");
-        }
-        factory.setHost(hostname);
 
-        try(Connection connection = factory.newConnection();
-            Channel channel = connection.createChannel()){
+    /**
+     * Connects to the rabbitMQ server and sends the message to it
+     */
+    public void run() {
+        try{
+            Connection connection = RabbitShared.connect();
+            Channel channel = connection.createChannel();
 
             channel.queueDeclare(queueName, false, false, false, null);
 

@@ -1,0 +1,96 @@
+@startuml
+
+skinparam linetype polyline
+
+component GUI
+
+together {
+
+  package "FloorSystem"{
+  component FloorSystem as fl
+    () "8002" as PFl
+    PFl - fl
+  }
+
+  package "ElevatorSystem" {
+  component ElevatorSystem as el
+    () "8000" as PEl
+    PEl - el
+  }
+
+}
+
+together {
+
+package "Simulator"{
+  () "8003" as PSi
+  component Simulator as sim
+  sim - PSi
+}
+
+package "Scheduler"{
+  component SchedulerSystem
+  () "8001" as PSc
+  SchedulerSystem - PSc
+}
+
+
+}
+
+together {
+package "GUI"{
+  component GUI as guii
+}
+package "Analyzer"{
+  component Analyzer as anal
+}
+package "RemoteConfig"{
+  component RemoteConfig as rc
+}
+}
+
+
+
+package "RabbitMQ"{
+  queue "ElevatorQueue"
+  queue "FloorQueue"
+  queue "GUIQueue"
+  queue "TelemetryQueue"
+  queue "ConfigQueue"
+
+  FloorQueue -[hidden]> ElevatorQueue
+
+}
+
+PSc <-- el
+PSc <-- fl
+SchedulerSystem --> PEl
+SchedulerSystem --> PFl
+fl -> PSi
+sim --> PFl
+sim --> PEl
+el -> PSi
+
+SchedulerSystem --> TelemetryQueue: pub
+el --> TelemetryQueue: pub
+
+TelemetryQueue --> anal: sub
+
+el --> GUIQueue: pub
+el <-- ElevatorQueue: sub
+fl --> GUIQueue : pub
+fl <-- FloorQueue : sub
+GUIQueue --> guii : sub
+FloorQueue <-- guii : pub
+ElevatorQueue <-- guii: pub
+ConfigQueue <-- rc: pub
+guii <-- ConfigQueue: sub
+Analyzer <-- ConfigQueue: sub
+fl <-- ConfigQueue: sub
+el <-- ConfigQueue: sub
+sim <-- ConfigQueue: sub
+SchedulerSystem <-- ConfigQueue: sub
+
+
+
+@enduml

@@ -25,6 +25,8 @@ public class Motor {
 	public void moveUp() {
 		if (!isStuck) {
 			parent.setCurrentHeight(parent.getCurrentHeight() + INCREMENT);
+		} else {
+			System.out.println("Motor instructed to move, but cannot because it is stuck");
 		}
 	}
 	
@@ -34,15 +36,24 @@ public class Motor {
 	public void moveDown() {
 		if (!isStuck) {
 			parent.setCurrentHeight(parent.getCurrentHeight() - INCREMENT);
+		} else {
+			System.out.println("Motor instructed to move, but cannot because it is stuck");
 		}
 	}
 
+	/**
+	 * Cause this motor to stick, making it unable to move.
+	 */
 	public void stick() {
+		System.out.println("Sticking motor");
 		isStuck = true;
 	}
 
+    /**
+     * Cause this motor to unstick, allowing it to move again.
+     */
 	public void unstick() {
+		System.out.println("Unsticking motor");
 		isStuck = false;
 	}
-
 }

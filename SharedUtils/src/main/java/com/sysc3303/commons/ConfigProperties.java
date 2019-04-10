@@ -2,10 +2,8 @@ package com.sysc3303.commons;
 
 import com.sysc3303.constants.Constants;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
@@ -50,5 +48,19 @@ public class ConfigProperties {
      */
     public String getProperty(String str){
         return properties.getProperty(str);
+    }
+
+
+    public void setProperty(String key, String value){
+        properties.setProperty(key, value);
+    }
+
+
+    public void setProperties(Properties properties){
+        this.properties = properties;
+    }
+
+    public Properties getProperties(){
+        return properties;
     }
 }

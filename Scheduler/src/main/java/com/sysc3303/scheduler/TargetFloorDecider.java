@@ -2,16 +2,20 @@ package com.sysc3303.scheduler;
 
 import java.util.ArrayList;
 
+
 import com.sysc3303.communication.ElevatorButtonMessage;
 import com.sysc3303.communication.FloorButtonMessage;
+
 import com.sysc3303.commons.Direction;
 import com.sysc3303.commons.ElevatorVector;
 
 /**
  * Selects target floors for
  * elevator
+ * @version 1.2
  * @author Yu Yamanaka
- *
+ * @version 1.1
+ * @author Xinrui Zhang
  */
 public class TargetFloorDecider {
 	TargetFloorValidator targetFloorValidator = new TargetFloorValidator();
@@ -34,14 +38,19 @@ public class TargetFloorDecider {
 		for(int i = 0; i < floorButtonMessages.size(); i++) {
 			addValidTargetFloor(numberOfElevator, request, targetFloorCandidates,floorButtonMessages.get(i));
 		}
-				
-	/*	for(int i = 0; i < downDirectionMessages.size(); i++) {
-			addValidTargetFloor(numberOfElevator, request, targetFloorCandidates,downDirectionMessages.get(i));
-		}
-		*/
+
 		return targetFloorCandidates;
 	}
 	
+	/**
+	 * Add valid target floor
+	 * for each elevator
+	 * @param numberOfElevator
+	 * @param request
+	 * @param targetFloorCandidates
+	 * @param message
+	 * @return
+	 */
 	private void addValidTargetFloor(int numberOfElevator, Request request, ArrayList<ArrayList<TargetWithDirection>> targetFloorCandidates, FloorButtonMessage message) {
 		if(message == null) {
 			return;
@@ -124,10 +133,8 @@ public class TargetFloorDecider {
  				}
  				targetFloors[duplicateElevatorId] = new TargetWithDirection(-1, Direction.IDLE);
 			}
-			
 			targetFloors[i] = nearestFloor;
 		}
-		
 		return targetFloors;
 	}
 	

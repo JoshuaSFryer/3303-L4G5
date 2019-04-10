@@ -15,7 +15,7 @@ import com.sysc3303.communication.Message;
 /**
  * Abstract class for request handlers
  * @author Yu Yamanaka
- *
+ * @author Xinrui Zhang
  */
 public abstract class RequestHandler {
 	protected final int               INVALID_FLOOR_1 = -1;
@@ -55,7 +55,7 @@ public abstract class RequestHandler {
 				int                 currentFloor           = request.getElevatorVector(i).currentFloor;
 				int                 targetFloor            = targetFloorDecider.getNearestFloor(targetFromFloorButton, 
 						                                                                         targetFloorsFromElevatorButtonMessages[i], currentFloor);
-				if(targetFloor != -1 && targetFloor != 0) {
+				if(targetFloor != -1) {
 					ElevatorVector curElevatorVector = request.getElevatorVector(i);
 					Direction      direction         = Direction.IDLE;
 					int            curFloor          = curElevatorVector.currentFloor;
@@ -75,10 +75,12 @@ public abstract class RequestHandler {
 					}
 					
 					schedulerMessageHandler.sendGoToFloor(new GoToFloorMessage(targetFloor, i));
+					printQueues();
+					sendQueuesToGUI();
 				}
 			}
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -87,6 +89,13 @@ public abstract class RequestHandler {
 		request.setGeneratorOff();
 	}
 	
+	/**
+	 * This function returns true if the arr has only invalid floor,
+	 * reutrn false otherwise. Initial version.
+	 *
+	 * @para arr
+	 * @return boolean
+	 */
 	protected boolean hasOnlyInvalidFloor(int[] arr) {
 		for(int i = 0; i < arr.length; i++) {
 			if(arr[i] != INVALID_FLOOR_1) {
@@ -96,6 +105,13 @@ public abstract class RequestHandler {
 		return true;
 	}
 	
+	/**
+	 * This function returns true if the arr has only invalid floor,
+	 * reutrn false otherwise.
+	 *
+	 * @para arr
+	 * @return boolean
+	 */
 	protected boolean hasOnlyInvalidFloor(TargetWithDirection[] arr) {
 		for(int i = 0; i < arr.length; i++) {
 			if(arr[i].getTargetFloor() != INVALID_FLOOR_1) {
@@ -134,5 +150,20 @@ public abstract class RequestHandler {
 		}
 		
 		floorRequestList.removeAll(Collections.singleton(null));
+	}
+	
+	/**
+	 * prints queue
+	 */
+	protected void printQueues() {
+		System.out.println(request.getFloorBtnQueueStr());
+		System.out.println(request.getElevatorBtnQueueStr());
+	}
+	
+	/**
+	 * sends queues to gui
+	 */
+	protected void sendQueuesToGUI() {
+		schedulerMessageHandler.sendQueuesToGUI(request.getFloorBtnQueueStr(), request.getElevatorBtnQueueStr());
 	}
 }

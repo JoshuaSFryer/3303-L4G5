@@ -16,6 +16,13 @@ public class ElevatorButtonMessage extends Message{
     private final Date time;
     private final long pressedTime;
 
+    /**
+     * Constructor
+     * @param destinationFloor the floor of the button that was clicked
+     * @param elevatorId the id of the elevator in which the button was clicked
+     * @param time the time at which the button was clicked
+     * @param pressedTime the time at which the module received the button click
+     */
     @JsonCreator
     public ElevatorButtonMessage(@JsonProperty("destinationFloor") int destinationFloor, @JsonProperty("elevatorId") int elevatorId, @JsonProperty("time") Date time, long pressedTime) {
         // the opcode for this message type is 5

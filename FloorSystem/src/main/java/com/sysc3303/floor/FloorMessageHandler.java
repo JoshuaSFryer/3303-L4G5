@@ -45,7 +45,7 @@ public class FloorMessageHandler extends MessageHandler {
             e.printStackTrace();
         }
         RabbitReceiver rabbitReceiver = new RabbitReceiver(this, floorQueueName);
-        new Thread(rabbitReceiver, "elevator queue receiver").start();
+        (new Thread(rabbitReceiver, "elevator queue receiver")).start();
     }
 
     @Override
@@ -95,6 +95,9 @@ public class FloorMessageHandler extends MessageHandler {
                 "simulator \n\tFloor: " + floor + "\n\tDirection: "+direction +"\n\tElevator ID: " + elevatorId);
     	FloorArrivalMessage floorArrivalMessage = new FloorArrivalMessage(floor, direction, elevatorId);
     	send(floorArrivalMessage, simulatorAddress, simulatorPort);
+        String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
+        RabbitSender sender = new RabbitSender(guiQueueName, floorArrivalMessage);
+        new Thread(sender).start();
     	try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -105,6 +108,8 @@ public class FloorMessageHandler extends MessageHandler {
 
     public void updateUI(boolean downState, boolean upState, int floor) {
         GUIFloorMessage msg = new GUIFloorMessage(downState, upState, floor);
-        send(msg, guiAddress, guiPort);
+        String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
+        RabbitSender sender = new RabbitSender(guiQueueName, msg);
+        new Thread(sender).start();
     }
 }

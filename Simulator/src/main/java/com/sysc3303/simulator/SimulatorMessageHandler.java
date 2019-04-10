@@ -11,11 +11,10 @@ public class SimulatorMessageHandler extends MessageHandler {
     private InetAddress elevatorAddress;
     private InetAddress floorAddress;
 
-    static int schedulerPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("schedulerPort"));
     static int floorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("floorPort"));
-    static int simulatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("simulatorPort"));
     static int elevatorPort = Integer.parseInt(ConfigProperties.getInstance().getProperty("elevatorPort"));
     static SimulatorMessageHandler instance;
+    static String simulatorQueueName = ConfigProperties.getInstance().getProperty("simulatorQueueName");
 
     public static SimulatorMessageHandler getInstance(int receivePort){
         if (instance == null){
@@ -38,6 +37,8 @@ public class SimulatorMessageHandler extends MessageHandler {
         }catch(UnknownHostException e){
             e.printStackTrace();
         }
+        RabbitReceiver rabbitReceiver = new RabbitReceiver(this, simulatorQueueName);
+        (new Thread(rabbitReceiver, "simulator queue receiver")).start();
     }
 
     @Override

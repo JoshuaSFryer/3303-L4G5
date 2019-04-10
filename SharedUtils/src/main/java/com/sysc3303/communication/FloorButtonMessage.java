@@ -21,6 +21,13 @@ public class FloorButtonMessage extends Message{
     private final Date time;
     private final long pressedTime;
 
+    /**
+     * Constructor
+     * @param floor the floor on which the button was pressed
+     * @param direction the direction of the button that was pressed
+     * @param time the time that message was sent
+     * @param pressedTime the time that the button was pressed
+     */
     @JsonCreator
     public FloorButtonMessage(@JsonProperty("floor") int floor,@JsonProperty("direction") Direction direction,@JsonProperty("time") Date time, long pressedTime) {
         // Opcode for this message is 0

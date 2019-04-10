@@ -14,6 +14,11 @@ public class ElevatorStateMessage extends Message{
     private final ElevatorVector elevatorVector;
     private final int elevatorId;
 
+    /**
+     * Constructor
+     * @param elevatorVector the current status of the elevator, including direction and floor
+     * @param elevatorId the id of the elevator
+     */
     @JsonCreator
     public ElevatorStateMessage(@JsonProperty("elevatorVector") ElevatorVector elevatorVector,@JsonProperty("elevatorId") int elevatorId) {
         // Opcode for this message is 3

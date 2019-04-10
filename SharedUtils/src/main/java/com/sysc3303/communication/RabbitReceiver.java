@@ -7,35 +7,37 @@ import com.rabbitmq.client.DeliverCallback;
 import com.sysc3303.commons.ConfigProperties;
 import com.sysc3303.commons.SerializationUtilJSON;
 
+/**
+ * A runnable receiver that listens and consumes from a message queue on RabbitMQ
+ * To learn more about consumers and RabbitMQ see https://www.rabbitmq.com/tutorials/tutorial-two-python.html
+ *
+ * @author Mattias Lightstone
+ */
 public class RabbitReceiver implements Runnable {
 
     private final static boolean AUTO_ACK = true;
-    private final static String HOSTNAME = "localhost";
     private MessageHandler messageHandler;
     private SerializationUtilJSON<Message> serializationUtil;
     private String queueName;
 
+    /**
+     * Constructor
+     * @param messageHandler The messagehandler whose receive message is called on consumption of a message
+     * @param queueName The queuename to listen to
+     */
     public RabbitReceiver(MessageHandler messageHandler, String queueName){
         this.messageHandler = messageHandler;
         this.queueName = queueName;
         serializationUtil = new SerializationUtilJSON<>();
     }
 
+    /**
+     * Runs the receiver and waits for a request. When one is received it calls the messageHandler's received message
+     * The receiver will continue to run util interrupted.
+     */
     public void run(){
-        ConnectionFactory factory = new ConnectionFactory();
-        String hostname;
-        if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("rabbitCloud"))){
-            hostname = ConfigProperties.getInstance().getProperty("rabbitCloudAddress");
-        }
-        else if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("local"))){
-            hostname = "localhost";
-        }
-        else {
-            hostname = ConfigProperties.getInstance().getProperty("rabbitAddress");
-        }
-        factory.setHost(hostname);
         try{
-            Connection connection = factory.newConnection();
+            Connection connection = RabbitShared.connect();
             Channel channel = connection.createChannel();
 
             channel.queueDeclare(queueName, false, false, false, null);
@@ -49,7 +51,7 @@ public class RabbitReceiver implements Runnable {
                 try {
                     receive(message);
                 } finally {
-                    System.out.println(" [x] Done");
+                    System.out.println("\n");
                 }
             };
             channel.basicConsume(queueName, AUTO_ACK, deliverCallback, consumerTag -> {});

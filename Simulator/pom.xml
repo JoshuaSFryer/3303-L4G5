@@ -46,6 +46,15 @@
                     <include>testEvents.txt</include>
                     <include>simpleTestEvents.txt</include>
                     <include>testEventsErrors.txt</include>
+<<<<<<< HEAD
+                    <include>4BottomFloorTo22.txt</include>
+                    <include>AllFloorButtonsAtOnce.txt</include>
+                    <include>Floor0To5.txt</include>
+                    <include>StickDoors.txt</include>
+                    <include>StickElevatorNoFault.txt</include>
+                    <include>StickElevatorsFault.txt</include>
+=======
+>>>>>>> master
                 </includes>
             </resource>
         </resources>

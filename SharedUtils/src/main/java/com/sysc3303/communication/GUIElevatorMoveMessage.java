@@ -1,5 +1,7 @@
 package com.sysc3303.communication;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sysc3303.commons.Direction;
 import com.sysc3303.communication.OpCodes;
 
@@ -14,14 +16,24 @@ public class GUIElevatorMoveMessage extends Message {
     public final Direction currentDirection;
     public final boolean doorOpen;
     public final int ID;
+    public final int targetFloor;
 
-    public GUIElevatorMoveMessage(int elevatorID, int floor,
-                                  Direction dir, boolean door) {
+    /**
+     * Constructor
+     * @param elevatorID The id of the elevator that is moving
+     * @param floor the floor that the elevator is currently
+     * @param dir the direction that the elevator is currently moving
+     * @param door the status of the door false = closed, true = open
+     */
+    @JsonCreator
+    public GUIElevatorMoveMessage(@JsonProperty("elevatorID") int elevatorID, @JsonProperty("floor") int floor,
+                                  @JsonProperty("dir") Direction dir, @JsonProperty("door") boolean door, @JsonProperty("targetFloor") int targetFloor) {
         super(ELEVATOR_UPDATE_GUI.getOpCode());
         this.currentFloor = floor;
         this.currentDirection = dir;
         this.doorOpen = door;
         this.ID = elevatorID;
+        this.targetFloor = targetFloor;
     }
 
     @Override
@@ -35,6 +47,6 @@ public class GUIElevatorMoveMessage extends Message {
 
         return "Elevator " + this.ID + ": Current floor: " + this.currentFloor
                 + " Going: " + this.currentDirection.name() + " Door is: "
-                + openClosed;
+                + openClosed + ", moving towards floor " + this.targetFloor;
     }
 }

@@ -15,6 +15,11 @@ public class FloorClickSimulationMessage extends Message{
     private int floor;
     private Direction direction;
 
+    /**
+     * Constructor
+     * @param floor the floor of the button that should be clicked
+     * @param direction the direction of the button that should be clicked
+     */
     @JsonCreator
     public FloorClickSimulationMessage(@JsonProperty("floor") int floor,@JsonProperty("direction") Direction direction) {
         // Opcode for this message is 5
