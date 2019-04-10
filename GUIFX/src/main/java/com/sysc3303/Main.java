@@ -121,15 +121,26 @@ public class Main extends Application implements UserInterface {
             //This HBox is to hold the floor buttons
             HBox hBox = new HBox();
             hBox.setSpacing(5);
-
-            //This Label is to Label the Floor numbers
+            
             Label floorLabel = new Label("Floor " + n);
-            CustomButton downButton = CustomButton.create(n, Direction.UP);
-            CustomButton upButton = CustomButton.create(n, Direction.DOWN);
-            floorClicks[n][0] = upButton;
-            floorClicks[n][1] = downButton;
-
-            hBox.getChildren().addAll(floorLabel, upButton, downButton);
+            hBox.getChildren().addAll(floorLabel);
+            
+            int topFloor = floorNumber - 1;
+            int bottomFloor = 0;
+            //This Label is to Label the Floor numbers
+            if (n != topFloor) { // Put up buttons on all floors except top.
+            	CustomButton upButton = CustomButton.create(n, Direction.UP);
+                floorClicks[n][0] = upButton;
+                hBox.getChildren().addAll(upButton);
+            }
+            
+            if (n != bottomFloor) {
+                CustomButton downButton = CustomButton.create(n, Direction.DOWN);
+                floorClicks[n][1] = downButton;
+                hBox.getChildren().addAll(downButton);
+            }
+            
+            
             gPane.add(hBox, 0, floorNumber - n - 1);
 
         }
@@ -365,10 +376,10 @@ public class Main extends Application implements UserInterface {
                     	if (floor == target) { // We are at a target floor.
                         	if (dir == Direction.UP) {
                         		// unclick up button
-                        		floorClicks[floor][1].unClickButton();
+                        		floorClicks[floor][0].unClickButton();
                         	} else if (dir == Direction.DOWN) {
                         		// unclick down button
-                        		floorClicks[floor][0].unClickButton();
+                        		floorClicks[floor][1].unClickButton();
                         	}
                         }
                     }
@@ -391,8 +402,27 @@ public class Main extends Application implements UserInterface {
      * @param ID    The ID of the elevator.
      */
     public void stickElevator(int ID) {
-    	elevators.get(ID).setFill(Color.RED);
-    	t.appendText("\nElevator " + ID + " fault! Stuck!");
+    	
+    	Task<Void> stickTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                    	elevators.get(ID).setFill(Color.RED);
+                    	t.appendText("\nElevator " + ID + " fault! Stuck!");
+                    }
+                });
+                return null;
+            }
+        }; // End Task declaration
+        
+        // Create a thread to launch the task.
+        Thread taskThread = new Thread (stickTask);
+        // Required code to launch the task thread.
+        taskThread.setDaemon(true);
+        taskThread.start();
+        
     }
 
     /**
@@ -401,8 +431,25 @@ public class Main extends Application implements UserInterface {
      * @param ID    The ID of the elevator.
      */
     public void unstickElevator(int ID) {
-    	elevators.get(ID).setFill(Color.YELLOW);
-    	t.appendText("\nElevator " + ID + " unstuck!");
+    	Task<Void> unstickTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                    	elevators.get(ID).setFill(Color.YELLOW);
+                    	t.appendText("\nElevator " + ID + " fault! Stuck!");
+                    }
+                });
+                return null;
+            }
+        }; // End Task declaration
+        
+        // Create a thread to launch the task.
+        Thread taskThread = new Thread (unstickTask);
+        // Required code to launch the task thread.
+        taskThread.setDaemon(true);
+        taskThread.start();
     }
 
 

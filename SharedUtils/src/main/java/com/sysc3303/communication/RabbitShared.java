@@ -21,7 +21,7 @@ public class RabbitShared {
 
     public static Connection connect() throws Exception{
         ConnectionFactory factory = new ConnectionFactory();
-        factory.setConnectionTimeout(10000);
+        factory.setConnectionTimeout(20000);
         String hostname;
 
         if (Boolean.parseBoolean(ConfigProperties.getInstance().getProperty("rabbitCloud"))){

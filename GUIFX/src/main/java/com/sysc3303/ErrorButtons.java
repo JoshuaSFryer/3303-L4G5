@@ -18,7 +18,7 @@ public class ErrorButtons extends Button {
 //    static String errorQueue = ConfigProperties.getInstance().getProperty("schedulerQueueName");
     static String errorQueue = ConfigProperties.getInstance().getProperty("elevatorQueueName");
 
-    int waitTime = Integer.parseInt(ConfigProperties.getInstance().getProperty("timeBetweenFloors"));
+    int waitTime = Integer.parseInt(ConfigProperties.getInstance().getProperty("timeBetweenFloors"))/1000;
 
     ErrorButtons (int elevatorID, String str, String type){
         super(str);
@@ -38,12 +38,12 @@ public class ErrorButtons extends Button {
         this.setOnAction((event) -> {
             String text = ((Button)event.getSource()).getText();
             if (this.type.equals("Door")){
-                sendDoorStick(elevatorID, waitTime );
+                sendDoorStick(elevatorID, waitTime * 2 + 1);
                 System.out.println("StickDoor Pressed! Assigned to Elevator " + this.elevatorID);
             }
 
             else if (this.type.equals("Elevator")){
-                sendElevatorStick(elevatorID, waitTime);
+                sendElevatorStick(elevatorID, waitTime*2 + 1);
                 System.out.println("Stick Elevator Pressed! Assigned to Elevator " + this.elevatorID);
             }
         }); // end lambda
@@ -81,7 +81,7 @@ public class ErrorButtons extends Button {
      * @param time          How long the elevator should keep its doors stuck.
      */
     private void sendDoorStick(int elevatorID, int time){
-        DoorStickMessage message = new DoorStickMessage(elevatorID, 2 * waitTime + 1 );
+        DoorStickMessage message = new DoorStickMessage(elevatorID, time);
         RabbitSender sender = new RabbitSender(errorQueue, message);
         new Thread(sender).start();
     }
@@ -92,7 +92,7 @@ public class ErrorButtons extends Button {
      * @param time          How long the elevator should stick.
      */
     private void sendElevatorStick(int elevatorID, int time){
-        ElevatorStickMessage message = new ElevatorStickMessage(elevatorID, waitTime);
+        ElevatorStickMessage message = new ElevatorStickMessage(elevatorID, time);
         RabbitSender sender = new RabbitSender(errorQueue, message);
         new Thread(sender).start();
     }
