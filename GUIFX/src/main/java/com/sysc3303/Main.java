@@ -141,6 +141,7 @@ public class Main extends Application implements UserInterface {
         	// Create the elevator.
             GUIElevator e = new GUIElevator(i, 0);
             gPane.add(e, i + 1, floorNumber - 1 - e.currentFloor);
+            //gPane.add(e, i + 1, floorNumber - 1); // UNCOMMENT ME TODO TODO TODO FIXME
             elevators.add(e);
         }
 
@@ -193,18 +194,45 @@ public class Main extends Application implements UserInterface {
      * Move the representation of an elevator in the GUI to a new position.
      * @param elevatorID    The ID of the elevator to move.
      * @param newFloor      The floor number to reposition the elevator to.
+     * @param dir			The direction the elevator is traveling in.
      */
-    public void moveElevator(int elevatorID, int newFloor) {
+    public void moveElevator(int elevatorID, int newFloor, Direction dir) {
 
         GUIElevator e = elevators.get(elevatorID);
-
-        gPane.getChildren().remove(e);
-        gPane.add(e, elevatorID + 1, floorNumber - 1 - newFloor);
-
-        Rectangle r = new Rectangle(40, 40);
-        r.setFill(Color.BLACK);
-        gPane.add(r, elevatorID + 1, floorNumber - 1 - e.currentFloor);
-        e.currentFloor = newFloor;
+        
+        if (dir == Direction.UP) { 
+	        gPane.getChildren().remove(e);
+	        gPane.add(e, elevatorID + 1, floorNumber - 1 - newFloor);
+	
+	        Rectangle r = new Rectangle(40, 40);
+	        r.setFill(Color.YELLOW);
+	        gPane.add(r, elevatorID + 1, floorNumber - 1 - e.currentFloor);
+	        e.currentFloor = newFloor;
+	        
+	        if (floorNumber - 1 - e.currentFloor != floorNumber - 1) { // only paint the square below if you aren't on the bottom floor already.
+		        Rectangle r2 = new Rectangle(40, 40);
+		        r2.setFill(Color.BLACK);
+		        gPane.add(r2, elevatorID + 1, floorNumber - 0 - e.currentFloor);
+		        e.currentFloor = newFloor;
+	        }
+        } else if (dir == Direction.DOWN) {
+        	gPane.getChildren().remove(e);
+	        gPane.add(e, elevatorID + 1, floorNumber - 1 - newFloor);
+	
+	        Rectangle r = new Rectangle(40, 40);
+	        r.setFill(Color.YELLOW);
+	        gPane.add(r, elevatorID + 1, floorNumber - 1 - e.currentFloor);
+	        e.currentFloor = newFloor;
+	        
+	        if (e.currentFloor != floorNumber - 1) { // only paint the square above if you aren't on the top floor already.
+		        Rectangle r2 = new Rectangle(40, 40);
+		        r2.setFill(Color.BLACK);
+		        gPane.add(r2, elevatorID + 1, floorNumber - 2 - e.currentFloor);
+		        e.currentFloor = newFloor;
+	        }
+        } else {
+        	System.out.println("Invalid direction supplied");
+        }
     }
 
 
@@ -245,7 +273,7 @@ public class Main extends Application implements UserInterface {
                     @Override
                     public void run() {
                         //This line of code will basically take the information for which elevator to move
-                        moveElevator(elevator, target);
+                        moveElevator(elevator, target, dir);
                         if (open) {
                             System.out.println("Doors are open");
                             openDoor(elevator);

@@ -59,6 +59,7 @@ public class GUIMessageHandler extends MessageHandler {
             case 7: // elevator update
                 GUIElevatorMoveMessage moveMSG = (GUIElevatorMoveMessage) message;
                 context.moveElevator(moveMSG);
+                
                 break;
 
             case 8: // floor update
