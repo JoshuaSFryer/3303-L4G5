@@ -39,13 +39,9 @@ import com.sysc3303.commons.ConfigProperties;
 // TODO: Fix bug that results in doors not holding open when selecting.
 public class Main extends Application implements UserInterface {
     public static void main(String[] args) {
-//        if(args.length > 0){
-//            if(args[0] .equals("config")){
-//                new ConfigListener().run();
-//            }
-//        }
+//        
        // mythread.start();
-    	//new ConfigListener().run();
+    	new ConfigListener().run();
         launch(args);
     }
 
