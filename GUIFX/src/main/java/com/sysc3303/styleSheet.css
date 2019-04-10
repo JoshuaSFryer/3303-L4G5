@@ -11,8 +11,8 @@
 }
 
 .buttonChanged {
-    -fx-text-fill:white;
+    -fx-text-fill:Black;
     -fx-font-family:"Arial Narrow";
     -fx_font-weight:bold;
-    -fx-background-color:linear-gradient(#00ff00, #2A5058);
+    -fx-background-color:linear-gradient(#61a2b1, #2A5058);
 }

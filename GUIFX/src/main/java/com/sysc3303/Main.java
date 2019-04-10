@@ -141,7 +141,6 @@ public class Main extends Application implements UserInterface {
         	// Create the elevator.
             GUIElevator e = new GUIElevator(i, 0);
             gPane.add(e, i + 1, floorNumber - 1 - e.currentFloor);
-            //gPane.add(e, i + 1, floorNumber - 1); // UNCOMMENT ME TODO TODO TODO FIXME
             elevators.add(e);
         }
 
@@ -276,7 +275,7 @@ public class Main extends Application implements UserInterface {
                         moveElevator(elevator, target, dir);
                         if (open) {
                             System.out.println("Doors are open");
-                            openDoor(elevator);
+                            openDoor(elevator, dir);
 
                         } else {
                             closeDoor(elevator);
@@ -323,9 +322,19 @@ public class Main extends Application implements UserInterface {
      * floor.
      * @param ID    The ID of the elevator.
      */
-    public void openDoor(int ID) {
+    public void openDoor(int ID, Direction dir) {
+    	System.out.println("Opening doors of elevator " + ID );
         // Change the elevator's colour to blue
         elevators.get(ID).setFill(Color.MEDIUMTURQUOISE);
+        int currentFloor = elevators.get(ID).currentFloor;
+        if (dir == Direction.UP) { 
+        	floorClicks[currentFloor][1].unClickButton();
+        } else if (dir == Direction.DOWN) {
+        	floorClicks[currentFloor][0].unClickButton();
+        } else {
+        	System.out.println("You get nothing, you lose, good DAY sir!");
+        }
+
         // Create a prompt to simulate a user pressing a button inside the elevator.
         createNewScene(ID);
     }
