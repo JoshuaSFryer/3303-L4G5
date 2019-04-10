@@ -102,9 +102,9 @@ public class FloorSystem {
 		}
 
 		// Update the UI with the updated states of the buttons on this floor.
-		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
-				arriveFloor.getButtons().isUpButtonLight(),
-				arriveFloor.getFloorNum());
+//		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
+//				arriveFloor.getButtons().isUpButtonLight(),
+//				arriveFloor.getFloorNum());
 
 		floorMessageHandler.sendFloorArrival(arrivalFloor, direction, elevatorId);
 		sendArrivalTelemetryMetric(arrivalFloor, direction, arrivalTime);
@@ -133,9 +133,9 @@ public class FloorSystem {
 		sendButtonTelemetryMetric(requestFloor, buttonDirection, pressedTime);
 		
 		// Update the UI with the updated states of the buttons on this floor.
-		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
-				arriveFloor.getButtons().isUpButtonLight(),
-				arriveFloor.getFloorNum());
+//		floorMessageHandler.updateUI(arriveFloor.getButtons().isDownButtonLight(),
+//				arriveFloor.getButtons().isUpButtonLight(),
+//				arriveFloor.getFloorNum());
 	}
 	
 	private void sendButtonTelemetryMetric(int floor, Direction direction, long pressedTime) {

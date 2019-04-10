@@ -77,7 +77,7 @@ public class MovementHandler implements Runnable {
 					// Update the elevator's current floor.
 					context.setCurrentFloor(floor);
 					// Update the UI.
-					context.updateUI();
+					context.updateUI(this.targetFloor);
 					lastHeight = context.getCurrentHeight();
 					// Reset the watchdog timer.
 					System.out.println("Elevator "+ elevatorId +": Refreshing watchdog");

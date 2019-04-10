@@ -176,7 +176,7 @@ public class Elevator {
 	 */
 	public void openDoors() {
 		door.openDoors();
-		messageHandler.updateUI(elevatorID, currentFloor, this.currentDirection, true);
+		messageHandler.updateUI(elevatorID, currentFloor, this.currentDirection, true, currentFloor);
 	}
 	
 	/**
@@ -184,7 +184,7 @@ public class Elevator {
 	 */
 	public void closeDoors() {
 		door.closeDoors();
-		messageHandler.updateUI(elevatorID, currentFloor, this.currentDirection, false);
+		messageHandler.updateUI(elevatorID, currentFloor, this.currentDirection, false, currentFloor);
 
 	}
 
@@ -354,9 +354,9 @@ public class Elevator {
 	 * Instruct the MessageHandler to build an ElevatorMoveMessage and send it
 	 * to the UI to update it.
 	 */
-	public void updateUI() {
+	public void updateUI(int targetFloor) {
 		messageHandler.updateUI(elevatorID, currentFloor, currentDirection,
-				door.isOpen());
+				door.isOpen(), targetFloor);
 	}
 
 	/**

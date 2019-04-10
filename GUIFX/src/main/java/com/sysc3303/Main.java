@@ -64,6 +64,7 @@ public class Main extends Application implements UserInterface {
     // Contains references to all the elevators.
     ArrayList<GUIElevator> elevators = new ArrayList<>();
     CustomButton[][] floorClicks = new CustomButton[floorNumber][2];
+    int[] elevatorTargets = new int[numberOfElevators];
 
     @Override
     public void start(Stage primaryStage) {
@@ -229,8 +230,8 @@ public class Main extends Application implements UserInterface {
 		        gPane.add(r2, elevatorID + 1, floorNumber - 2 - e.currentFloor);
 		        e.currentFloor = newFloor;
 	        }
-        } else {
-        	System.out.println("Invalid direction supplied");
+        } else  if (dir == Direction.IDLE){
+        	//System.out.println("Elevator " + elevatorID + " Idle");
         }
     }
 
@@ -260,11 +261,14 @@ public class Main extends Application implements UserInterface {
      * @param msg   The message passed on from the MessageHandler.
      */
     public void moveElevator(GUIElevatorMoveMessage msg) {
-        final int target = msg.currentFloor;
+        final int floor = msg.currentFloor;
         final int elevator = msg.ID;
         final boolean open = msg.doorOpen;
         final Direction dir = msg.currentDirection;
-
+        final int target = msg.targetFloor;
+        
+        this.elevatorTargets[elevator] = target;
+        
         Task<Void> task = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -272,7 +276,7 @@ public class Main extends Application implements UserInterface {
                     @Override
                     public void run() {
                         //This line of code will basically take the information for which elevator to move
-                        moveElevator(elevator, target, dir);
+                        moveElevator(elevator, floor, dir);
                         if (open) {
                             System.out.println("Doors are open");
                             openDoor(elevator, dir);
@@ -326,14 +330,15 @@ public class Main extends Application implements UserInterface {
     	System.out.println("Opening doors of elevator " + ID );
         // Change the elevator's colour to blue
         elevators.get(ID).setFill(Color.MEDIUMTURQUOISE);
-        int currentFloor = elevators.get(ID).currentFloor;
-        if (dir == Direction.UP) { 
-        	floorClicks[currentFloor][1].unClickButton();
-        } else if (dir == Direction.DOWN) {
-        	floorClicks[currentFloor][0].unClickButton();
-        } else {
-        	System.out.println("You get nothing, you lose, good DAY sir!");
-        }
+//        int currentFloor = elevators.get(ID).currentFloor;
+//        if (dir == Direction.UP) { 
+//        	floorClicks[currentFloor][1].unClickButton();
+//        }
+//        if (dir == Direction.DOWN) {
+//        	floorClicks[currentFloor][0].unClickButton();
+//        } else {
+//        	System.out.println("You get nothing, you lose, good DAY sir!");
+//        }
 
         // Create a prompt to simulate a user pressing a button inside the elevator.
         createNewScene(ID);
@@ -347,6 +352,18 @@ public class Main extends Application implements UserInterface {
      */
     public void closeDoor(int ID) {
         elevators.get(ID).setFill(Color.YELLOW);
+    }
+    
+    public void unclick(int floor, Direction dir, int elevatorID ) {
+    	if (floor == this.elevatorTargets[elevatorID]) { // We are at a target floor.
+        	if (dir == Direction.UP) {
+        		// unclick up button
+        		floorClicks[floor][1].unClickButton();
+        	} else if (dir == Direction.DOWN) {
+        		// unclick down button
+        		floorClicks[floor][0].unClickButton();
+        	}
+        }
     }
 
     /**

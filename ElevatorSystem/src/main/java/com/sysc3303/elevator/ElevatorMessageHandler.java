@@ -154,9 +154,10 @@ public class ElevatorMessageHandler extends MessageHandler {
      * @param currentFloor      The floor the elevator is currently on.
      * @param dir               The Direction in which the elevator is travelling.
      * @param open              True if the elevator's doors are open, false otherwise.
+     * @param targetFloor		The floor that the elevator is moving towards.
      */
-    public void updateUI(int elevatorID, int currentFloor, Direction dir, boolean open) {
-        GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, dir, open);
+    public void updateUI(int elevatorID, int currentFloor, Direction dir, boolean open, int targetFloor) {
+        GUIElevatorMoveMessage msg = new GUIElevatorMoveMessage(elevatorID, currentFloor, dir, open, targetFloor);
         String guiQueueName = ConfigProperties.getInstance().getProperty("guiQueueName");
         RabbitSender sender = new SpecializedRabbitSender(guiQueueName, msg);
         new Thread(sender).run();

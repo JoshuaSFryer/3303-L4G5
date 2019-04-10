@@ -52,14 +52,16 @@ public class GUIMessageHandler extends MessageHandler {
                 // the elevator has arrived at a floor
                 FloorArrivalMessage msg = (FloorArrivalMessage) message;
                 Direction dir = msg.getCurrentDirection();
-                int elevatorId = msg.getElevatorId();
+                int elevatorID = msg.getElevatorId();
                 int floor = msg.getFloor();
+                
+                context.unclick(floor, dir, elevatorID);
                 break;
 
             case 7: // elevator update
                 GUIElevatorMoveMessage moveMSG = (GUIElevatorMoveMessage) message;
                 context.moveElevator(moveMSG);
-                
+
                 break;
 
             case 8: // floor update
